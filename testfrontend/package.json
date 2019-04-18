@@ -1,0 +1,16 @@
+{
+  "name": "bos-oracle-utils",
+  "version": "1.0.0",
+  "description": "",
+  "main": "updater.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Guillaume Babin-Tremblay",
+  "license": "ISC",
+  "dependencies": {
+    "eosjs": "*",
+    "dotenv": "*",
+    "axios": "*"
+  }
+}

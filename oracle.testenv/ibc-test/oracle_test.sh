@@ -64,60 +64,30 @@ init_contracts1(){
     # ${!cleos}  push action  ${contract_oracle} write '{"owner":"eosio", "value":58500}' -p eosio@active
 
 
-    ${!cleos}  push action  ${contract_oraclize} addoracle '{"oracle":"oracleoracle"}' -p ${contract_oraclize}@active
+    # ${!cleos}  push action  ${contract_oraclize} addoracle '{"oracle":"oracleoracle"}' -p ${contract_oraclize}@active
 
-    get_account ${contract_oraclized}
+    # get_account ${contract_oraclized}
     # ${!cleos} set account permission eosio active '{"threshold": 1,"keys": [{"key": "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oraclized}'","permission":"eosio.code"},"weight":1}]}' owner -p eosio
 
     # ${!cleos} set account permission ${contract_oraclize}  active '{"threshold": 1,"keys": [{"key": "EOS7dUuGNbsh4x1kgv7vMrkgEDxKFwuGjZpixkjQrQGqJqwxpriSM","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oraclized}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_oraclize} 
         # owner     1:    1 EOS7ZrkZFcZqzr2rxb2EV7xLeR1YRGcgfG3wwgPJfcf6dbaYCpoym
         # active     1:    1 EOS7ZrkZFcZqzr2rxb2EV7xLeR1YRGcgfG3wwgPJfcf6dbaYCpoym
-#         password: [[
-#     "EOS5NkC58kuahypYnbyYXEZvwau1KbD1rmRDJD2R61CzKaznnWH3y",
-#     "5J1G4dhajiWDQduM3WSJ26vuoaMHi1AoqFLgVpazHL2aHsMkSb1"
-#   ],[
-#     "EOS5ek5mix7jBFNox715fDevLfvCCvv1ks1Fv57CuJYtBYTb9UqkM",
-#     "5KGg63tz4CGkwoENGyhqoMaz8fnFNdqFiV8tKwepkheFdUTwxaX"
-#   ],[
-#     "EOS5g6Bo5jdMnhAxauxkkDKch7q4WsU7zfkxBxZoLyitgw7r6Qq9w",
-#     "5JDDThPHfHXXEN4mCoZ6xSWaYeiFmMYxKWQqrKtwqcq4mQVGpRt"
-#   ],[
-#     "EOS63zURXSRd1Myu5ynZ7fUBiwubc3CGKTL8MGsPFVYp5YS1Py7kW",
-#     "5JVGR8Tj4n8DsCiSFpEQs9YfEuMnvRyka9Qw3uzjtCkg8eSC5bQ"
-#   ],[
-#     "EOS664YzagGmQX9irD1rACWDLB34DKpn1W2Dju57b934p3349J8xF",
-#     "5KAGbic3eXJen2nw11f6QeypyJGaNxJj3DBomPBFALERyYxe8wz"
-#   ],[
-#     "EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV",
-#     "5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3"
-#   ],[
-#     "EOS6Sc4BuA7dEGRU6u4VSuEKusESFe61qD8LmguGEMULrghKDSPaU",
-#     "5K79wAY8rgPwWQSRmyQa2BR8vPicieJdLCXL3cM5Db77QnsJess"
-#   ],[
-#     "EOS6jmPJZAPAB7hBwYxwfKiwVuqSrkSyRy2E4mjTmQ2CyYas4ESuv",
-#     "5K6ZCUpk2jn1munFdiADgKgfAqcpGMHKCoJUue65p99xKX9WWCW"
-#   ],[
-#     "EOS7DYy6C1k35RsFD1iSKwSVNGnDwcUgtwSSpnmfzEhdrmF3pirDP",
-#     "5HpauMBdvhNEribfVfiYG1jniWrg1xRoRa5RmVdfg4JywkQFPP1"
-#   ],[
-#     "EOS7uiCTbwNptteEUyMGjnbcsL9YezHnRnDRThSDZ8kAYzqw133v9",
-#     "5JXoS35W4Ys8VGwoRc1gZqEijW3R3uf8gPKLcY5i12qngydzvnR"
-#   ],[
-#     "EOS8ACpi4GFsSA1RHom8TS8t5TxCjfe8J5F2PAvZrGiNb5Zhj9y2p",
-#     "5JvftBQsdzygzvgX93bX62wTDzbhPvqHCEDqkyBNahnTuAi4cDA"
+
     # ${!cleos} set account permission ${contract_oraclized}  active '{"threshold": 1,"keys": [{"key": "EOS7uiCTbwNptteEUyMGjnbcsL9YezHnRnDRThSDZ8kAYzqw13","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oraclize}'","permission":"eosio.code"},"weight":1}],"waits":[{"wait_sec":0,"weight":1}]}' owner -p ${contract_oraclized}@owner
 
-    ${!cleos} set account permission ${contract_oraclized}  active '{"threshold": 1,"keys": [{"key": "EOS5ySwhXJJ3psy9Y8WdaNPuKk6JEA4bbhFVrdZ81YC2SUDd3PpMV","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oraclized}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_oraclized}@owner
+    # ${!cleos}  set account permission ${contract_oraclized}  active '{"threshold": 1,"keys": [{"key": "EOS89PeKPVQG3f48KCX2NEg6HDW7YcoSracQMRpy46da74yi3fTLP","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oraclized}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_oraclized}@owner
 
-     transfer
-    echo ===setup
-    ${!cleos} push action ${contract_oraclized} setup '{"oracle":"'${contract_oraclize}'"}' -p ${contract_oraclized} 
-    echo ===setupend
+    #  transfer
+    # echo ===setup
+    # ${!cleos} push action ${contract_oraclized} setup '{"oracle":"'${contract_oraclize}'"}' -p ${contract_oraclized} 
+    # echo ===setupend
+
+    ${!cleos}  push action  ${contract_oraclize} disable '{"administrator":"oracle444444","contract":"oracle444444","task":"c0fe86756e446503eed0d3c6a9be9e6276018fead3cd038932cf9cc2b661d9de","memo":""}' -p oracle444444@active
 
     # echo ===push
-    # ${!cleos}  push action  ${contract_oraclize} push '{"oracle":"oracleoracle","contract":"bosoraclebos","task":"0xae1cb3a8b6b4c49c65d22655c1ec4d28a4b3819065dd6aaf990d18e7ede951f1","memo":"","data":""}' -p oracleoracle@active
+    # ${!cleos}  push action  ${contract_oraclize} push '{"oracle":"oracleoracle","contract":"bosoraclebos","task":"c0fe86756e446503eed0d3c6a9be9e6276018fead3cd038932cf9cc2b661d9de","memo":"","data":""}' -p oracleoracle@active
 }
-init_contracts1 c1
+# init_contracts1 c1
 
 get_oracle_table(){
     cleos=cleos1 && if [ "$1" == "c2" ];then cleos=cleos2 ;fi
@@ -126,6 +96,9 @@ get_oracle_table(){
     #cleos get table ${contract_token} ${contract_token} globals
     ${!cleos} get table ${contract_oracle} ${contract_oracle} eosusd --limit 1
 
+     ${!cleos} get table ${contract_oraclize} ${contract_oraclize} request --limit 1
+
+ ${!cleos} get table ${contract_oraclized} ${contract_oraclized} ethbtc --limit 1
 }
 
 get_oracle_table c1
@@ -140,7 +113,7 @@ get_oracle_info(){
 
 }
 
-get_oracle_info c1
+# get_oracle_info c1
 
 # init_two(){
 #     $cleos1 push action eosio namelist '{"list":"actor_blacklist","action":"insert","names":["testblklist1"]}' -p eosio

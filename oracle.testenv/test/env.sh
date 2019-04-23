@@ -12,16 +12,27 @@ cleos1='cleos -u http://127.0.0.1:8888'
 cleos2='cleos -u http://127.0.0.1:8889'
 
 
-contract_oracle=bosbosoracle
+contract_oracle=oraclebosbos
 contract_oracle_folder=bos.oracle
 
-contract_oraclize=oraclebosbos
-contract_oraclize_folder=bos.oraclize
-
-contract_oraclized=oracle444444
-contract_oraclized_folder=bos.oraclized
+contract_consumer=consumer1234
+contract_consumer_folder=bos.consumer
 
 
+oraclize_c_pubkey=EOS6FZoCJr1o6VJAB4d1hduGjb1Z1FC69jNXZ6BtvrzPbnssik5DH
+oraclize_c_prikey=5JhNVeWb8DnMwczC54PSeGBYeQgjvW4SJhVWXMXW7o4f3xh7sYk
+
+
+consumer_c_pubkey=EOS89PeKPVQG3f48KCX2NEg6HDW7YcoSracQMRpy46da74yi3fTLP
+consumer_c_prikey=5JBqSZmzhvf3wopwyAwXH5g2DuNw9xdwgnTtuWLpkWP7YLtDdhp
+
+
+oracle_c_pubkey=EOS547kdHMjA9zrpYtPBW4ixZ4g3K4KGqp1GXyzyxx7ugPrvwHjhe
+oracle_c_prikey=5JCtWxuqPzcPUfFukj58q8TqyRJ7asGnhSYvvxi16yq3c5p6JRG
+
+
+oracleoracle_c_pubkey=EOS6Sc4BuA7dEGRU6u4VSuEKusESFe61qD8LmguGEMULrghKDSPaU
+oracleoracle_c_prikey=5K79wAY8rgPwWQSRmyQa2BR8vPicieJdLCXL3cM5Db77QnsJess
 
 
 

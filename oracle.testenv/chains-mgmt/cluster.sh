@@ -26,7 +26,7 @@ cluster_start(){
     echo "starting node 1"
     node1data=var/lib/node_bios1/
     node1conf=staging/etc/eosio/node_bios1
-    nohup ./programs/nodeos/nodeos -e -p eosio -d $node1data --config-dir $node1conf  \
+    nohup ./programs/nodeos/nodeos -e -p eosio -d $node1data --config-dir $node1conf --genesis-json $node1conf/genesis.json \
         --plugin eosio::chain_api_plugin --plugin eosio::producer_plugin  \
         --plugin eosio::producer_api_plugin --plugin eosio::history_api_plugin --plugin eosio::http_plugin \
         --contracts-console  --max-transaction-time 1000 --genesis-timestamp $now > node1.log &
@@ -64,7 +64,7 @@ cluster_clear(){
     rm -rf etc/eosio/node_*
     rm -rf var/lib
 
-    cd ./../ibc-test/ && ./clear.sh 2>/dev/null && cd - >/dev/null
+    cd ./../test/ && ./clear.sh 2>/dev/null && cd - >/dev/null
 }
 
 

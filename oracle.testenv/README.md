@@ -10,17 +10,17 @@ tail -f node1.log
 #tail -f node2.log
 
 # step 2 ( in a new shell )
-cd ./ibc-test
+cd ./test
 . chains_init.sh
 
 
 # step 3 ( in a new shell )
-cd ./ibc-test
+cd ./test
 . task_ibc_test.sh
 
 
 # clear shell backgroud processes and log files
-cd ./ibc-test
+cd ./test
 . clear.sh
 
 ```

@@ -11,12 +11,12 @@ const owner = process.env.ORACLE;
 const oracleContract = process.env.CONTRACT;
 
 const oraclize = "oraclebosbos";
-const oraclized = "oracle444444";
+const consumer = "consumer1234";
 const oracle = "oracleoracle";
 
 const eos = Eos({ 
   httpEndpoint: process.env.EOS_PROTOCOL + "://" +  process.env.EOS_HOST + ":" + process.env.EOS_PORT,
-  keyProvider: [process.env.EOS_KEY,'5JhNVeWb8DnMwczC54PSeGBYeQgjvW4SJhVWXMXW7o4f3xh7sYk','5JBqSZmzhvf3wopwyAwXH5g2DuNw9xdwgnTtuWLpkWP7YLtDdhp'],
+  keyProvider: [process.env.EOS_KEY,'5JhNVeWb8DnMwczC54PSeGBYeQgjvW4SJhVWXMXW7o4f3xh7sYk','5JBqSZmzhvf3wopwyAwXH5g2DuNw9xdwgnTtuWLpkWP7YLtDdhp','5JCtWxuqPzcPUfFukj58q8TqyRJ7asGnhSYvvxi16yq3c5p6JRG','5K79wAY8rgPwWQSRmyQa2BR8vPicieJdLCXL3cM5Db77QnsJess'],
   chainId: process.env.EOS_CHAIN,
   verbose:false,
   logger: {
@@ -109,14 +109,14 @@ const require_permissions = ({ account, key, actor, parent }) => {
   };
 
   const pub = "EOS89PeKPVQG3f48KCX2NEg6HDW7YcoSracQMRpy46da74yi3fTLP";
-  eos.transaction(allowContract(oraclized, pub, oraclized));
+  eos.transaction(allowContract(consumer, pub, consumer));
 //   await oraclizeContract.setup(oraclizeAccount, oracle, masterAccount, {
 // 	authorization: [oraclizeAccount]
 //   });
 
 function  setup(){
 	
-	eos.contract(oraclized)
+	eos.contract(consumer)
 					.then((contract) => {
 						// const price = {
 						// 	value: 200000,
@@ -124,7 +124,7 @@ function  setup(){
 						// };
 						// const priceBinary = contract.fc.toBuffer("price", price);
 						contract.setup(oraclize, {
-							 	authorization: [oraclized]
+							 	authorization: [consumer]
 							   }).then(results=>{
 							console.log("results:", results);
 							
@@ -186,7 +186,7 @@ function push(){
 						// contract.addoracle(owner, {
 						// 	authorization: [`${oraclize}@${process.env.ORACLE_PERMISSION || 'active'}`] 
 						// });
-						contract.push(owner, oraclized, "c0fe86756e446503eed0d3c6a9be9e6276018fead3cd038932cf9cc2b661d9de", "", priceBinary, {
+						contract.push(owner, consumer, "c0fe86756e446503eed0d3c6a9be9e6276018fead3cd038932cf9cc2b661d9de", "", priceBinary, {
 							authorization: [`${owner}@${process.env.ORACLE_PERMISSION || 'active'}`] 
 						}).then(results=>{
 							console.log("results:", results);

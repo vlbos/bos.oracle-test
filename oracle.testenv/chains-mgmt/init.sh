@@ -2,8 +2,9 @@
 
 base_dir=/Users/lisheng
 
-nodeos_repo_dir=${base_dir}/amybos/bos
-#nodeos_repo_dir=${base_dir}/boscore/bos
+# nodeos_repo_dir=${base_dir}/eos/eos
+# nodeos_repo_dir=${base_dir}/amybos/bos
+nodeos_repo_dir=${base_dir}/alibos/bos
 
 build=build
 #build=cmake-build-debug

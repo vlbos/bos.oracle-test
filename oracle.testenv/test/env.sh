@@ -4,7 +4,8 @@
 # contract_repo_dir=bos.contract-prebuild
 contract_repo_dir=eosio.contracts
 
-CONTRACTS_DIR=/Users/lisheng/abo/${contract_repo_dir}/build/contracts/
+CONTRACTS_DIR=/Users/lisheng/${contract_repo_dir}/build/contracts/
+# CONTRACTS_DIR=/Users/lisheng/abo/${contract_repo_dir}/build/contracts/
 # CONTRACTS_DIR=/Users/lisheng/abos/${contract_repo_dir}
 WALLET_DIR=/Users/lisheng/eosio-wallet
 
@@ -16,7 +17,7 @@ contract_oracle=oraclebosbos
 contract_oracle_folder=bos.oracle
 
 contract_consumer=consumer1234
-contract_consumer_folder=bos.consumer
+contract_consumer_folder=bos.dappuser
 
 
 oraclize_c_pubkey=EOS6FZoCJr1o6VJAB4d1hduGjb1Z1FC69jNXZ6BtvrzPbnssik5DH

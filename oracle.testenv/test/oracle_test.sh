@@ -125,8 +125,9 @@ get_account(){
     # $cleos2 get account  $1
 }
 test_get_account(){
-    get account oraclize1111
-    get account bosbosoracle
+    get_account oraclize1111
+    get_account bosbosoracle
+    get_account ${contract_oracle}
 }
 
 transfer(){
@@ -170,6 +171,18 @@ get_info(){
     #cleos get table ${contract_token} ${contract_token} globals
     ${!cleos} get info 
 
+}
+get_scope(){
+    cleos=cleos1 && if [ "$1" == "c2" ];then cleos=cleos2 ;fi
+
+    #cleos get table ${contract_token} ${contract_token} globals
+    ${!cleos} get scope  -t stat eosio.token
+
+}
+
+test_get_scope()
+{
+get_scope c1
 }
 
 test_get_info()
@@ -414,5 +427,6 @@ in
     "keys" )   test_list_pri_key;;
     "table"  )   test_get_table;;
     "info"  )   test_get_info;;
+    "scope"  )   test_get_scope;;
     *) echo "usage: oracle_test.sh set|init|acc|transfer|keys|table|info" ;;
 esac

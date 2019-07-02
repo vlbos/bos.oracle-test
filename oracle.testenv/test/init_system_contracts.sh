@@ -13,7 +13,7 @@ setup_system_contracts_and_issue_token(){
     for account in eosio.aaa \
                    eosio.bpay eosio.msig eosio.names eosio.ram eosio.ramfee \
                    eosio.saving eosio.stake eosio.token eosio.vpay \
-                   eosio.btc eosio.eth eosio.eos eosio.test
+                   eosio.btc eosio.eth eosio.eos eosio.test provider.bos consumer.bos riskctrl.bos  arbitrat.bos
     do
         echo -e "\n creating $account \n";
         ${!cleos} create account eosio ${account} EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV -p eosio -x 1000

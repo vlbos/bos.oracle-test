@@ -52,9 +52,9 @@ test_push() {
 test_pushforreq() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
-echo ===
-echo "$1"
-echo "$2"
+    echo ===
+    echo "$1"
+    echo "$2"
 
     ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"'${provider1111}'", "contract_account":"'${contract_consumer}'", "action_name":"receivejson",
                          "request_id":'"$2"', "data_json":"test data json"}' -p ${provider1111}
@@ -63,33 +63,36 @@ echo "$2"
 
 test_multipush() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
+    reqflag=false && if [ "$2" != "" ]; then reqflag="$2"; fi
 
     echo ===multipush
-    ${!cleos}  set account permission ${provider1111}  active '{"threshold": 1,"keys": [{"key": "'${provider1111_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${provider1111}@owner
-    sleep .2
+    # ${!cleos}  set account permission ${provider1111}  active '{"threshold": 1,"keys": [{"key": "'${provider1111_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${provider1111}@owner
+     ${!cleos}  set account permission ${contract_oracle}  active '{"threshold": 1,"keys": [{"key": "'${oracle_c_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_oracle}@owner
+
+    # sleep .2
     ${!cleos} push action ${contract_oracle} multipush '{"service_id":0, "provider":"'${provider1111}'", 
-                          "data_json":"test multipush data json","is_request":'"$2"'}' -p ${provider1111}
+                          "data_json":"test multipush data json","is_request":'${reqflag}'}' -p ${provider1111}
 }
 
 test_req() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
-    ${!cleos} push action ${contract_oracle} requestdata '{"service_id":"0",  "contract_account":"'${contract_consumer}'", "action_name":"receivejson",
+    ${!cleos} push action ${contract_oracle} requestdata '{"service_id":0,  "contract_account":"'${contract_consumer}'", "action_name":"receivejson",
                          "requester":"'${consumer1111}'", "request_content":"eth usd"}' -p ${consumer1111}@active
 }
 
 test_deposit() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
-    ${!cleos} push action ${contract_oracle} deposit '{"service_id":"0",  "from":"oraclize1111", "to":"'${consumer1111}'",
-                         "quantity":"10.0000 EOS", "is_notify":""}' -p ${consumer1111}@active
+    ${!cleos} push action ${contract_oracle} deposit '{"service_id":0,  "from":"oraclize1111", "to":"'${consumer1111}'",
+                         "quantity":"10.0000 EOS", "memo":"","is_notify":false}' -p ${contract_oracle}@active
 }
 
 test_withdraw() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
-    ${!cleos} push action ${contract_oracle} withdraw '{"service_id":"0",  "from":"'${consumer1111}'", "to":"oraclize1111",
-                         "quantity":"10.0000 EOS"}' -p ${consumer1111}@active
+    ${!cleos} push action ${contract_oracle} withdraw '{"service_id":0,  "from":"'${consumer1111}'", "to":"oraclize1111",
+                         "quantity":"1.0000 EOS", "memo":""}' -p ${contract_oracle}@active
 }
 
 test_() {
@@ -104,13 +107,13 @@ test_init_contracts() {
     "reg") test_reg_service c1 ;;
     "fee") test_fee c1 ;;
     "subs") test_subs c1 ;;
-    "mpush") test_multipush c1 "$2";;
+    "mpush") test_multipush c1 "$2" ;;
     "push") test_push c1 ;;
-    "pushr") test_pushforreq c1 "$2";;
+    "pushr") test_pushforreq c1 "$2" ;;
     "req") test_req c1 ;;
     "deposit") test_deposit c1 ;;
     "withdraw") test_withdraw c1 ;;
-    *) echo "usage: init reg|fee|subs|push|mpush|req|deposit|withdraw" ;;
+    *) echo "usage: init reg|fee|subs|pushr {reqid}|mpush {false|true|}|req|deposit|withdraw" ;;
     esac
 
     # init_contracts c2
@@ -191,7 +194,7 @@ test_get_info() {
 case "$1" in
 
 "set") test_set_contracts ;;
-"init") test_init_contracts "$2" "$3";;
+"init") test_init_contracts "$2" "$3" ;;
 "acc") test_get_account ;;
 "transfer") test_transfer ;;
 "keys") test_list_pri_key ;;
@@ -199,7 +202,7 @@ case "$1" in
 "table1") test_get_table1 "$2" "$3" ;;
 "info") test_get_info ;;
 "scope") test_get_scope ;;
-*) echo "usage: oracle_test.sh set|init|acc|transfer|keys|table|info" ;;
+*) echo "usage: oracle_test.sh set|init {param1 param2}|acc|transfer|keys|table {name}|table1 {scope name}|info" ;;
 esac
 
 # dataservices

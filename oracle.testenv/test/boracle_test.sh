@@ -126,19 +126,22 @@ get_account() {
     # $cleos2 get account  $1
 }
 test_get_account() {
-    get_account oraclize1111
-    get_account bosbosoracle
-    get_account ${contract_oracle}
+    get_account "$1"
+    # get_account oraclize1111
+    # get_account bosbosoracle
+    # get_account ${contract_oracle}
 }
 
 transfer() {
-    echo --- cleos2 transfer ---
-    $cleos1 transfer ${contract_consumer} ${contract_oracle} "10.0000 EOS" -p ${contract_consumer}
+    echo --- cleos1 transfer ---
+    $cleos1 transfer ${consumer1112} ${contract_oracle} "0.0001 EOS" "2,consumer1112,consumer1111,0" -p ${consumer1112} -p ${contract_oracle}
     # $cleos2 transfer  testblklist1 testblklist2 "10.0000 BOS" "ibc receiver=chengsong111" -p testblklist1
 }
 
-# test_transfer()
-# {}
+test_transfer()
+ {
+     transfer
+ }
 
 pwd = 'cat /Users/lisheng/eosio-wallet/password.txt'
 
@@ -165,7 +168,7 @@ test_get_table() {
 }
 
 test_get_table1() {
-    get_oracle_table c1 $1 $2
+    get_oracle_table1 c1 $1 $2
 }
 
 get_info() {
@@ -195,7 +198,7 @@ case "$1" in
 
 "set") test_set_contracts ;;
 "init") test_init_contracts "$2" "$3" ;;
-"acc") test_get_account ;;
+"acc") test_get_account "$2";;
 "transfer") test_transfer ;;
 "keys") test_list_pri_key ;;
 "table") test_get_table "$2" ;;

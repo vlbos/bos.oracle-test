@@ -75,6 +75,12 @@ provider1131_prikey=5KAyefwicvJyxDaQ1riCztiSgVKiH37VV9JdSRcrqi88qQkV2gJ
 # ]
 consumer1111=consumer1111
 consumer1112=consumer1112
+
+
+consumer1124=consumer1124
+consumer1125=consumer1125
+consumer1131=consumer1131
+
 #         password: [[
 consumer1111_pubkey=EOS5NkC58kuahypYnbyYXEZvwau1KbD1rmRDJD2R61CzKaznnWH3y
 consumer1111_prikey=5J1G4dhajiWDQduM3WSJ26vuoaMHi1AoqFLgVpazHL2aHsMkSb1

@@ -134,13 +134,78 @@ test_get_account() {
 
 transfer() {
     echo --- cleos1 transfer ---
-    $cleos1 transfer ${consumer1112} ${contract_oracle} "0.0001 EOS" "2,consumer1112,consumer1111,0" -p ${consumer1112} -p ${contract_oracle}
+    $cleos1 transfer ${provider1111} ${contract_oracle} "0.0001 EOS" "0,0" -p ${provider1111} 
+    $cleos1 transfer ${consumer1112} ${contract_oracle} "0.0001 EOS" "1,0" -p ${consumer1112} 
+    $cleos1 transfer ${consumer1112} ${contract_oracle} "0.0001 EOS" "2,consumer1112,consumer1111,0" -p ${consumer1112} 
+    $cleos1 transfer ${consumer1112} ${contract_oracle} "0.0001 EOS" "3,0" -p ${consumer1112} 
+    
+
     # $cleos2 transfer  testblklist1 testblklist2 "10.0000 BOS" "ibc receiver=chengsong111" -p testblklist1
+    #
+}
+# dataservices
+# servicefees
+# providers
+# provservices
+# svcprovision
+# cancelapplys
+
+# pushrecords
+# ppushrecords
+# apushrecords
+# papushrecord
+
+# provisionlog
+transfer0() {
+    echo --- providers before transfer ---
+    test_get_table providers
+     echo --- svcprovision before transfer ---
+    test_get_table1 0 svcprovision
+     echo --- servicestake before transfer ---
+    test_get_table servicestake
+    echo --- cleos1 transfer service stake---
+    $cleos1 transfer ${provider1111} ${contract_oracle} "0.0001 EOS" "0,0" -p ${provider1111} 
+    echo --- providers after transfer ---
+    test_get_table providers
+     echo --- svcprovision after transfer ---
+    test_get_table1 0 svcprovision
+     echo --- servicestake after transfer ---
+    test_get_table servicestake
+}
+
+transfer1() {
+    echo --- cleos1  subscription before transfer ---
+    test_get_table1 0 subscription
+    echo --- cleos1  pay service before transfer ---
+    $cleos1 transfer ${contract_consumer} ${contract_oracle} "0.0001 EOS" "1,0" -p ${contract_consumer} 
+    echo --- cleos1  subscription after transfer ---
+    test_get_table1 0 subscription
+}
+
+transfer2() {
+    echo --- riskaccounts before transfer 2---
+    test_get_table1 consumer1111 riskaccounts
+    echo --- deposit transfer 2---
+    $cleos1 transfer ${consumer1112} ${contract_oracle} "0.0001 EOS" "2,consumer1112,consumer1111,0" -p ${consumer1112} 
+    echo --- riskaccounts after transfer 2---
+    test_get_table1 consumer1111 riskaccounts
+}
+transfer3() {
+    echo --- cleos1 transfer 3---
+
+    $cleos1 transfer ${consumer1112} ${contract_oracle} "0.0001 EOS" "3,0" -p ${consumer1112} 
 }
 
 test_transfer()
  {
-     transfer
+    #  transfer
+    case "$1" in
+    "stake") transfer0;;
+    "pay") transfer1 ;;
+    "deposit") transfer2 ;;
+    "arbi") transfer3 ;;
+    *) echo "usage: transfer stake|pay|deposit|arbi" ;;
+    esac
  }
 
 pwd = 'cat /Users/lisheng/eosio-wallet/password.txt'
@@ -199,13 +264,13 @@ case "$1" in
 "set") test_set_contracts ;;
 "init") test_init_contracts "$2" "$3" ;;
 "acc") test_get_account "$2";;
-"transfer") test_transfer ;;
+"transfer") test_transfer "$2";;
 "keys") test_list_pri_key ;;
 "table") test_get_table "$2" ;;
 "table1") test_get_table1 "$2" "$3" ;;
 "info") test_get_info ;;
 "scope") test_get_scope ;;
-*) echo "usage: oracle_test.sh set|init {param1 param2}|acc|transfer|keys|table {name}|table1 {scope name}|info" ;;
+*) echo "usage: oracle_test.sh set|init {reg|fee|subs|pushr {reqid}|mpush {false|true|}|req|deposit|withdraw}|acc|transfer {stake|pay|deposit|arbi}|keys|table {name}|table1 {scope name}|info" ;;
 esac
 
 # dataservices

@@ -22,8 +22,7 @@ read -d '' genesis << EOF
     "max_inline_action_size": 4096,
     "max_inline_action_depth": 4,
     "max_authority_depth": 6
-    },
-  "initial_chain_id":"41b319e21b898a6b704e8b0fd587099d4815232471416e46bbc4fd3f1cb68355"
+    }
 }
 EOF
 

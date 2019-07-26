@@ -62,7 +62,7 @@ test_reg_service5() {
         ${!cleos} push action ${contract_oracle} regservice '{"service_id":1,  "account":"'${p}'", "stake_amount":"10.0000 EOS", "service_price":"1.0000 EOS",
                           "fee_type":1, "data_format":"", "data_type":0, "criteria":"",
                           "acceptance":0, "declaration":"", "injection_method":0, "duration":20,
-                          "provider_limit":3, "update_cycle":60, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${p}@active
+                          "provider_limit":3, "update_cycle":120, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${p}@active
 
         sleep .1
     done

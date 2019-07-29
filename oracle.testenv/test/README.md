@@ -1,3 +1,98 @@
+1.部署合约
+test_set_contracts
+oracle.bos
+dappuser.bos
+2.注册服务
+test_reg_service
+3.初始化服务如费用
+test_fee
+4.抵押
+transfer stake
+stake unstake  eosio.code
+5.订阅/请求
+test_subs
+
+test_req
+6.支付服务费用
+transfer pay
+7.推送
+ "mpush") test_multipush c1 "$2" ;;
+"push") test_push c1 ;;
+"pushr") test_pushforreq c1 "$2" ;;
+
+风控
+"deposit") test_deposit c1 ;; dappuser()->dapp(data consumer) save
+"withdraw") test_withdraw c1 ;; dapp(data consumer) -> dappuser()
+
+
+仲裁
+前提条件  注册服务
+1.注册仲裁员（抵押）
+专业，大众
+cleos push action $EOS_ORACLE regarbitrat '["arbitrator11", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 EOS", "hello world"]' -p arbitrator11@active
+2.申诉（抵押）仲裁开始
+cleos push action $EOS_ORACLE complain '["complain1", 0, "1.0000 EOS", "complain1", 1]' -p complain1@active
+3.上传证据
+cleos push action $EOS_ORACLE uploadeviden '["complain1", 0, "evidence"]' -p complain1@active
+
+3.应诉（抵押）
+cleos push action $EOS_ORACLE respcase '["provider1111", 0, 0]' -p provider1111@active
+
+4.接受仲裁邀请
+cleos push action $EOS_ORACLE respcase '["provider1111", 0, 0]' -p provider1111@active
+
+5.上仲裁结果
+cleos push action $EOS_ORACLE uploadresult '["arbitrator12", 0, 1, 0]' -p arbitrator12@active
+当前仲裁结果得出   通知transfer memo 再申诉等待
+6.再申诉
+cleos push action $EOS_ORACLE reappeal '["complain1", 0, 0, 1, 1, false, "1.0000 EOS", 1, "数据使用者不服, 再次申诉"]' -p complain1@active
+7.再应诉
+
+
+"set") test_set_contracts ;;
+"init") test_init_contracts "$2" "$3" ;;
+"acc") test_get_account "$2" ;;
+"transfer") test_transfer "$2" ;;
+"keys") test_list_pri_key ;;
+"table") test_get_table "$2" ;;
+"table1") test_get_table1 "$2" "$3" ;;
+"info") test_get_info ;;
+"scope") test_get_scope ;;
+"data") test_fetchdata ;;
+"pub") test_publish ;;
+"auto") test_autopublish ;;
+
+
+"reg") test_reg_service c1 ;;
+    "fee") test_fee c1 ;;
+    "subs") test_subs c1 ;;
+    "mpush") test_multipush c1 "$2" ;;
+    "push") test_push c1 ;;
+    "pushr") test_pushforreq c1 "$2" ;;
+    "req") test_req c1 ;;
+
+    "deposit") test_deposit c1 ;;
+    "withdraw") test_withdraw c1 ;;
+
+
+test_transfer() {
+    #  transfer
+    case "$1" in
+    "stake") transfer0 ;;
+    "pay") transfer1 ;;
+    "deposit") transfer2 ;;
+    "arbi") transfer3 ;;
+    *) echo "usage: transfer stake|pay|deposit|arbi" ;;
+    esac
+}
+
+
+#部署合约 
+
+
+    ${!cleos} set contract ${contract_oracle} ${CONTRACTS_DIR}/${contract_oracle_folder} -x 1000 -p ${contract_oracle}
+   
+    ${!cleos} set contract ${contract_consumer} ${CONTRACTS_DIR}/${contract_consumer_folder} -x 1000 -p ${contract_consumer}@active
 
 
 1. 注册预言机数据服务接口
@@ -19,9 +114,13 @@
 | 数据注入方式    | Data injection method    | uint64_t injection _method   | 整型   | 数据注入方式    链上直接，链接间接（over oracle），链外   | 
 | 基础抵押金额   | basic_mortgage_amount   | uint64_t stake_amount   | 整型   | 基础抵押金额    | 
 | 数据收集持续时间   | Data Collection Duration   | uint64_t duration   | 整型   | 数据收集持续时间（从第一个数据提供者注入数据算起，多久后不再接受同一project_id ^update_number 的数据）duration   | 
-| 数据提供者上限   | Data Provider Limit   | uint64_t provider_limit   | 整型   | 数据提供者上限（大于3） data_provider_max_namber    | 
+| 数据提供者下限   | Data Provider min Limit   | uint64_t provider_limit   | 整型   | 数据提供者下限（大于3） data_provider_min_number    | 
 | 数据更新周期 | Data Update Cycle   | uint64_t update_cycle   | 整型   | 数据更新周期   | 
 | 数据更新开始时间 | Data update start time    | uint64_t update_start_time   | 整型   | 数据更新开始时间   | 
+
+  ${!cleos} push action ${contract_oracle} requestdata '{"service_id":0,  "contract_account":"'${contract_consumer}'", "action_name":"receivejson",
+                         "requester":"'${consumer1111}'", "request_content":"eth usd"}' -p ${consumer1111}@active
+
 
 2. 注销数据服务接口
 
@@ -79,6 +178,10 @@
 | 转账账户   | Transfer account   | uint64_t account | 整型 |    | 
 | 充值金额   | deposit amount   | uint64_t amount | 整型 |    | 
 
+    ${!cleos} push action ${contract_oracle} subscribe '{"service_id":"0", 
+    "contract_account":"'${contract_consumer}'", "action_name":"receivejson", "publickey":"",
+                          "account":"'${consumer1111}'", "amount":"10.0000 EOS", "memo":""}' -p ${consumer1111}@active
+
 6. 请求服务数据接口
 
 | 中文接口名 | 请求服务数据接口   |    |    |    | 
@@ -91,6 +194,11 @@
 | 请求数据服务ID   | Request Data Service ID   | uint64_t service _id | 整型 |    | 
 | 请求签名   | Request Signature   | name request_signature  | 字符串 |    | 
 | 请求内容   | Request Content    | uint64_t request_content | 字符串 |   定义规则   | 
+
+
+    ${!cleos} push action ${contract_oracle} requestdata '{"service_id":0,  "contract_account":"'${contract_consumer}'", "action_name":"receivejson",
+                         "requester":"'${consumer1111}'", "request_content":"eth usd"}' -p ${consumer1111}@active
+
 
 7. 推送服务数据接口  
 
@@ -105,6 +213,27 @@
 | 具体数据json    | Specific data json   | uint64_t data_json | 字符串 |    | 
 | 数据提供者签名    | Data Provider Signature    | uint64_t provider _signature  | 字符串 |    | 
 | 数据服务请求ID | Data Service Request ID  | uint64_t request_id | 整型 |    | 
+
+  ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"'${provider1111}'", "contract_account":"'${contract_consumer}'", "action_name":"receivejson",
+                         "request_id":'"$2"', "data_json":"test data json"}' -p ${provider1111}
+
+  # ${!cleos}  set account permission ${provider1111}  active '{"threshold": 1,"keys": [{"key": "'${provider1111_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${provider1111}@owner
+
+    ${!cleos} set account permission ${contract_oracle} active '{"threshold": 1,"keys": [{"key": "'${oracle_c_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_oracle}@owner
+
+    # sleep .2
+    ${!cleos} push action ${contract_oracle} multipush '{"service_id":0, "provider":"'${provider1111}'", 
+                          "data_json":"test multipush data json","is_request":'${reqflag}'}' -p ${provider1111}
+
+  reqflag=false && if [ "$2" != "" ]; then reqflag="$2"; fi
+
+    echo ===multipush
+    # ${!cleos}  set account permission ${provider1111}  active '{"threshold": 1,"keys": [{"key": "'${provider1111_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${provider1111}@owner
+    ${!cleos} set account permission ${contract_oracle} active '{"threshold": 1,"keys": [{"key": "'${oracle_c_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_oracle}@owner
+
+    # sleep .2
+    ${!cleos} push action ${contract_oracle} multipush '{"service_id":0, "provider":"'${provider1111}'", 
+                          "data_json":"test multipush data json","is_request":'${reqflag}'}' -p ${provider1111}
 
 # 
 8. 申诉接口

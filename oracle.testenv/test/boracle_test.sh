@@ -26,6 +26,7 @@ test_publish() {
     consumer_transfer5
     test_autopublish
 }
+
 provider_transfer5() {
     echo --- cleos1 provider transfer ---
     ${!cleos} set account permission ${contract_oracle} active '{"threshold": 1,"keys": [{"key": "'${oracle_c_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_oracle}@owner

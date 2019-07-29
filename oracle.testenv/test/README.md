@@ -1,52 +1,85 @@
+
+
+
 1.部署合约
+
 test_set_contracts
 oracle.bos
 dappuser.bos
+
 2.注册服务
+
 test_reg_service
+
 3.初始化服务如费用
+
 test_fee
+
 4.抵押
+
 transfer stake
 stake unstake  eosio.code
+
 5.订阅/请求
+
 test_subs
 
 test_req
+
 6.支付服务费用
+
 transfer pay
+
 7.推送
+
  "mpush") test_multipush c1 "$2" ;;
 "push") test_push c1 ;;
 "pushr") test_pushforreq c1 "$2" ;;
 
 风控
+
 "deposit") test_deposit c1 ;; dappuser()->dapp(data consumer) save
 "withdraw") test_withdraw c1 ;; dapp(data consumer) -> dappuser()
+
 
 
 仲裁
 前提条件  注册服务
 1.注册仲裁员（抵押）
 专业，大众
+
 cleos push action $EOS_ORACLE regarbitrat '["arbitrator11", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 EOS", "hello world"]' -p arbitrator11@active
+
 2.申诉（抵押）仲裁开始
+
 cleos push action $EOS_ORACLE complain '["complain1", 0, "1.0000 EOS", "complain1", 1]' -p complain1@active
+
 3.上传证据
-cleos push action $EOS_ORACLE uploadeviden '["complain1", 0, "evidence"]' -p complain1@active
+
+``` shell 
+cleos push action $EOS_ORACLE uploadeviden '["complain1", 0, "evidence"]' - p complain1 @active
+```
 
 3.应诉（抵押）
+
 cleos push action $EOS_ORACLE respcase '["provider1111", 0, 0]' -p provider1111@active
 
 4.接受仲裁邀请
+
 cleos push action $EOS_ORACLE respcase '["provider1111", 0, 0]' -p provider1111@active
 
 5.上仲裁结果
+
 cleos push action $EOS_ORACLE uploadresult '["arbitrator12", 0, 1, 0]' -p arbitrator12@active
 当前仲裁结果得出   通知transfer memo 再申诉等待
-6.再申诉
+
+6.再申诉（抵押）
+
 cleos push action $EOS_ORACLE reappeal '["complain1", 0, 0, 1, 1, false, "1.0000 EOS", 1, "数据使用者不服, 再次申诉"]' -p complain1@active
-7.再应诉
+
+7.再应诉（抵押）
+
+cleos push action $EOS_ORACLE rerespcase '["provider1111", 0, 0, 1, true]' -p complain1@active
 
 
 "set") test_set_contracts ;;
@@ -87,7 +120,7 @@ test_transfer() {
 }
 
 
-#部署合约 
+# 1. 部署合约 
 
 
     ${!cleos} set contract ${contract_oracle} ${CONTRACTS_DIR}/${contract_oracle_folder} -x 1000 -p ${contract_oracle}
@@ -235,7 +268,7 @@ test_transfer() {
     ${!cleos} push action ${contract_oracle} multipush '{"service_id":0, "provider":"'${provider1111}'", 
                           "data_json":"test multipush data json","is_request":'${reqflag}'}' -p ${provider1111}
 
-# 
+# 2.  
 8. 申诉接口
 
 | 中文接口名 | 申诉接口 |    |    |    | 
@@ -251,7 +284,7 @@ test_transfer() {
 | ~~申诉者发起人~~   | ~~Sponsors~~   | ~~bool is_~~~~sponsor~~   | ~~布尔~~   |    | 
 | 仲裁方式 | Arbitration   | uint8_t arbi_method   | 整型 | 仲裁方式  大众仲裁，多轮仲裁 | 
 
-# 
+# 3.  
 9. 应诉接口  
 
 | 中文接口名 | 应诉接口   |    |    |    | 
@@ -305,7 +338,7 @@ test_transfer() {
 | 仲裁结果   | Arbitration Results    | uint64_t result | 整型 |    | 
 | 仲裁轮次   | Arbitration Process Record ID   | uint64_t process_id | 整型 |    | 
 
-# 
+# 4.  
 13. 上传证据接口
 
 | 中文接口名 | 上传证据接口      |    |    |    | 
@@ -373,14 +406,14 @@ test_transfer() {
 | 数据 hash | data hash | uint64_t data_hash | 字符串 |    | 
 
 
-# 疑问
-### 申诉接口: complain
+# 5. 疑问
+### 5.0.1. 申诉接口: complain
 初次申诉时, `arbicaseapp`表, `update_number` 更新逻辑
 答：`arbicaseapp`表, `update_number` 更新逻辑，暂时没有了。表设计时申诉考虑具体到哪条数据。上次讨论具体到服务ID。
-### 应诉接口: resparbitrat
+### 5.0.2. 应诉接口: resparbitrat
 应诉接口签名参数有什么用？签名验证的内容是什么? 应诉逻辑? 修改arbicaseapp哪几个字段?
 答：签名为出现争议使用，链就行了，action验证有效格式就行了。应诉，转账抵押金额。更新arbicaseapp，arbi_step为应诉状态，触发仲裁启动。判断仲裁方式，执行仲裁流程逻辑。
-### 上传证据: uploadeviden
+### 5.0.3. 上传证据: uploadeviden
 签名参数有什么用? 签名验证什么内容? 
 答：现在实现到验证签名是有效格式就行了，设计考虑如果有争议，发生抵赖或冒名等问题，保存证据。
 

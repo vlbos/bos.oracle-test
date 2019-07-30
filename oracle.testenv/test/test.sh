@@ -8,12 +8,16 @@ transfernormal(){
 
 once(){
     # for i in {8873..9999}; do transfernormal ${i} && sleep .1 ;done
-    for i in {1..5}; do 
-    echo provider${i}${i}${i}${i} 
-    p=provider${i}${i}${i}${i} 
-    echo 'p='${p}
-     sleep .1 
-    done
+    # for i in {1..5}; do 
+    # echo provider${i}${i}${i}${i} 
+    # p=provider${i}${i}${i}${i} 
+    # echo 'p='${p}
+    #  sleep .1 
+    # done
+    datetime1=`date "+%s#%N"`
+datetime2=`echo $datetime1 | cut -d"#" -f1`   #取出秒
+
+echo $datetime2
 
  }
 

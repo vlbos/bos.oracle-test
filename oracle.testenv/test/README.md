@@ -1,123 +1,184 @@
 
 
+######1. 部署合约
 
-1.部署合约
+```
+- test_set_contracts
+- oracle.bos
+- dappuser.bos
 
-test_set_contracts
-oracle.bos
-dappuser.bos
+contract_oracle=oraclebosbos
+contract_oracle_folder=bos.oracle
 
-2.注册服务
+contract_consumer=consumer1234
+contract_consumer_folder=bos.dappuser
 
+  ${!cleos} set contract ${contract_oracle} ${CONTRACTS_DIR}/${contract_oracle_folder} -x 1000 -p ${contract_oracle}
+ 
+    ${!cleos} set contract ${contract_consumer} ${CONTRACTS_DIR}/${contract_consumer_folder} -x 1000 -p ${contract_consumer}@active
+  
+```
+
+#####2. 注册服务
+
+```
 test_reg_service
+ ${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"'${provider1111}'", "stake_amount":"10.0000 EOS", "service_price":"1.0000 EOS",
+                          "fee_type":1, "data_format":"", "data_type":0, "criteria":"",
+                          "acceptance":0, "declaration":"", "injection_method":0, "duration":1,
+                          "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${provider1111}@active
 
-3.初始化服务如费用
+```
 
+#####3. 初始化服务如费用
+
+```
 test_fee
 
-4.抵押
+    ${!cleos} push action ${contract_oracle} addfeetypes '{"service_id":"0","fee_types":[0,1],"service_prices":["1.0000 EOS","2.0000 EOS"] }' -p ${contract_oracle}@active
 
+```
+
+#####4.抵押
+
+```
 transfer stake
 stake unstake  eosio.code
+  $cleos1 transfer ${provider1111} ${contract_oracle} "0.0001 EOS" "0,0" -p ${provider1111}
 
-5.订阅/请求
+```
 
+#####5. 订阅/请求
+
+```
 test_subs
-
+  ${!cleos} push action ${contract_oracle} subscribe '{"service_id":"0", 
+    "contract_account":"'${contract_consumer}'", "action_name":"receivejson", "publickey":"",
+                          "account":"'${consumer1111}'", "amount":"10.0000 EOS", "memo":""}' -p ${consumer1111}@active
+}
 test_req
 
-6.支付服务费用
+  ${!cleos} push action ${contract_oracle} requestdata '{"service_id":0,  "contract_account":"'${contract_consumer}'", "action_name":"receivejson",
+                         "requester":"'${consumer1111}'", "request_content":"eth usd"}' -p ${consumer1111}@active
 
+```
+
+#####6. 支付服务费用
+
+```
 transfer pay
+    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "1,0" -p ${consumer2222}
 
-7.推送
+```
 
- "mpush") test_multipush c1 "$2" ;;
+#####7.推送
+
+```
+"mpush") test_multipush c1 "$2" ;;
+
+  # ${!cleos}  set account permission ${provider1111}  active '{"threshold": 1,"keys": [{"key": "'${provider1111_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${provider1111}@owner
+    ${!cleos} set account permission ${contract_oracle} active '{"threshold": 1,"keys": [{"key": "'${oracle_c_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_oracle}@owner
+
+    # sleep .2
+    ${!cleos} push action ${contract_oracle} multipush '{"service_id":0, "provider":"'${provider1111}'", 
+                          "data_json":"test multipush data json","is_request":'${reqflag}'}' -p ${provider1111}
+
 "push") test_push c1 ;;
+
+
+    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"'${provider1111}'", "contract_account":"'${contract_consumer}'", "action_name":"receivejson",
+                         "request_id":0, "data_json":"test data json"}' -p ${provider1111}
+
 "pushr") test_pushforreq c1 "$2" ;;
 
-风控
+    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"'${provider1111}'", "contract_account":"'${contract_consumer}'", "action_name":"receivejson",
+                         "request_id":'"$2"', "data_json":"test data json"}' -p ${provider1111}
 
+
+${!cleos} push action ${contract_oracle} autopublish '{"service_id":1, "provider":"'${p}'", 
+                         "request_id":0, "data_json":"auto publish test data json"}' -p ${p}
+
+```
+
+####风控
+
+#####1. 存入金额
+
+```
 "deposit") test_deposit c1 ;; dappuser()->dapp(data consumer) save
+
+    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "2,consumer2222,consumer1111,0" -p ${consumer2222}
+   
+```
+
+#####2. 提取金额 
+
+```
 "withdraw") test_withdraw c1 ;; dapp(data consumer) -> dappuser()
 
+  ${!cleos} push action ${contract_oracle} withdraw '{"service_id":0,  "from":"'${consumer1111}'", "to":"oraclize1111",
+                         "quantity":"1.0000 EOS", "memo":""}' -p ${contract_oracle}@active
+}
+```
 
 
-仲裁
-前提条件  注册服务
+####仲裁
+#####前提条件  
+注册服务
+
 1.注册仲裁员（抵押）
 专业，大众
 
+```
 cleos push action $EOS_ORACLE regarbitrat '["arbitrator11", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 EOS", "hello world"]' -p arbitrator11@active
+
+ $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "3,0" -p ${consumer2222}
+```
 
 2.申诉（抵押）仲裁开始
 
+```
 cleos push action $EOS_ORACLE complain '["complain1", 0, "1.0000 EOS", "complain1", 1]' -p complain1@active
+```
 
 3.上传证据
 
-``` shell 
+```  
 cleos push action $EOS_ORACLE uploadeviden '["complain1", 0, "evidence"]' - p complain1 @active
 ```
 
 3.应诉（抵押）
 
+```
 cleos push action $EOS_ORACLE respcase '["provider1111", 0, 0]' -p provider1111@active
+```
 
 4.接受仲裁邀请
 
+```
 cleos push action $EOS_ORACLE respcase '["provider1111", 0, 0]' -p provider1111@active
+```
 
 5.上仲裁结果
 
+```
 cleos push action $EOS_ORACLE uploadresult '["arbitrator12", 0, 1, 0]' -p arbitrator12@active
 当前仲裁结果得出   通知transfer memo 再申诉等待
+```
 
 6.再申诉（抵押）
 
+```
 cleos push action $EOS_ORACLE reappeal '["complain1", 0, 0, 1, 1, false, "1.0000 EOS", 1, "数据使用者不服, 再次申诉"]' -p complain1@active
+```
 
 7.再应诉（抵押）
 
+```
 cleos push action $EOS_ORACLE rerespcase '["provider1111", 0, 0, 1, true]' -p complain1@active
+```
 
 
-"set") test_set_contracts ;;
-"init") test_init_contracts "$2" "$3" ;;
-"acc") test_get_account "$2" ;;
-"transfer") test_transfer "$2" ;;
-"keys") test_list_pri_key ;;
-"table") test_get_table "$2" ;;
-"table1") test_get_table1 "$2" "$3" ;;
-"info") test_get_info ;;
-"scope") test_get_scope ;;
-"data") test_fetchdata ;;
-"pub") test_publish ;;
-"auto") test_autopublish ;;
-
-
-"reg") test_reg_service c1 ;;
-    "fee") test_fee c1 ;;
-    "subs") test_subs c1 ;;
-    "mpush") test_multipush c1 "$2" ;;
-    "push") test_push c1 ;;
-    "pushr") test_pushforreq c1 "$2" ;;
-    "req") test_req c1 ;;
-
-    "deposit") test_deposit c1 ;;
-    "withdraw") test_withdraw c1 ;;
-
-
-test_transfer() {
-    #  transfer
-    case "$1" in
-    "stake") transfer0 ;;
-    "pay") transfer1 ;;
-    "deposit") transfer2 ;;
-    "arbi") transfer3 ;;
-    *) echo "usage: transfer stake|pay|deposit|arbi" ;;
-    esac
-}
 
 
 # 1. 部署合约 
@@ -147,12 +208,17 @@ test_transfer() {
 | 数据注入方式    | Data injection method    | uint64_t injection _method   | 整型   | 数据注入方式    链上直接，链接间接（over oracle），链外   | 
 | 基础抵押金额   | basic_mortgage_amount   | uint64_t stake_amount   | 整型   | 基础抵押金额    | 
 | 数据收集持续时间   | Data Collection Duration   | uint64_t duration   | 整型   | 数据收集持续时间（从第一个数据提供者注入数据算起，多久后不再接受同一project_id ^update_number 的数据）duration   | 
-| 数据提供者下限   | Data Provider min Limit   | uint64_t provider_limit   | 整型   | 数据提供者下限（大于3） data_provider_min_number    | 
+| 数据提供者下限   | Data Provider Limit   | uint64_t provider_limit   | 整型   | 数据提供者下限（大于3） data_provider_min_number    | 
 | 数据更新周期 | Data Update Cycle   | uint64_t update_cycle   | 整型   | 数据更新周期   | 
 | 数据更新开始时间 | Data update start time    | uint64_t update_start_time   | 整型   | 数据更新开始时间   | 
 
-  ${!cleos} push action ${contract_oracle} requestdata '{"service_id":0,  "contract_account":"'${contract_consumer}'", "action_name":"receivejson",
-                         "requester":"'${consumer1111}'", "request_content":"eth usd"}' -p ${consumer1111}@active
+
+```
+  ${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"'${provider1111}'", "stake_amount":"10.0000 EOS", "service_price":"1.0000 EOS",
+                          "fee_type":1, "data_format":"", "data_type":0, "criteria":"",
+                          "acceptance":0, "declaration":"", "injection_method":0, "duration":1,
+                          "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${provider1111}@active
+```
 
 
 2. 注销数据服务接口

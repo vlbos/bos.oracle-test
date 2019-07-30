@@ -50,6 +50,9 @@ consumer_transfer5() {
     
 }
 
+service_duration=200
+update_cycle=300
+
 test_reg_service5() {
     echo ==reg 5
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
@@ -203,6 +206,7 @@ get_account() {
     # echo && echo --- cleos2 ---  $1
     # $cleos2 get account  $1
 }
+
 test_get_account() {
     get_account "$1"
     # get_account oraclize1111

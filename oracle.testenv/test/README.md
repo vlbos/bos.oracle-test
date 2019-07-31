@@ -1,6 +1,6 @@
 
 
-######1. 部署合约
+###### 1. 部署合约
 
 ```
 - test_set_contracts
@@ -19,7 +19,7 @@ contract_consumer_folder=bos.dappuser
   
 ```
 
-#####2. 注册服务
+##### 2. 注册服务
 
 ```
 test_reg_service
@@ -30,7 +30,7 @@ test_reg_service
 
 ```
 
-#####3. 初始化服务如费用
+##### 3. 初始化服务如费用
 
 ```
 test_fee
@@ -39,7 +39,7 @@ test_fee
 
 ```
 
-#####4.抵押
+##### 4.抵押
 
 ```
 transfer stake
@@ -48,7 +48,7 @@ stake unstake  eosio.code
 
 ```
 
-#####5. 订阅/请求
+##### 5. 订阅/请求
 
 ```
 test_subs
@@ -63,7 +63,7 @@ test_req
 
 ```
 
-#####6. 支付服务费用
+##### 6. 支付服务费用
 
 ```
 transfer pay
@@ -71,7 +71,7 @@ transfer pay
 
 ```
 
-#####7.推送
+##### 7.推送
 
 ```
 "mpush") test_multipush c1 "$2" ;;
@@ -100,9 +100,9 @@ ${!cleos} push action ${contract_oracle} autopublish '{"service_id":1, "provider
 
 ```
 
-####风控
+#### 风控
 
-#####1. 存入金额
+##### 1. 存入金额
 
 ```
 "deposit") test_deposit c1 ;; dappuser()->dapp(data consumer) save
@@ -111,7 +111,7 @@ ${!cleos} push action ${contract_oracle} autopublish '{"service_id":1, "provider
    
 ```
 
-#####2. 提取金额 
+##### 2. 提取金额 
 
 ```
 "withdraw") test_withdraw c1 ;; dapp(data consumer) -> dappuser()
@@ -122,8 +122,8 @@ ${!cleos} push action ${contract_oracle} autopublish '{"service_id":1, "provider
 ```
 
 
-####仲裁
-#####前提条件  
+#### 仲裁
+##### 前提条件  
 注册服务
 
 1.注册仲裁员（抵押）

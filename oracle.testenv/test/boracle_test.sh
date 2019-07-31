@@ -25,6 +25,8 @@ test_publish() {
     test_subs5
     consumer_transfer5
     test_autopublish
+    test_get_table1 1 oracledata
+    test_fetchdatawithp c1 $current_update_number
 }
 
 provider_transfer5() {
@@ -39,7 +41,7 @@ provider_transfer5() {
 }
 
 consumer_transfer5() {
-    echo --- cleos1 consumer transfer  ---
+    echo --- cleos1 consumer transfer ---
     ${!cleos} set account permission ${contract_oracle} active '{"threshold": 1,"keys": [{"key": "'${oracle_c_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_oracle}@owner
 
     for i in {1..5}; do
@@ -47,19 +49,59 @@ consumer_transfer5() {
         $cleos1 transfer ${c} ${contract_oracle} "10.0001 EOS" "1,1" -p ${c}
         sleep .1
     done
-    
+
 }
 
 service_duration=200
 update_cycle=300
+
+
+current_update_number=0
+datetime1=$(date "+%s#%N")
+datetime2=$(echo $datetime1 | cut -d"#" -f1) #取出秒
+
+get_current_date() {
+    datetime1=$(date "+%s#%N")
+    datetime2=$(echo $datetime1 | cut -d"#" -f1) #取出秒
+}
+
+waitnext() {
+    get_current_date
+    i=$(($datetime2))
+    while [ $i -le $1 ]; do
+        get_current_date
+        i=$datetime2
+        sleep 10
+    done
+}
+
+get_update_number() {
+    a=$1
+    b=$2
+    if [ $a -eq 0 ]; then return 0; fi
+    if [ $b -eq 0 ]; then return 0; fi
+
+    get_current_date
+
+    current_update_number=$(($datetime2 / $a))
+    begin_time=$(($current_update_number * $a))
+    end_time=$(($begin_time + $b))
+    # if [ 0 -le  $1 ]; then return 0; fi
+    if [ $datetime2 -le $end_time ]; then return $current_update_number; fi
+    next_begin_time=$(($begin_time + $a))
+    waitnext $next_begin_time
+    get_update_number $a $b
+
+}
+
 
 test_reg_service5() {
     echo ==reg 5
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
     ${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"'${provider1111}'", "stake_amount":"10.0000 EOS", "service_price":"1.0000 EOS",
                           "fee_type":1, "data_format":"", "data_type":0, "criteria":"",
-                          "acceptance":0, "declaration":"", "injection_method":0, "duration":10,
-                          "provider_limit":3, "update_cycle":60, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${provider1111}@active
+                          "acceptance":0, "declaration":"", "injection_method":0, "duration":'${service_duration}',
+                          "provider_limit":3, "update_cycle":'${update_cycle}', "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${provider1111}@active
 
     for i in {2..5}; do
         p='provider'${i}${i}${i}${i}
@@ -90,12 +132,19 @@ test_autopublish() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
     ${!cleos} set account permission ${contract_oracle} active '{"threshold": 1,"keys": [{"key": "'${oracle_c_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_oracle}@owner
 
-    for i in {1..5}; do
-        p='provider'${i}${i}${i}${i}
-        ${!cleos} push action ${contract_oracle} autopublish '{"service_id":1, "provider":"'${p}'", 
+    get_update_number $update_cycle $service_duration
+
+    if [ $current_update_number -ne 0 ]; then
+
+        for i in {1..5}; do
+            p='provider'${i}${i}${i}${i}
+            ${!cleos} push action ${contract_oracle} autopublish '{"service_id":1, "provider":"'${p}'", "update_number":"'${un}'", 
                          "request_id":0, "data_json":"auto publish test data json"}' -p ${p}
-        sleep 2
-    done
+            sleep 2
+        done
+    else
+        echo current update number equal zero
+    fi
 }
 
 test_reg_service() {
@@ -339,10 +388,18 @@ test_get_info() {
     get_info c1
 }
 
+test_fetchdatawithp() {
+    cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
+
+    ${!cleos} push action ${contract_consumer} fetchdata '{"oracle":"'${contract_oracle}'","service_id":1, "update_number":'$2'}' -p ${contract_consumer}
+
+}
+
 test_fetchdata() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
-    ${!cleos} push action ${contract_consumer} fetchdata '{"service_id":1, "update_number":0}' -p ${contract_consumer}
+    # ${!cleos} push action ${contract_consumer} fetchdata '{"oracle":"'${contract_oracle}'","service_id":1, "update_number":'$current_update_number'}' -p ${contract_consumer}
+    ${!cleos} push action ${contract_consumer} fetchdata '{"oracle":"'${contract_oracle}'","service_id":1, "update_number":5215135}' -p ${contract_consumer}
 
 }
 

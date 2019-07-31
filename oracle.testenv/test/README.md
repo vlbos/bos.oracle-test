@@ -199,7 +199,7 @@ cleos push action $EOS_ORACLE rerespcase '["provider1111", 0, 0, 1, true]' -p co
 | 中文参数名           |   英文参数名               | 参数定义   | 参数类型   |      参数描述    | 
 | 数据服务ID    | Data Service ID   | uint64_t service_id   | 整型   |  注册id：int 从1开始自增，用于表示一类预言机服务   | 
 | 服务价格   | Service Price   | uint64_t service_price   | 整型   |    | 
-| 费用类型   |  Fee Type    | uint64_t fee_type   | 整型   |  按次，月   | 
+| 费用类型   |  Fee Type    | uint64_t fee_type   | 整型   |  按0-次，1-月   | 
 | 数据格式   | data_format   | std::string data_format   | 字符串   |  data_format：提前约定数据展现形式，比如：Jianeng2Hongyang:100   | 
 | 数据类型   | Data Type   | uint64_t data_type   | 整型   | (确定性/非确定性) type：是指数据提者提供的数据是否允许差异   | 
 | 准则   | criteria   | std::string criteria   | 字符串   | （出现时评判准则）  备注类型   | 
@@ -207,9 +207,9 @@ cleos push action $EOS_ORACLE rerespcase '["provider1111", 0, 0, 1, true]' -p co
 | 声明    | registration_instructions   | std::string declaration   |    |    | 
 | 数据注入方式    | Data injection method    | uint64_t injection _method   | 整型   | 数据注入方式    链上直接，链接间接（over oracle），链外   | 
 | 基础抵押金额   | basic_mortgage_amount   | uint64_t stake_amount   | 整型   | 基础抵押金额    | 
-| 数据收集持续时间   | Data Collection Duration   | uint64_t duration   | 整型   | 数据收集持续时间（从第一个数据提供者注入数据算起，多久后不再接受同一project_id ^update_number 的数据）duration   | 
+| 数据收集持续时间   | Data Collection Duration   | uint64_t duration   | 整型   | 数据收集持续时间（从第一个数据提供者注入数据算起，多久后不再接受同一project_id ^update_number 的数据）duration 单位：秒   | 
 | 数据提供者下限   | Data Provider Limit   | uint64_t provider_limit   | 整型   | 数据提供者下限（大于3） data_provider_min_number    | 
-| 数据更新周期 | Data Update Cycle   | uint64_t update_cycle   | 整型   | 数据更新周期   | 
+| 数据更新周期 | Data Update Cycle   | uint64_t update_cycle   | 整型   | 数据更新周期 单位：秒  | 
 | 数据更新开始时间 | Data update start time    | uint64_t update_start_time   | 整型   | 数据更新开始时间   | 
 
 
@@ -373,7 +373,7 @@ cleos push action $EOS_ORACLE rerespcase '["provider1111", 0, 0, 1, true]' -p co
 | 中文参数名         |   英文参数名             | 参数定义 | 参数类型 |      参数描述  | 
 | 仲裁员账户 | Arbitrator Account | name account | 整型 |    | 
 | 仲裁员publickey | Arbitrator publickey | public_key pubkey   | 公钥   |    | 
-| 仲裁员类型 | Arbitrator type | uint8_t type   | 整型 |    | 
+| 仲裁员类型 | Arbitrator type | uint8_t type   | 整型 |   1 - 职业仲裁员，2 -大众仲裁员 | 
 | 仲裁员抵押金额 | Arbitrator Mortgage Amount | asset stake_amount   | 整型 |    | 
 | 仲裁员公示信息 | Arbitrator Public Information  | std::string public_info   | 字符串 |    | 
 

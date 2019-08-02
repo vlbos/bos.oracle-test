@@ -3,6 +3,8 @@
 ###### 1. 部署合约
 
 ```
+./boracle_test.sh set
+
 - test_set_contracts
 - oracle.bos
 - dappuser.bos
@@ -130,6 +132,8 @@ ${!cleos} push action ${contract_oracle} autopublish '{"service_id":1, "provider
 专业，大众
 
 ```
+./boracle_test.sh arbi rega
+
 cleos push action $EOS_ORACLE regarbitrat '["arbitrator11", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 EOS", "hello world"]' -p arbitrator11@active
 
  $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "3,0" -p ${consumer2222}
@@ -138,13 +142,13 @@ cleos push action $EOS_ORACLE regarbitrat '["arbitrator11", "EOS7UCx8GSeEHC4XE8j
 2.申诉（抵押）仲裁开始
 
 ```
-cleos push action $EOS_ORACLE complain '["complain1", 0, "1.0000 EOS", "complain1", 1]' -p complain1@active
+cleos push action $EOS_ORACLE complain '["complainant1", 0, "1.0000 EOS", "complainant1", 1]' -p complainant1@active
 ```
 
 3.上传证据
 
 ```  
-cleos push action $EOS_ORACLE uploadeviden '["complain1", 0, "evidence"]' - p complain1 @active
+cleos push action $EOS_ORACLE uploadeviden '["complainant1", 0, "evidence"]' - p complainant1 @active
 ```
 
 3.应诉（抵押）
@@ -169,13 +173,13 @@ cleos push action $EOS_ORACLE uploadresult '["arbitrator12", 0, 1, 0]' -p arbitr
 6.再申诉（抵押）
 
 ```
-cleos push action $EOS_ORACLE reappeal '["complain1", 0, 0, 1, 1, false, "1.0000 EOS", 1, "数据使用者不服, 再次申诉"]' -p complain1@active
+cleos push action $EOS_ORACLE reappeal '["complainant1", 0, 0, 1, 1, false, "1.0000 EOS", 1, "数据使用者不服, 再次申诉"]' -p complainant1@active
 ```
 
 7.再应诉（抵押）
 
 ```
-cleos push action $EOS_ORACLE rerespcase '["provider1111", 0, 0, 1, true]' -p complain1@active
+cleos push action $EOS_ORACLE rerespcase '["provider1111", 0, 0, 1, true]' -p complainant1@active
 ```
 
 

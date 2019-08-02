@@ -18,17 +18,20 @@ create_wallet(){
 }
 create_wallet
 
+import_key(){
+    cleos wallet import --private-key $1
+}
+
 new_keys(){
     str=`cleos create key --to-console`
     pri_key=`echo $str | cut -d' ' -f 3`
     pub_key=`echo $str | cut -d' ' -f 6`
+    import_key $pri_key
     echo 'prikey='$pri_key  >> ./keys.txt
     echo 'pubkey='$pub_key  >> ./keys.txt
 }
 
-import_key(){
-    cleos wallet import --private-key $1
-}
+
 
 list_pri_key()
 {

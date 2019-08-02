@@ -85,7 +85,7 @@ create_arbi_test_account()
 {
 
 ACCOUNTS=(
-    "complain1" "complain2" "complain3"  "arbitrator11" "arbitrator12" "arbitrator13" "arbitrator14" "arbitrator15"
+    "complainant1" "complainant2" "complainant3"  "arbitrator11" "arbitrator12" "arbitrator13" "arbitrator14" "arbitrator15"
 )
 for account in ${ACCOUNTS[*]}
 do
@@ -95,3 +95,5 @@ do
 done
 
 }
+
+create_arbi_test_account

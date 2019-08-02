@@ -4,7 +4,7 @@ base_dir=/Users/lisheng/mygit
 
 # nodeos_repo_dir=${base_dir}/eos/eos
 # nodeos_repo_dir=${base_dir}/amybos/bos
-nodeos_repo_dir=${base_dir}/eosio/eos
+nodeos_repo_dir=${base_dir}/boscore/bos
 
 build=build
 #build=cmake-build-debug

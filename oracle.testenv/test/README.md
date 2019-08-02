@@ -23,7 +23,7 @@ contract_consumer_folder=bos.dappuser
 
 ```
 test_reg_service
- ${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"'${provider1111}'", "stake_amount":"10.0000 EOS", "service_price":"1.0000 EOS",
+ ${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"'${provider1111}'", "amount":"10.0000 EOS", "service_price":"1.0000 EOS",
                           "fee_type":1, "data_format":"", "data_type":0, "criteria":"",
                           "acceptance":0, "declaration":"", "injection_method":0, "duration":1,
                           "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${provider1111}@active
@@ -206,7 +206,7 @@ cleos push action $EOS_ORACLE rerespcase '["provider1111", 0, 0, 1, true]' -p co
 | 接受方式     | accept_mode     | uint64_t  acceptance   | 整型   |  数据接受规则  比例/人数   | 
 | 声明    | registration_instructions   | std::string declaration   |    |    | 
 | 数据注入方式    | Data injection method    | uint64_t injection _method   | 整型   | 数据注入方式    链上直接，链接间接（over oracle），链外   | 
-| 基础抵押金额   | basic_mortgage_amount   | uint64_t stake_amount   | 整型   | 基础抵押金额    | 
+| 基础抵押金额   | basic_mortgage_amount   | uint64_t amount   | 整型   | 基础抵押金额    | 
 | 数据收集持续时间   | Data Collection Duration   | uint64_t duration   | 整型   | 数据收集持续时间（从第一个数据提供者注入数据算起，多久后不再接受同一project_id ^update_number 的数据）duration 单位：秒   | 
 | 数据提供者下限   | Data Provider Limit   | uint64_t provider_limit   | 整型   | 数据提供者下限（大于3） data_provider_min_number    | 
 | 数据更新周期 | Data Update Cycle   | uint64_t update_cycle   | 整型   | 数据更新周期 单位：秒  | 
@@ -214,7 +214,7 @@ cleos push action $EOS_ORACLE rerespcase '["provider1111", 0, 0, 1, true]' -p co
 
 
 ```
-  ${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"'${provider1111}'", "stake_amount":"10.0000 EOS", "service_price":"1.0000 EOS",
+  ${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"'${provider1111}'", "amount":"10.0000 EOS", "service_price":"1.0000 EOS",
                           "fee_type":1, "data_format":"", "data_type":0, "criteria":"",
                           "acceptance":0, "declaration":"", "injection_method":0, "duration":1,
                           "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${provider1111}@active
@@ -356,7 +356,7 @@ cleos push action $EOS_ORACLE rerespcase '["provider1111", 0, 0, 1, true]' -p co
 | 中文接口名 | 应诉接口   |    |    |    | 
 |:----|:----|:----|:----|:----|
 | 英文接口名 | response to arbitration Interface   |    |    |    | 
-| 定义接口名 | resparbitrat   |    |    |    | 
+| 定义接口名 | acceptarbi   |    |    |    | 
 | 接口功能描述 | 应诉仲裁案件   |    |    |    | 
 | 中文参数名         |   英文参数名             | 参数定义 | 参数类型 |      参数描述  | 
 | 应诉者   | arbitrator   | name arbitrator   | name   |    | 
@@ -374,7 +374,7 @@ cleos push action $EOS_ORACLE rerespcase '["provider1111", 0, 0, 1, true]' -p co
 | 仲裁员账户 | Arbitrator Account | name account | 整型 |    | 
 | 仲裁员publickey | Arbitrator publickey | public_key pubkey   | 公钥   |    | 
 | 仲裁员类型 | Arbitrator type | uint8_t type   | 整型 |   1 - 职业仲裁员，2 -大众仲裁员 | 
-| 仲裁员抵押金额 | Arbitrator Mortgage Amount | asset stake_amount   | 整型 |    | 
+| 仲裁员抵押金额 | Arbitrator Mortgage Amount | asset amount   | 整型 |    | 
 | 仲裁员公示信息 | Arbitrator Public Information  | std::string public_info   | 字符串 |    | 
 
 
@@ -440,7 +440,6 @@ cleos push action $EOS_ORACLE rerespcase '["provider1111", 0, 0, 1, true]' -p co
 | 中文参数名         |   英文参数名             | 参数定义 | 参数类型 |      参数描述  | 
 | 数据服务ID   | Data Service ID   | uint64_t service _id | 整型 |    | 
 | 发放账户   |  issuance of accounts    | name account  | 整型 |    | 
-| 发放金额   | Release Amount   | uint64_t amount    | 整型 |    | 
 
 16. 添加数据服务风险担保接口
 
@@ -476,7 +475,7 @@ cleos push action $EOS_ORACLE rerespcase '["provider1111", 0, 0, 1, true]' -p co
 ### 5.0.1. 申诉接口: complain
 初次申诉时, `arbicaseapp`表, `update_number` 更新逻辑
 答：`arbicaseapp`表, `update_number` 更新逻辑，暂时没有了。表设计时申诉考虑具体到哪条数据。上次讨论具体到服务ID。
-### 5.0.2. 应诉接口: resparbitrat
+### 5.0.2. 应诉接口: acceptarbi
 应诉接口签名参数有什么用？签名验证的内容是什么? 应诉逻辑? 修改arbicaseapp哪几个字段?
 答：签名为出现争议使用，链就行了，action验证有效格式就行了。应诉，转账抵押金额。更新arbicaseapp，arbi_step为应诉状态，触发仲裁启动。判断仲裁方式，执行仲裁流程逻辑。
 ### 5.0.3. 上传证据: uploadeviden

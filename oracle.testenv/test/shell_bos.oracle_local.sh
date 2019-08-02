@@ -46,7 +46,7 @@ cleos push action $EOS_ORACLE regarbitrat '["arbitrator15", "EOS7UCx8GSeEHC4XE8j
 cleos get table $EOS_ORACLE $EOS_ORACLE arbitrators
 
 ###=============================================== regservice, ok
-cleos push action $EOS_ORACLE regservice '{"service_id":0,  "account":"provider1111", "stake_amount":"10.0000 EOS", "service_price":"1.0000 EOS",
+cleos push action $EOS_ORACLE regservice '{"service_id":0,  "account":"provider1111", "amount":"10.0000 EOS", "service_price":"1.0000 EOS",
                           "fee_type":1, "data_format":"", "data_type":0, "criteria":"",
                           "acceptance":0, "declaration":"", "injection_method":0, "duration":1,
                           "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p provider1111@active
@@ -65,10 +65,10 @@ cleos get table $EOS_ORACLE $EOS_ORACLE arbiprocess
 ###=============================================== respcase 数据提供者应诉, ok
 cleos push action $EOS_ORACLE respcase '["provider1111", 0, 0]' -p provider1111@active
 
-###=============================================== resparbitrat 仲裁员应诉, ok
-cleos push action $EOS_ORACLE resparbitrat '["arbitrator14", "1.0000 EOS", 0, 0]' -p arbitrator14@active
-cleos push action $EOS_ORACLE resparbitrat '["arbitrator12", "1.0000 EOS", 0, 0]' -p arbitrator12@active
-cleos push action $EOS_ORACLE resparbitrat '["arbitrator13", "1.0000 EOS", 0, 0]' -p arbitrator13@active
+###=============================================== acceptarbi 仲裁员应诉, ok
+cleos push action $EOS_ORACLE acceptarbi '["arbitrator14", "1.0000 EOS", 0, 0]' -p arbitrator14@active
+cleos push action $EOS_ORACLE acceptarbi '["arbitrator12", "1.0000 EOS", 0, 0]' -p arbitrator12@active
+cleos push action $EOS_ORACLE acceptarbi '["arbitrator13", "1.0000 EOS", 0, 0]' -p arbitrator13@active
 
 ###=============================================== uploadeviden, 申诉者上传证据, ok
 cleos push action $EOS_ORACLE uploadeviden '["complain1", 0, "evidence"]' -p complain1@active
@@ -84,12 +84,12 @@ cleos push action $EOS_ORACLE reappeal '["provider1111", 0, 0, 1, 0, true, "1.00
 ###=============================================== rerespcase, 数据使用者再次应诉, ok
 cleos push action $EOS_ORACLE rerespcase '["complain1", 0, 0, 0, false]' -p complain1@active
 
-###=============================================== resparbitrat 仲裁员应诉, ok
-cleos push action $EOS_ORACLE resparbitrat '["arbitrator11", "1.0000 EOS", 0, 1]' -p arbitrator11@active
-cleos push action $EOS_ORACLE resparbitrat '["arbitrator12", "1.0000 EOS", 0, 1]' -p arbitrator12@active
-cleos push action $EOS_ORACLE resparbitrat '["arbitrator13", "1.0000 EOS", 0, 1]' -p arbitrator13@active
-cleos push action $EOS_ORACLE resparbitrat '["arbitrator14", "1.0000 EOS", 0, 1]' -p arbitrator14@active
-cleos push action $EOS_ORACLE resparbitrat '["arbitrator15", "1.0000 EOS", 0, 1]' -p arbitrator15@active
+###=============================================== acceptarbi 仲裁员应诉, ok
+cleos push action $EOS_ORACLE acceptarbi '["arbitrator11", "1.0000 EOS", 0, 1]' -p arbitrator11@active
+cleos push action $EOS_ORACLE acceptarbi '["arbitrator12", "1.0000 EOS", 0, 1]' -p arbitrator12@active
+cleos push action $EOS_ORACLE acceptarbi '["arbitrator13", "1.0000 EOS", 0, 1]' -p arbitrator13@active
+cleos push action $EOS_ORACLE acceptarbi '["arbitrator14", "1.0000 EOS", 0, 1]' -p arbitrator14@active
+cleos push action $EOS_ORACLE acceptarbi '["arbitrator15", "1.0000 EOS", 0, 1]' -p arbitrator15@active
 ###=============================================== uploadeviden, 申诉者上传证据, ok
 cleos push action $EOS_ORACLE uploadeviden '["provider1111", 1, "provider1111 evidence"]' -p provider1111@active
 ###=============================================== uploadresult 仲裁员上传仲裁结果, ok

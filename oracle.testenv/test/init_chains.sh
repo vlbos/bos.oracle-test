@@ -81,3 +81,17 @@ create_account_by_pub_key c1 ${consumer5555} ${consumer5555_pubkey}
 
 
 
+create_arbi_test_account()
+{
+
+ACCOUNTS=(
+    "complain1" "complain2" "complain3"  "arbitrator11" "arbitrator12" "arbitrator13" "arbitrator14" "arbitrator15"
+)
+for account in ${ACCOUNTS[*]}
+do
+    echo -e "\n creating $account \n"; 
+    new_account c1 ${account}; 
+    sleep 1; 
+done
+
+}

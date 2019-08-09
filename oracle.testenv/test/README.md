@@ -183,6 +183,80 @@ cleos push action $EOS_ORACLE rerespcase '["provider1111", 0, 0, 1, true]' -p co
 ```
 
 
+transfer memo format type
+```
+enum transfer_category : 
+tc_service_stake , 
+tc_pay_service,tc_deposit,
+tc_arbitration_stake_complain,
+tc_arbitration_stake_arbitrator,
+tc_arbitration_stake_resp_case,
+ts_arbitration_stake_reappeal,
+tc_arbitration_stake_reresp_case,
+tc_risk_guarantee};
+
+
+transfer0() {
+    echo --- providers before transfer ---
+    test_get_table providers
+    echo --- svcprovision before transfer ---
+    test_get_table1 0 svcprovision
+    echo --- servicestake before transfer ---
+    test_get_table servicestake
+    echo --- cleos1 transfer service stake---
+    $cleos1 transfer ${provider1111} ${contract_oracle} "0.0001 EOS" "0,0" -p ${provider1111}
+    echo --- providers after transfer ---
+    test_get_table providers
+    echo --- svcprovision after transfer ---
+    test_get_table1 0 svcprovision
+    echo --- servicestake after transfer ---
+    test_get_table servicestake
+}
+
+transfer1() {
+    echo --- cleos1 subscription before transfer ---
+    test_get_table1 0 subscription
+    echo --- cleos1 pay service before transfer ---
+    $cleos1 transfer ${contract_consumer} ${contract_oracle} "0.0001 EOS" "1,0" -p ${contract_consumer}
+    echo --- cleos1 subscription after transfer ---
+    test_get_table1 0 subscription
+}
+
+transfer2() {
+    echo --- riskaccounts before transfer 2---
+    test_get_table1 consumer1111 riskaccounts
+    echo --- deposit transfer 2---
+    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "2,consumer2222,consumer1111,0" -p ${consumer2222}
+    echo --- riskaccounts after transfer 2---
+    test_get_table1 consumer1111 riskaccounts
+}
+
+# // enum class memo_index : uint8_t { index_category,index_id ,index_count};
+# // enum class memo_index_deposit : uint8_t { deposit_category,deposit_from ,deposit_to,deposit_notify , index_count};
+# // enum class memo_index_complain : uint8_t { complain_category,index_id ,index_evidence,index_info,index_reason,index_count};
+# // enum class memo_index_arbitrator : uint8_t { arbitrator_category,index_type ,index_count};
+# // enum class memo_index_resp_case : uint8_t { resp_case_category,index_id ,index_round,index_evidence,index_count};
+# // enum class memo_index_reappeal : uint8_t { reappeal_category,index_id ,index_round,index_evidence,index_provider,index_reason,index_arbi_id ,index_count};
+# // enum class memo_index_reresp_case : uint8_t { reresp_case_category,index_id ,index_round,index_evidence,index_provider,index_count};
+# // enum class memo_index_risk_guarantee : uint8_t { risk_guarantee_category,index_id ,index_duration,index_count};
+
+transfer3() {
+    echo --- cleos1 transfer 3---
+
+    #complain
+    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "3,1,'','','reason'" -p ${consumer2222}
+    #arbitrator
+    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "4,1" -p ${consumer2222}
+    #resp_case
+    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "5,0,1" -p ${consumer2222}
+    #reappeal
+    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "6,1,2,0,'reason',0" -p ${consumer2222}
+    #reresp_case
+    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "7,0,2" -p ${consumer2222}
+
+}
+
+```
 
 
 # 1. 部署合约 

@@ -323,16 +323,12 @@ transfer2() {
 
 # // enum class memo_index : uint8_t { index_category,index_id ,index_count};
 # // enum class memo_index_deposit : uint8_t { deposit_category,deposit_from ,deposit_to,deposit_notify , index_count};
-# // enum class memo_index_complain : uint8_t { complain_category,index_id ,index_key,index_info,index_reason,index_count};
+# // enum class memo_index_complain : uint8_t { complain_category,index_id ,index_evidence,index_info,index_reason,index_count};
 # // enum class memo_index_arbitrator : uint8_t { arbitrator_category,index_type ,index_count};
-# // enum class memo_index_resp_case : uint8_t { resp_case_category,index_id ,index_round,index_count};
-# // enum class memo_index_reappeal : uint8_t { reappeal_category,index_id ,index_round,index_provider,index_reason,index_arbi_id ,index_count};
-# // enum class memo_index_reresp_case : uint8_t { reresp_case_category,index_id ,index_round,index_provider,index_count};
-    # void _regarbitrat( name account, public_key pubkey, uint8_t type, asset amount, std::string public_info );
-    # void _complain( name applicant, uint64_t service_id, asset amount, std::string reason, uint8_t arbi_method );
-    # void _respcase( name respondent, uint64_t arbitration_id,asset amount, uint64_t process_id );
-    # void _reappeal( name applicant, uint64_t arbitration_id, uint64_t service_id, uint64_t process_id, bool is_provider, asset amount, std::string reason );
-    # void _rerespcase( name respondent, uint64_t arbitration_id, asset amount,uint64_t process_id);
+# // enum class memo_index_resp_case : uint8_t { resp_case_category,index_id ,index_round,index_evidence,index_count};
+# // enum class memo_index_reappeal : uint8_t { reappeal_category,index_id ,index_round,index_evidence,index_provider,index_reason,index_arbi_id ,index_count};
+# // enum class memo_index_reresp_case : uint8_t { reresp_case_category,index_id ,index_round,index_evidence,index_provider,index_count};
+# // enum class memo_index_risk_guarantee : uint8_t { risk_guarantee_category,index_id ,index_duration,index_count};
 
 transfer3() {
     echo --- cleos1 transfer 3---

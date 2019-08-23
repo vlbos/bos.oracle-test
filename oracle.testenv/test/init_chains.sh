@@ -8,7 +8,6 @@ receiver=111111111111
 create_one c1 ${receiver}
 # create_one c2 ${receiver}
 
-
 import_key ${oraclize_c_prikey}
 
 import_key ${consumer_c_prikey}
@@ -28,8 +27,8 @@ import_key ${consumer3333_prikey}
 import_key ${consumer4444_prikey}
 import_key ${consumer5555_prikey}
 
-new_account(){
-    cleos=cleos1 && if [ "$1" == "c2" ];then cleos=cleos2 ;fi
+new_account() {
+    cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
     create_one $1 $2
 }
 
@@ -44,7 +43,6 @@ create_account_by_pub_key c1 ${contract_consumer} ${consumer_c_pubkey}
 create_account_by_pub_key c1 ${contract_oracle} ${oracle_c_pubkey}
 
 create_account_by_pub_key c1 oracleoracle ${oracleoracle_c_pubkey}
-
 
 # new_account c1 oracleoracle
 
@@ -66,8 +64,6 @@ new_account c1 ${contract_consumer_5}
 # create_account_by_pub_key c1 ibc2relay555 EOS5jLHvXsFPvUAawjc6qodxUbkBjWcU1j6GUghsNvsGPRdFV5ZWi
 # create_account_by_pub_key c2 ibc2relay555 EOS5jLHvXsFPvUAawjc6qodxUbkBjWcU1j6GUghsNvsGPRdFV5ZWi
 
-
-
 create_account_by_pub_key c1 ${provider1111} ${provider1111_pubkey}
 create_account_by_pub_key c1 ${provider2222} ${provider2222_pubkey}
 create_account_by_pub_key c1 ${provider3333} ${provider3333_pubkey}
@@ -79,20 +75,21 @@ create_account_by_pub_key c1 ${consumer3333} ${consumer3333_pubkey}
 create_account_by_pub_key c1 ${consumer4444} ${consumer4444_pubkey}
 create_account_by_pub_key c1 ${consumer5555} ${consumer5555_pubkey}
 
+create_arbi_test_account() {
 
-
-create_arbi_test_account()
-{
-
-ACCOUNTS=(
-    "complainant1" "complainant2" "complainant3"  "arbitrator11" "arbitrator12" "arbitrator13" "arbitrator14" "arbitrator15"
-)
-for account in ${ACCOUNTS[*]}
-do
-    echo -e "\n creating $account \n"; 
-    new_account c1 ${account}; 
-    sleep 1; 
-done
+    ACCOUNTS=(
+        "appeallant" "arbitrator"
+    )
+    for a in ${ACCOUNTS[*]}; do
+        for i in {1..5}; do
+            for j in {1..5}; do
+                account=${a}${i}${j}
+                echo -e "\n creating $account \n"
+                new_account c1 ${account}
+                sleep 1
+            done
+        done
+    done
 
 }
 

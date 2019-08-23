@@ -29,8 +29,7 @@ contract_consumer_folder=bos.dappuser
 
 ```
 test_reg_service
- ${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"'${provider1111}'", "amount":"10.0000 EOS", "service_price":"1.0000 EOS",
-                          "fee_type":1, "data_format":"", "data_type":0, "criteria":"",
+ ${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"'${provider1111}'", "amount":"10.0000 EOS","data_format":"", "data_type":0, "criteria":"",
                           "acceptance":0, "declaration":"", "injection_method":0, "duration":1,
                           "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${provider1111}@active
 
@@ -59,12 +58,12 @@ stake unstake  eosio.code
 ```
 test_subs
   ${!cleos} push action ${contract_oracle} subscribe '{"service_id":"0", 
-    "contract_account":"'${contract_consumer}'", "action_name":"receivejson", "publickey":"",
+    "contract_account":"'${contract_consumer}'",  "publickey":"",
                           "account":"'${consumer1111}'", "amount":"10.0000 EOS", "memo":""}' -p ${consumer1111}@active
 }
 test_req
 
-  ${!cleos} push action ${contract_oracle} requestdata '{"service_id":0,  "contract_account":"'${contract_consumer}'", "action_name":"receivejson",
+  ${!cleos} push action ${contract_oracle} requestdata '{"service_id":0,  "contract_account":"'${contract_consumer}'", 
                          "requester":"'${consumer1111}'", "request_content":"eth usd"}' -p ${consumer1111}@active
 
 ```
@@ -92,16 +91,16 @@ transfer pay
 "push") test_push c1 ;;
 
 
-    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"'${provider1111}'", "contract_account":"'${contract_consumer}'", "action_name":"receivejson",
+    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"'${provider1111}'", "contract_account":"'${contract_consumer}'", 
                          "request_id":0, "data_json":"test data json"}' -p ${provider1111}
 
 "pushr") test_pushforreq c1 "$2" ;;
 
-    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"'${provider1111}'", "contract_account":"'${contract_consumer}'", "action_name":"receivejson",
+    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"'${provider1111}'", "contract_account":"'${contract_consumer}'", 
                          "request_id":'"$2"', "data_json":"test data json"}' -p ${provider1111}
 
 
-${!cleos} push action ${contract_oracle} autopublish '{"service_id":1, "provider":"'${p}'", 
+${!cleos} push action ${contract_oracle} oraclepush '{"service_id":1, "provider":"'${p}'", 
                          "request_id":0, "data_json":"auto publish test data json"}' -p ${p}
 
 ```
@@ -146,13 +145,13 @@ cleos push action $EOS_ORACLE regarbitrat '["arbitrator11", "EOS7UCx8GSeEHC4XE8j
 2.申诉（抵押）仲裁开始
 
 ```
-cleos push action $EOS_ORACLE complain '["complainant1", 0, "1.0000 EOS", "complainant1", 1]' -p complainant1@active
+cleos push action $EOS_ORACLE appeal '["appeallant1", 0, "1.0000 EOS", "appeallant1", 1]' -p appeallant1@active
 ```
 
 3.上传证据
 
 ```  
-cleos push action $EOS_ORACLE uploadeviden '["complainant1", 0, "evidence"]' - p complainant1 @active
+cleos push action $EOS_ORACLE uploadeviden '["appeallant1", 0, "evidence"]' - p appeallant1 @active
 ```
 
 3.应诉（抵押）
@@ -170,20 +169,20 @@ cleos push action $EOS_ORACLE respcase '["provider1111", 0, 0]' -p provider1111@
 5.上仲裁结果
 
 ```
-cleos push action $EOS_ORACLE uploadresult '["arbitrator12", 0, 1, 0]' -p arbitrator12@active
+cleos push action $EOS_ORACLE uploadresult '["arbitrator12", 0, 1, 0,""]' -p arbitrator12@active
 当前仲裁结果得出   通知transfer memo 再申诉等待
 ```
 
 6.再申诉（抵押）
 
 ```
-cleos push action $EOS_ORACLE reappeal '["complainant1", 0, 0, 1, 1, false, "1.0000 EOS", 1, "数据使用者不服, 再次申诉"]' -p complainant1@active
+cleos push action $EOS_ORACLE reappeal '["appeallant1", 0, 0, 1, 1, false, "1.0000 EOS", 1, "数据使用者不服, 再次申诉"]' -p appeallant1@active
 ```
 
 7.再应诉（抵押）
 
 ```
-cleos push action $EOS_ORACLE rerespcase '["provider1111", 0, 0, 1, true]' -p complainant1@active
+cleos push action $EOS_ORACLE rerespcase '["provider1111", 0, 0, 1, true]' -p appeallant1@active
 ```
 
 
@@ -198,7 +197,7 @@ enum transfer_category :
 tc_service_stake  , 
 tc_pay_service,
 tc_deposit,
-tc_arbitration_stake_complain,
+tc_arbitration_stake_appeal,
 tc_arbitration_stake_arbitrator,
 tc_arbitration_stake_resp_case,
 ts_arbitration_stake_reappeal,
@@ -215,7 +214,7 @@ tc_risk_guarantee};
 
 申诉
 '类型=3，服务id，公示信息，证据，申诉原因'
-# // enum class memo_index_complain : uint8_t { complain_category,index_id ,index_info,index_evidence,index_reason,index_count};
+# // enum class memo_index_appeal : uint8_t { appeal_category,index_id ,index_info,index_evidence,index_reason,index_count};
 注册仲裁员
 '类型=4，仲裁员类型'
 # // enum class memo_index_arbitrator : uint8_t { arbitrator_category,index_type ,index_count};
@@ -228,11 +227,11 @@ tc_risk_guarantee};
 '类型=6，服务id，仲裁轮次，证据，是否是数据提供者，申诉原因，仲裁id'
 # // enum class memo_index_reappeal : uint8_t { reappeal_category,index_id ,index_round,index_evidence,index_provider,index_reason,index_arbi_id ,index_count};
 再应诉
-'类型=6，服务id，仲裁轮次，证据，是否是数据提供者'
+'类型=7，服务id，仲裁轮次，证据，是否是数据提供者'
 # // enum class memo_index_reresp_case : uint8_t { reresp_case_category,index_id ,index_round,index_evidence,index_provider,index_count};
 
 添加风险担保金
-'类型=6，服务id，有效时长'
+'类型=8，服务id，有效时长'
 # // enum class memo_index_risk_guarantee : uint8_t { risk_guarantee_category,index_id ,index_duration,index_count};
 
 transfer0() {
@@ -272,7 +271,7 @@ transfer2() {
 
 # // enum class memo_index : uint8_t { index_category,index_id ,index_count};
 # // enum class memo_index_deposit : uint8_t { deposit_category,deposit_from ,deposit_to,deposit_notify , index_count};
-# // enum class memo_index_complain : uint8_t { complain_category,index_id ,index_evidence,index_info,index_reason,index_count};
+# // enum class memo_index_appeal : uint8_t { appeal_category,index_id ,index_evidence,index_info,index_reason,index_count};
 # // enum class memo_index_arbitrator : uint8_t { arbitrator_category,index_type ,index_count};
 # // enum class memo_index_resp_case : uint8_t { resp_case_category,index_id ,index_round,index_evidence,index_count};
 # // enum class memo_index_reappeal : uint8_t { reappeal_category,index_id ,index_round,index_evidence,index_provider,index_reason,index_arbi_id ,index_count};
@@ -282,7 +281,7 @@ transfer2() {
 transfer3() {
     echo --- cleos1 transfer 3---
 
-    #complain
+    #appeal
     $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "3,1,'','','reason'" -p ${consumer2222}
     #arbitrator
     $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "4,1" -p ${consumer2222}
@@ -315,24 +314,21 @@ transfer3() {
 | 接口功能描述   | 注册oracle数据服务   |    |    |    | 
 | 中文参数名           |   英文参数名               | 参数定义   | 参数类型   |      参数描述    | 
 | 数据服务ID    | Data Service ID   | uint64_t service_id   | 整型   |  注册id：int 从1开始自增，用于表示一类预言机服务   | 
-| 服务价格   | Service Price   | uint64_t service_price   | 整型   |    | 
-| 费用类型   |  Fee Type    | uint64_t fee_type   | 整型   |  按0-次，1-月   | 
 | 数据格式   | data_format   | std::string data_format   | 字符串   |  data_format：提前约定数据展现形式，比如：Jianeng2Hongyang:100   | 
-| 数据类型   | Data Type   | uint64_t data_type   | 整型   | (确定性/非确定性) type：是指数据提者提供的数据是否允许差异   | 
+| 数据类型   | Data Type   | uint8_t data_type   | 整型   | (确定性/非确定性) type：是指数据提者提供的数据是否允许差异   | 
 | 准则   | criteria   | std::string criteria   | 字符串   | （出现时评判准则）  备注类型   | 
 | 接受方式     | accept_mode     | uint64_t  acceptance   | 整型   |  数据接受规则  比例/人数   | 
 | 声明    | registration_instructions   | std::string declaration   |    |    | 
 | 数据注入方式    | Data injection method    | uint64_t injection _method   | 整型   | 数据注入方式    链上直接，链接间接（over oracle），链外   | 
 | 基础抵押金额   | basic_mortgage_amount   | uint64_t amount   | 整型   | 基础抵押金额    | 
-| 数据收集持续时间   | Data Collection Duration   | uint64_t duration   | 整型   | 数据收集持续时间（从第一个数据提供者注入数据算起，多久后不再接受同一project_id ^update_number 的数据）duration 单位：秒   | 
-| 数据提供者下限   | Data Provider Limit   | uint64_t provider_limit   | 整型   | 数据提供者下限（大于3） data_provider_min_number    | 
-| 数据更新周期 | Data Update Cycle   | uint64_t update_cycle   | 整型   | 数据更新周期 单位：秒  | 
+| 数据收集持续时间   | Data Collection Duration   | uint32_t duration   | 整型   | 数据收集持续时间（从第一个数据提供者注入数据算起，多久后不再接受同一project_id ^update_number 的数据）duration 单位：秒   | 
+| 数据提供者下限   | Data Provider Limit   | uint8_t provider_limit   | 整型   | 数据提供者下限（大于3） data_provider_min_number    | 
+| 数据更新周期 | Data Update Cycle   | uint32_t update_cycle   | 整型   | 数据更新周期 单位：秒  | 
 | 数据更新开始时间 | Data update start time    | uint64_t update_start_time   | 整型   | 数据更新开始时间   | 
 
 
 ```
-  ${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"'${provider1111}'", "amount":"10.0000 EOS", "service_price":"1.0000 EOS",
-                          "fee_type":1, "data_format":"", "data_type":0, "criteria":"",
+  ${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"'${provider1111}'", "amount":"10.0000 EOS",  "data_format":"", "data_type":0, "criteria":"",
                           "acceptance":0, "declaration":"", "injection_method":0, "duration":1,
                           "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${provider1111}@active
 ```
@@ -390,12 +386,11 @@ transfer3() {
 | 数据服务ID    | Data Service ID   | uint64_t service _id | 整型 |    | 
 | 接收数据合约账户   | Receive Data Contract Account   | name contract_account | 整型 |    | 
 | 接收数据acion名称   | Receive data acion name   | name action_name  | 整型   |    | 
-| 数据使用者publickey | Data User publickey  | std::string publickey | 字符串 |    | 
 | 转账账户   | Transfer account   | uint64_t account | 整型 |    | 
 | 充值金额   | deposit amount   | uint64_t amount | 整型 |    | 
 
     ${!cleos} push action ${contract_oracle} subscribe '{"service_id":"0", 
-    "contract_account":"'${contract_consumer}'", "action_name":"receivejson", "publickey":"",
+    "contract_account":"'${contract_consumer}'", 
                           "account":"'${consumer1111}'", "amount":"10.0000 EOS", "memo":""}' -p ${consumer1111}@active
 
 6. 请求服务数据接口
@@ -412,7 +407,7 @@ transfer3() {
 | 请求内容   | Request Content    | uint64_t request_content | 字符串 |   定义规则   | 
 
 
-    ${!cleos} push action ${contract_oracle} requestdata '{"service_id":0,  "contract_account":"'${contract_consumer}'", "action_name":"receivejson",
+    ${!cleos} push action ${contract_oracle} requestdata '{"service_id":0,  "contract_account":"'${contract_consumer}'", 
                          "requester":"'${consumer1111}'", "request_content":"eth usd"}' -p ${consumer1111}@active
 
 
@@ -430,7 +425,7 @@ transfer3() {
 | 数据提供者签名    | Data Provider Signature    | uint64_t provider _signature  | 字符串 |    | 
 | 数据服务请求ID | Data Service Request ID  | uint64_t request_id | 整型 |    | 
 
-  ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"'${provider1111}'", "contract_account":"'${contract_consumer}'", "action_name":"receivejson",
+  ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"'${provider1111}'", "contract_account":"'${contract_consumer}'", 
                          "request_id":'"$2"', "data_json":"test data json"}' -p ${provider1111}
 
   # ${!cleos}  set account permission ${provider1111}  active '{"threshold": 1,"keys": [{"key": "'${provider1111_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${provider1111}@owner
@@ -457,10 +452,10 @@ transfer3() {
 | 中文接口名 | 申诉接口 |    |    |    | 
 |:----:|:----|:----|:----|:----|
 | 英文接口名 | Complain Interface   |    |    |    | 
-| 定义接口名 | complain   |    |    |    | 
+| 定义接口名 | appeal   |    |    |    | 
 | 接口功能描述 | 定义数据服务使用者对提供数据质疑时提出申诉接口   |    |    |    | 
 | 中文参数名         |   英文参数名             | 参数定义 | 参数类型 |      参数描述  | 
-| 申诉者签名   | Appellant   | name applicant   | 整型 |    | 
+| 申诉者签名   | Appellant   | name appeallant   | 整型 |    | 
 | 数据服务ID | Data Service ID   | uint64_t service_id  | 整型 |    | 
 | 申诉抵押金额   | stake amount   | asset amount   | 整型 |    | 
 | 申诉原因 | Reason for appeal   | std::string reason   | 字符串   |    | 
@@ -478,7 +473,6 @@ transfer3() {
 | 中文参数名         |   英文参数名             | 参数定义 | 参数类型 |      参数描述  | 
 | 应诉者   | arbitrator   | name arbitrator   | name   |    | 
 | 仲裁项ID  | Arbitration ID  | uint64_t arbitration_id | 整型 |    | 
-| 应诉者签名 | signature | signature sig | 整型 |    | 
 
 10. 注册仲裁员接口   
 
@@ -505,8 +499,8 @@ transfer3() {
 | 中文参数名         |   英文参数名             | 参数定义 | 参数类型 |      参数描述  | 
 | 仲裁员 |  Arbitrator Name   | name arbitrator   | name   |    | 
 | 仲裁项ID | Arbitration ID | uint64_t arbitrate_id   | 整型 |    | 
-| 仲裁结果 | Arbitration Results  | uint64_t result | 整型 |    | 
-| 仲裁轮次 | Arbitration Process Record ID | uint64_t process_id | 整型 |    | 
+| 仲裁结果 | Arbitration Results  | uint8_t result | 整型 |    | 
+| 仲裁轮次 | Arbitration Process Record ID | uint8_t round | 整型 |    | 
 
 12. 上传仲裁结果接口  
 
@@ -518,8 +512,8 @@ transfer3() {
 | 中文参数名         |   英文参数名             | 参数定义 | 参数类型 |      参数描述  | 
 | 仲裁员名称   |  Arbitrator Name   | name  arbitrator   | 整型 |    | 
 | 仲裁项ID   | Arbitration ID   | uint64_t arbitration_id   | 整型 |    | 
-| 仲裁结果   | Arbitration Results    | uint64_t result | 整型 |    | 
-| 仲裁轮次   | Arbitration Process Record ID   | uint64_t process_id | 整型 |    | 
+| 仲裁结果   | Arbitration Results    | uint8_t result | 整型 |    | 
+| 仲裁轮次   | Arbitration Process Record ID   | uint8_t round | 整型 |    | 
 
 # 4.  
 13. 上传证据接口
@@ -530,7 +524,6 @@ transfer3() {
 | 定义接口名 | uploadeviden   |    |    |    | 
 | 接口功能描述 | 上传仲裁案件相关证据   |    |    |    | 
 | 中文参数名         |   英文参数名             | 参数定义 | 参数类型 |      参数描述  | 
-| 上传者签名   | uploader signature   | signature sig    | 整型 |    | 
 | 仲裁项ID   | Arbitration ID   | uint64_t arbitration_id | 整型 |    | 
 | 仲裁员证据    | Arbitrator Evidence   | std::string evidence  | 字符串   | 仲裁员证据  ipfs hash链接   | 
 
@@ -570,7 +563,7 @@ transfer3() {
 | 风险担保ID | Risk Guarantee ID   | uint64_t risk _id | 整型 |    | 
 | 风险担保账户 | Risk Guarantee Account   | name account | 整型 |    | 
 | 风险担保金额 |  Risk Guarantee Amount   | name amount  | 整型 |    | 
-| 风险担保时长 | Risk Guarantee Duration   | uint64_t duration | 整型 |    | 
+| 风险担保时长 | Risk Guarantee Duration   | uint32_t duration | 整型 |    | 
 | 风险担保签名 | Risk Guarantee Signature   | std::string signature | 字符串 |    | 
 
 17. 链外握手协议接口(不实现）
@@ -589,12 +582,12 @@ transfer3() {
 
 
 # 5. 疑问
-### 5.0.1. 申诉接口: complain
-初次申诉时, `arbicaseapp`表, `update_number` 更新逻辑
-答：`arbicaseapp`表, `update_number` 更新逻辑，暂时没有了。表设计时申诉考虑具体到哪条数据。上次讨论具体到服务ID。
+### 5.0.1. 申诉接口: appeal
+初次申诉时, `arbitratcase`表, `update_number` 更新逻辑
+答：`arbitratcase`表, `update_number` 更新逻辑，暂时没有了。表设计时申诉考虑具体到哪条数据。上次讨论具体到服务ID。
 ### 5.0.2. 应诉接口: acceptarbi
-应诉接口签名参数有什么用？签名验证的内容是什么? 应诉逻辑? 修改arbicaseapp哪几个字段?
-答：签名为出现争议使用，链就行了，action验证有效格式就行了。应诉，转账抵押金额。更新arbicaseapp，arbi_step为应诉状态，触发仲裁启动。判断仲裁方式，执行仲裁流程逻辑。
+应诉接口签名参数有什么用？签名验证的内容是什么? 应诉逻辑? 修改arbitratcase哪几个字段?
+答：签名为出现争议使用，链就行了，action验证有效格式就行了。应诉，转账抵押金额。更新arbitratcase，arbi_step为应诉状态，触发仲裁启动。判断仲裁方式，执行仲裁流程逻辑。
 ### 5.0.3. 上传证据: uploadeviden
 签名参数有什么用? 签名验证什么内容? 
 答：现在实现到验证签名是有效格式就行了，设计考虑如果有争议，发生抵赖或冒名等问题，保存证据。

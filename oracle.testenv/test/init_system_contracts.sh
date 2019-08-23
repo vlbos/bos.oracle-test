@@ -51,7 +51,7 @@ create_firstaccount(){
     ${!cleos} system newaccount \
          --stake-net "10000.0000 "$sym --stake-cpu "10000.0000 "$sym --buy-ram "10000.0000 "$sym \
          eosio firstaccount $pub_key $pub_key -p eosio --transfer
-    ${!cleos} transfer eosio firstaccount "1000000.0000 "$sym
+    ${!cleos} transfer eosio firstaccount "10000000.0000 "$sym
     import_key $pri_key
 }
 
@@ -63,7 +63,7 @@ create_one(){
     ${!cleos} system newaccount \
         --stake-net "1000.0000 "$sym --stake-cpu "1000.0000 "$sym --buy-ram "1000.0000 "$sym \
         firstaccount $name $pub_key $pub_key -p firstaccount
-    ${!cleos} transfer firstaccount $name "1000.0000 "$sym
+    ${!cleos} transfer firstaccount $name "20000.0000 "$sym
     import_key $pri_key
 }
 
@@ -74,7 +74,7 @@ create_account_by_pub_key(){
     ${!cleos} system newaccount \
         --stake-net "1000.0000 "$sym --stake-cpu "1000.0000 "$sym --buy-ram "1000.0000 "$sym \
         firstaccount $name $pub_key $pub_key -p firstaccount
-    ${!cleos} transfer firstaccount $name "100.0000 "$sym
+    ${!cleos} transfer firstaccount $name "20000.0000 "$sym
 }
 
 

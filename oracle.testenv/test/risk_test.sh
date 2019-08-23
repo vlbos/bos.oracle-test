@@ -147,7 +147,7 @@ test_indirectpush() {
 
 test_reg_service() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
-    ${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"'${provider1111}'","data_format":"", "data_type":0, "criteria":"",
+    ${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"'${provider1111}'", "amount":"10.0000 EOS","data_format":"", "data_type":0, "criteria":"",
                           "acceptance":0, "declaration":"", "injection_method":0, "duration":1,
                           "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${provider1111}@active
 
@@ -165,7 +165,7 @@ test_subs() {
 
     ${!cleos} push action ${contract_oracle} subscribe '{"service_id":"0", 
     "contract_account":"'${contract_consumer}'",  "publickey":"",
-                          "account":"'${consumer1111}'",  "memo":""}' -p ${consumer1111}@active
+                          "account":"'${consumer1111}'", "amount":"10.0000 EOS", "memo":""}' -p ${consumer1111}@active
 }
 
 test_push() {
@@ -293,7 +293,7 @@ test_list_pri_key() {
 
 get_oracle_table() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
-    echo $2
+    echo ==dataservices
     ${!cleos} get table ${contract_oracle} ${contract_oracle} $2 --limit 10
 
 }

@@ -187,10 +187,10 @@ eosio_test_test(){
     create_one ${a}
     cleos set contract ${a} ${CONTRACTS_DIR}/eosio.test -x 1000 -p ${a}
 
-    cleos transfer eosfirstacnt ${a}  "1.2345 EOS" -p eosfirstacnt
+    cleos transfer eosfirstacnt ${a}  "1.2345 BOS" -p eosfirstacnt
 
 
-    cleos push action ${a} transfer '["eosfirstacnt","eostest12345","1.2356 EOS","memo"]' -p eosfirstacnt
+    cleos push action ${a} transfer '["eosfirstacnt","eostest12345","1.2356 BOS","memo"]' -p eosfirstacnt
 }
 
 

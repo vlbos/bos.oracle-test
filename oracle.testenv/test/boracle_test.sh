@@ -36,7 +36,7 @@ provider_transfer5() {
 
     for i in {1..5}; do
         p='provider'${i}${i}${i}${i}
-        $cleos1 transfer ${p} ${contract_oracle} "10.0001 EOS" "0,1" -p ${p}
+        $cleos1 transfer ${p} ${contract_oracle} "10.0001 BOS" "0,1" -p ${p}
         sleep .1
     done
 }
@@ -47,7 +47,7 @@ consumer_transfer5() {
 
     for i in {1..5}; do
         c='consumercon'${i}
-        $cleos1 transfer ${c} ${contract_oracle} "10.0001 EOS" "1,1" -p ${c}
+        $cleos1 transfer ${c} ${contract_oracle} "10.0001 BOS" "1,1" -p ${c}
         sleep .1
     done
 
@@ -99,13 +99,13 @@ get_update_number() {
 test_reg_service5() {
     echo ==reg 5
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
-    ${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"'${provider1111}'", "amount":"10.0000 EOS",  "data_format":"", "data_type":0, "criteria":"",
+    ${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"'${provider1111}'", "amount":"10.0000 BOS",  "data_format":"", "data_type":0, "criteria":"",
                           "acceptance":0, "declaration":"", "injection_method":0, "duration":'${service_duration}',
                           "provider_limit":3, "update_cycle":'${update_cycle}', "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${provider1111}@active
 
     for i in {2..5}; do
         p='provider'${i}${i}${i}${i}
-        ${!cleos} push action ${contract_oracle} regservice '{"service_id":1,  "account":"'${p}'", "amount":"10.0000 EOS", "data_format":"", "data_type":0, "criteria":"",
+        ${!cleos} push action ${contract_oracle} regservice '{"service_id":1,  "account":"'${p}'", "amount":"10.0000 BOS", "data_format":"", "data_type":0, "criteria":"",
                           "acceptance":0, "declaration":"", "injection_method":0, "duration":20,
                           "provider_limit":3, "update_cycle":120, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${p}@active
 
@@ -120,7 +120,7 @@ test_subs5() {
         c='consumer'${i}${i}${i}${i}
         ${!cleos} push action ${contract_oracle} subscribe '{"service_id":"1", 
     "contract_account":"consumercon'${i}'",  "publickey":"",
-                          "account":"'${c}'", "amount":"10.0000 EOS", "memo":""}' -p ${c}@active
+                          "account":"'${c}'", "amount":"10.0000 BOS", "memo":""}' -p ${c}@active
 
         sleep .1
     done
@@ -156,7 +156,7 @@ test_reg_service() {
 test_fee() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
-    ${!cleos} push action ${contract_oracle} addfeetypes '{"service_id":"0","fee_types":[0,1],"service_prices":["1.0000 EOS","2.0000 EOS"] }' -p ${contract_oracle}@active
+    ${!cleos} push action ${contract_oracle} addfeetypes '{"service_id":"0","fee_types":[0,1],"service_prices":["1.0000 BOS","2.0000 BOS"] }' -p ${contract_oracle}@active
 
 }
 
@@ -212,14 +212,14 @@ test_deposit() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
     ${!cleos} push action ${contract_oracle} deposit '{"service_id":0,  "from":"oraclize1111", "to":"'${consumer1111}'",
-                         "quantity":"10.0000 EOS", "memo":"","is_notify":false}' -p ${contract_oracle}@active
+                         "quantity":"10.0000 BOS", "memo":"","is_notify":false}' -p ${contract_oracle}@active
 }
 
 test_withdraw() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
     ${!cleos} push action ${contract_oracle} withdraw '{"service_id":0,  "from":"'${consumer1111}'", "to":"oraclize1111",
-                         "quantity":"1.0000 EOS", "memo":""}' -p ${contract_oracle}@active
+                         "quantity":"1.0000 BOS", "memo":""}' -p ${contract_oracle}@active
 }
 
 test_() {
@@ -246,10 +246,10 @@ test_get_account() {
 
 transfer() {
     echo --- cleos1 transfer ---
-    $cleos1 transfer ${provider1111} ${contract_oracle} "0.0001 EOS" "0,0" -p ${provider1111}
-    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "1,0" -p ${consumer2222}
-    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "2,consumer2222,consumer1111,0" -p ${consumer2222}
-    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "3,0" -p ${consumer2222}
+    $cleos1 transfer ${provider1111} ${contract_oracle} "0.0001 BOS" "0,0" -p ${provider1111}
+    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "1,0" -p ${consumer2222}
+    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "2,consumer2222,consumer1111,0" -p ${consumer2222}
+    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "3,0" -p ${consumer2222}
 
     # $cleos2 transfer  testblklist1 testblklist2 "10.0000 BOS" "ibc receiver=chengsong111" -p testblklist1
     #
@@ -275,7 +275,7 @@ transfer0() {
     echo --- servicestake before transfer ---
     test_get_table servicestake
     echo --- cleos1 transfer service stake---
-    $cleos1 transfer ${provider1111} ${contract_oracle} "0.0001 EOS" "0,0" -p ${provider1111}
+    $cleos1 transfer ${provider1111} ${contract_oracle} "0.0001 BOS" "0,0" -p ${provider1111}
     echo --- providers after transfer ---
     test_get_table providers
     echo --- svcprovision after transfer ---
@@ -362,11 +362,11 @@ test_regarbitrat()
 {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 ###=============================================== regarbitrat, ok
-${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator11", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 EOS", "hello world"]' -p arbitrator11@active
-${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator12", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 EOS", "hello world"]' -p arbitrator12@active
-${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator13", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 EOS", "hello world"]' -p arbitrator13@active
-${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator14", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 EOS", "hello world"]' -p arbitrator14@active
-${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator15", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 EOS", "hello world"]' -p arbitrator15@active
+${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator11", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 BOS", "hello world"]' -p arbitrator11@active
+${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator12", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 BOS", "hello world"]' -p arbitrator12@active
+${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator13", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 BOS", "hello world"]' -p arbitrator13@active
+${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator14", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 BOS", "hello world"]' -p arbitrator14@active
+${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator15", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 BOS", "hello world"]' -p arbitrator15@active
 ${!cleos} get table ${contract_oracle} ${contract_oracle} arbitrators
 }
 
@@ -376,7 +376,7 @@ test_regs()
     ${!cleos} set account permission ${contract_oracle} active '{"threshold": 1,"keys": [{"key": "'${oracle_c_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_oracle}@owner
 
     ###=============================================== regservice, ok
-${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"provider1111", "amount":"10.0000 EOS",  "data_format":"", "data_type":0, "criteria":"",
+${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"provider1111", "amount":"10.0000 BOS",  "data_format":"", "data_type":0, "criteria":"",
                           "acceptance":0, "declaration":"", "injection_method":0, "duration":1,
                           "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p provider1111@active
 ${!cleos} get table ${contract_oracle} ${contract_oracle} dataservices
@@ -390,7 +390,7 @@ test_appeal()
 {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 ###=============================================== appeal 申诉, ok
-# ${!cleos} push action ${contract_oracle} appeal '["appeallant1", 1, "1.0000 EOS", "appeallant1", 1]' -p appeallant1@active
+# ${!cleos} push action ${contract_oracle} appeal '["appeallant1", 1, "1.0000 BOS", "appeallant1", 1]' -p appeallant1@active
 ${!cleos} get table ${contract_oracle} ${contract_oracle} appeal_request
 ${!cleos} get table ${contract_oracle} ${contract_oracle} arbitratcase
 ${!cleos} get table ${contract_oracle} ${contract_oracle} arbiprocess
@@ -400,16 +400,16 @@ test_respcase()
 {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 ###=============================================== respcase 数据提供者应诉, ok
-${!cleos} push action ${contract_oracle} respcase '["provider1111", 0, "1.0000 EOS",1]' -p provider1111@active
+${!cleos} push action ${contract_oracle} respcase '["provider1111", 0, "1.0000 BOS",1]' -p provider1111@active
 }
 
 test_acceptarbi()
 {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 ###=============================================== acceptarbi 仲裁员应诉, ok
-${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator14", "1.0000 EOS", 0, 0]' -p arbitrator14@active
-${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator12", "1.0000 EOS", 0, 0]' -p arbitrator12@active
-${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator13", "1.0000 EOS", 0, 0]' -p arbitrator13@active
+${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator14", "1.0000 BOS", 0, 0]' -p arbitrator14@active
+${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator12", "1.0000 BOS", 0, 0]' -p arbitrator12@active
+${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator13", "1.0000 BOS", 0, 0]' -p arbitrator13@active
 }
 
 test_uploadeviden()
@@ -432,7 +432,7 @@ test_reappeal()
 {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 ###=============================================== reappeal, 数据提供者再次申诉, ok
-${!cleos} push action ${contract_oracle} reappeal '["provider1111", 0, 0, 1, 0, true, "1.0000 EOS", 1, "再次申诉"]' -p provider1111@active
+${!cleos} push action ${contract_oracle} reappeal '["provider1111", 0, 0, 1, 0, true, "1.0000 BOS", 1, "再次申诉"]' -p provider1111@active
 }
 
 test_rerespcase()
@@ -446,11 +446,11 @@ test_acceptarbi2()
 {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 ###=============================================== acceptarbi 仲裁员应诉, ok
-${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator11", "1.0000 EOS", 0, 1]' -p arbitrator11@active
-${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator12", "1.0000 EOS", 0, 1]' -p arbitrator12@active
-${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator13", "1.0000 EOS", 0, 1]' -p arbitrator13@active
-${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator14", "1.0000 EOS", 0, 1]' -p arbitrator14@active
-${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator15", "1.0000 EOS", 0, 1]' -p arbitrator15@active
+${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator11", "1.0000 BOS", 0, 1]' -p arbitrator11@active
+${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator12", "1.0000 BOS", 0, 1]' -p arbitrator12@active
+${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator13", "1.0000 BOS", 0, 1]' -p arbitrator13@active
+${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator14", "1.0000 BOS", 0, 1]' -p arbitrator14@active
+${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator15", "1.0000 BOS", 0, 1]' -p arbitrator15@active
 }
 
 test_uploadeviden2()
@@ -474,7 +474,7 @@ test_reappeal2()
 {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 ###=============================================== reappeal, 数据使用者再次申诉, ok
-${!cleos} push action ${contract_oracle} reappeal '["appeallant1", 0, 0, 1, 1, false, "1.0000 EOS", 1, "数据使用者不服, 再次申诉"]' -p appeallant1@active
+${!cleos} push action ${contract_oracle} reappeal '["appeallant1", 0, 0, 1, 1, false, "1.0000 BOS", 1, "数据使用者不服, 再次申诉"]' -p appeallant1@active
 }
 
 test_rerespcase2()
@@ -489,7 +489,7 @@ transfer1() {
     echo --- cleos1 subscription before transfer ---
     test_get_table1 0 subscription
     echo --- cleos1 pay service before transfer ---
-    $cleos1 transfer ${contract_consumer} ${contract_oracle} "0.0001 EOS" "1,0" -p ${contract_consumer}
+    $cleos1 transfer ${contract_consumer} ${contract_oracle} "0.0001 BOS" "1,0" -p ${contract_consumer}
     echo --- cleos1 subscription after transfer ---
     test_get_table1 0 subscription
 }
@@ -498,7 +498,7 @@ transfer2() {
     echo --- riskaccounts before transfer 2---
     test_get_table1 consumer1111 riskaccounts
     echo --- deposit transfer 2---
-    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "2,consumer2222,consumer1111,0" -p ${consumer2222}
+    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "2,consumer2222,consumer1111,0" -p ${consumer2222}
     echo --- riskaccounts after transfer 2---
     test_get_table1 consumer1111 riskaccounts
 }
@@ -517,11 +517,11 @@ transfer3() {
     ${!cleos} set account permission ${contract_oracle} active '{"threshold": 1,"keys": [{"key": "'${oracle_c_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_oracle}@owner
 
     #appeal
-    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "3,1,'','','reason'" -p ${consumer2222}
+    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "3,1,'','','reason'" -p ${consumer2222}
     # #arbitrator
-    # $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "4,1" -p ${consumer2222}
+    # $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "4,1" -p ${consumer2222}
     # #resp_case
-    # $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "5,0,1" -p ${consumer2222}
+    # $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "5,0,1" -p ${consumer2222}
 
 }
 
@@ -533,11 +533,11 @@ transfer_appeal() {
     ${!cleos} set account permission ${contract_oracle} active '{"threshold": 1,"keys": [{"key": "'${oracle_c_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_oracle}@owner
 
     #appeal
-    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "3,1,'','','reason'" -p ${consumer2222}
+    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "3,1,'','','reason'" -p ${consumer2222}
     # #arbitrator
-    # $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "4,1" -p ${consumer2222}
+    # $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "4,1" -p ${consumer2222}
     # #resp_case
-    # $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "5,0,1" -p ${consumer2222}
+    # $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "5,0,1" -p ${consumer2222}
 }
 
 transfer_regarbi() {
@@ -547,7 +547,7 @@ transfer_regarbi() {
     ${!cleos} set account permission ${contract_oracle} active '{"threshold": 1,"keys": [{"key": "'${oracle_c_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_oracle}@owner
 
     #arbitrator
-    cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "4,1" -p ${consumer2222}
+    cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "4,1" -p ${consumer2222}
 
 }
 
@@ -558,7 +558,7 @@ transfer_respcase() {
     ${!cleos} set account permission ${contract_oracle} active '{"threshold": 1,"keys": [{"key": "'${oracle_c_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_oracle}@owner
 
     #resp_case
-    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 EOS" "5,0,1" -p ${consumer2222}
+    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "5,0,1" -p ${consumer2222}
 }
 
 

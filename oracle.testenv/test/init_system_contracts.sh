@@ -3,7 +3,7 @@
 . init.sh
 
 setup_system_contracts_and_issue_token(){
-    cleos=cleos1 sym=EOS && if [ "$1" == "c2" ];then cleos=cleos2 sym=BOS ;fi
+    cleos=cleos1 sym=BOS && if [ "$1" == "c2" ];then cleos=cleos2 sym=EOS ;fi
 
     # step 1: set contract eosio.bios
     ${!cleos} set contract eosio ${CONTRACTS_DIR}/eosio.bios -p eosio
@@ -45,7 +45,7 @@ setup_system_contracts_and_issue_token(){
 
 
 create_firstaccount(){
-    cleos=cleos1 sym=EOS && if [ "$1" == "c2" ];then cleos=cleos2 sym=BOS ;fi
+    cleos=cleos1 sym=BOS && if [ "$1" == "c2" ];then cleos=cleos2 sym=EOS ;fi
     echo "create first user account."
     new_keys
     ${!cleos} system newaccount \
@@ -57,7 +57,7 @@ create_firstaccount(){
 
 
 create_one(){
-     cleos=cleos1 sym=EOS && if [ "$1" == "c2" ];then cleos=cleos2 sym=BOS ;fi
+     cleos=cleos1 sym=BOS && if [ "$1" == "c2" ];then cleos=cleos2 sym=EOS ;fi
     name=$2
     new_keys
     ${!cleos} system newaccount \
@@ -68,7 +68,7 @@ create_one(){
 }
 
 create_account_by_pub_key(){
-     cleos=cleos1 sym=EOS && if [ "$1" == "c2" ];then cleos=cleos2 sym=BOS ;fi
+     cleos=cleos1 sym=BOS && if [ "$1" == "c2" ];then cleos=cleos2 sym=EOS ;fi
     name=$2
     pub_key=$3
     ${!cleos} system newaccount \

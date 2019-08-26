@@ -132,7 +132,7 @@ test_get_account(){
 
 transfer(){
     echo --- cleos2 transfer ---
-    $cleos1 transfer  ${contract_consumer} ${contract_oracle} "10.0000 EOS"  -p ${contract_consumer}
+    $cleos1 transfer  ${contract_consumer} ${contract_oracle} "10.0000 BOS"  -p ${contract_consumer}
     # $cleos2 transfer  testblklist1 testblklist2 "10.0000 BOS" "ibc receiver=chengsong111" -p testblklist1
 }
 
@@ -255,7 +255,7 @@ get_info c1
 
 # get_receiver_b(){
 #     echo --- cleos1 currency balance  ---
-#     $cleos1 get currency balance eosio.token testblklist1 "EOS"
+#     $cleos1 get currency balance eosio.token testblklist1 "BOS"
 #     $cleos2 get currency balance eosio.token testblklist1 "BOS"
 # }
 # get_receiver_b
@@ -275,7 +275,7 @@ get_info c1
 
 # transfernormal(){
 #     echo --- cleosn transfer ---
-#     $cleos1 transfer  testblklist2 ibc2token555 "0.0001 EOS"  -p testblklist2
+#     $cleos1 transfer  testblklist2 ibc2token555 "0.0001 BOS"  -p testblklist2
 #     $cleos2 transfer  testblklist2 ibc2token555 "0.0001 BOS" "ibc receiver=chengsong111" -p testblklist2
 # }
 
@@ -283,7 +283,7 @@ get_info c1
 
 # transfer(){
 #     echo --- cleos2 transfer ---
-#     $cleos1 transfer  testblklist1 testblklist2 "10.0000 EOS"  -p testblklist1
+#     $cleos1 transfer  testblklist1 testblklist2 "10.0000 BOS"  -p testblklist1
 #     $cleos2 transfer  testblklist1 testblklist2 "10.0000 BOS" "ibc receiver=chengsong111" -p testblklist1
 # }
 
@@ -291,7 +291,7 @@ get_info c1
 
 # transferonchainblacklist(){
 #     echo --- cleos3 transfer ---
-#     $cleos1 transfer  testblklist3 testblklist2 "10.0000 EOS"  -p testblklist3
+#     $cleos1 transfer  testblklist3 testblklist2 "10.0000 BOS"  -p testblklist3
 #     $cleos2 transfer  testblklist3 testblklist2 "10.0000 BOS" "" -p testblklist3
 # }
 # # transferonchainblacklist
@@ -303,7 +303,7 @@ get_info c1
 # }
 
 # transfer_fail(){
-#     $cleos1 transfer -f firstaccount ibc2token555 "10.0000 EOS" "ibc receiver=chengsong123" -p firstaccount
+#     $cleos1 transfer -f firstaccount ibc2token555 "10.0000 BOS" "ibc receiver=chengsong123" -p firstaccount
 #     $cleos2 transfer -f firstaccount ibc2token555 "10.0000 BOS" "ibc receiver=chengsong123" -p firstaccount
 # }
 

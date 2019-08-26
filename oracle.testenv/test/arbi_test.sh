@@ -6,11 +6,11 @@
 test_regarbitrat() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
      ###=============================================== regarbitrat, ok
-     ${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator11", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 EOS", "hello world"]' -p arbitrator11@active
-     ${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator12", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 EOS", "hello world"]' -p arbitrator12@active
-     ${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator13", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 EOS", "hello world"]' -p arbitrator13@active
-     ${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator14", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 EOS", "hello world"]' -p arbitrator14@active
-     ${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator15", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 EOS", "hello world"]' -p arbitrator15@active
+     ${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator11", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 BOS", "hello world"]' -p arbitrator11@active
+     ${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator12", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 BOS", "hello world"]' -p arbitrator12@active
+     ${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator13", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 BOS", "hello world"]' -p arbitrator13@active
+     ${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator14", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 BOS", "hello world"]' -p arbitrator14@active
+     ${!cleos} push action ${contract_oracle} regarbitrat '["arbitrator15", "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq", 1, "1.0000 BOS", "hello world"]' -p arbitrator15@active
      ${!cleos} get table ${contract_oracle} ${contract_oracle} arbitrators
 }
 
@@ -32,7 +32,7 @@ test_regs() {
 test_appeal() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
      ###=============================================== appeal 申诉, ok
-     # ${!cleos} push action ${contract_oracle} appeal '["appeallant1", 1, "1.0000 EOS", "appeallant1", 1]' -p appeallant1@active
+     # ${!cleos} push action ${contract_oracle} appeal '["appeallant1", 1, "1.0000 BOS", "appeallant1", 1]' -p appeallant1@active
      ${!cleos} get table ${contract_oracle} ${contract_oracle} appeal_request
      ${!cleos} get table ${contract_oracle} ${contract_oracle} arbitratcase
      ${!cleos} get table ${contract_oracle} ${contract_oracle} arbiprocess
@@ -41,15 +41,15 @@ test_appeal() {
 test_respcase() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
      ###=============================================== respcase 数据提供者应诉, ok
-     ${!cleos} push action ${contract_oracle} respcase '["provider1111", 0, "1.0000 EOS",1]' -p provider1111@active
+     ${!cleos} push action ${contract_oracle} respcase '["provider1111", 0, "1.0000 BOS",1]' -p provider1111@active
 }
 
 test_acceptarbi() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
      ###=============================================== acceptarbi 仲裁员应诉, ok
-     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator14", "1.0000 EOS", 0, 0]' -p arbitrator14@active
-     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator12", "1.0000 EOS", 0, 0]' -p arbitrator12@active
-     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator13", "1.0000 EOS", 0, 0]' -p arbitrator13@active
+     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator14", "1.0000 BOS", 0, 0]' -p arbitrator14@active
+     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator12", "1.0000 BOS", 0, 0]' -p arbitrator12@active
+     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator13", "1.0000 BOS", 0, 0]' -p arbitrator13@active
 }
 
 test_uploadeviden() {
@@ -61,7 +61,7 @@ test_uploadeviden() {
 test_reappeal() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
      ###=============================================== reappeal, 数据提供者再次申诉, ok
-     ${!cleos} push action ${contract_oracle} reappeal '["provider1111", 0, 0, 1, 0, true, "1.0000 EOS", 1, "再次申诉"]' -p provider1111@active
+     ${!cleos} push action ${contract_oracle} reappeal '["provider1111", 0, 0, 1, 0, true, "1.0000 BOS", 1, "再次申诉"]' -p provider1111@active
 }
 
 test_rerespcase() {
@@ -73,11 +73,11 @@ test_rerespcase() {
 test_acceptarbi2() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
      ###=============================================== acceptarbi 仲裁员应诉, ok
-     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator11", "1.0000 EOS", 0, 1]' -p arbitrator11@active
-     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator12", "1.0000 EOS", 0, 1]' -p arbitrator12@active
-     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator13", "1.0000 EOS", 0, 1]' -p arbitrator13@active
-     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator14", "1.0000 EOS", 0, 1]' -p arbitrator14@active
-     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator15", "1.0000 EOS", 0, 1]' -p arbitrator15@active
+     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator11", "1.0000 BOS", 0, 1]' -p arbitrator11@active
+     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator12", "1.0000 BOS", 0, 1]' -p arbitrator12@active
+     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator13", "1.0000 BOS", 0, 1]' -p arbitrator13@active
+     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator14", "1.0000 BOS", 0, 1]' -p arbitrator14@active
+     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator15", "1.0000 BOS", 0, 1]' -p arbitrator15@active
 }
 
 test_uploadeviden2() {
@@ -98,7 +98,7 @@ test_uploadresult2() {
 test_reappeal2() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
      ###=============================================== reappeal, 数据使用者再次申诉, ok
-     ${!cleos} push action ${contract_oracle} reappeal '["appeallant1", 0, 0, 1, 1, false, "1.0000 EOS", 1, "数据使用者不服, 再次申诉"]' -p appeallant1@active
+     ${!cleos} push action ${contract_oracle} reappeal '["appeallant1", 0, 0, 1, 1, false, "1.0000 BOS", 1, "数据使用者不服, 再次申诉"]' -p appeallant1@active
 }
 
 test_rerespcase2() {
@@ -152,8 +152,8 @@ arbi() {
      EOS_TOKEN=eosio.token
      ################################################################## 发币
      cleos set contract $EOS_TOKEN /bos.contracts/build/contracts/eosio.token -p $EOS_TOKEN@active
-     cleos push action $EOS_TOKEN create '[ "eosio.token", "10000000000.0000 EOS", 0, 0, 0]' -p $EOS_TOKEN
-     cleos push action $EOS_TOKEN issue '["eosio.token", "1000000000.0000 EOS", ""]' -p $EOS_TOKEN
+     cleos push action $EOS_TOKEN create '[ "eosio.token", "10000000000.0000 BOS", 0, 0, 0]' -p $EOS_TOKEN
+     cleos push action $EOS_TOKEN issue '["eosio.token", "1000000000.0000 BOS", ""]' -p $EOS_TOKEN
 
      ###=============================================== 部署合约
      EOS_ORACLE=bos.oracle

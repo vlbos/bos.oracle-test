@@ -16,7 +16,6 @@ test_regarbitrat() {
 
 test_regs() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
-     ${!cleos} set account permission ${contract_oracle} active '{"threshold": 1,"keys": [{"key": "'${oracle_c_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_oracle}@owner
 
      ###=============================================== regservice, ok
      ${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"provider1111",  "data_format":"", "data_type":0, "criteria":"",

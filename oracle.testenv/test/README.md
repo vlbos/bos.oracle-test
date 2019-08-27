@@ -179,13 +179,13 @@ cleos push action $EOS_ORACLE uploadeviden '["appeallant1", 0, "evidence"]' - p 
 4.接受仲裁邀请
 
 ```
-     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator13", "1.0000 BOS", 0, 0]' -p arbitrator13@active
+  ${!cleos} push action ${contract_oracle} acceptarbi '["'$account'", 1]' -p $account@active 
 ```
 
 5.上仲裁结果
 
 ```
-${!cleos} push action ${contract_oracle} uploadresult '["arbitrator11", 0, 0, 1,""]' -p arbitrator11@active
+ ${!cleos} push action ${contract_oracle} uploadresult '["'${account}'", 1, 1,"comment:"'${account}']' -p ${account}@active
 当前仲裁结果得出   通知transfer memo 再申诉等待
 ```
 
@@ -440,13 +440,12 @@ tc_risk_guarantee};
 |  中文接口名  | 仲裁员应答接口                |                       |          |          |
 | :----------: | :---------------------------- | :-------------------- | :------- | :------- |
 |  英文接口名  | Arbitrator response Interface |                       |          |          |
-|  定义接口名  | respcase                      |                       |          |          |
+|  定义接口名  | acceptarbi                      |                       |          |          |
 | 接口功能描述 | 定义仲裁员接受邀请仲裁案件    |                       |          |          |
 |  中文参数名  | 英文参数名                    | 参数定义              | 参数类型 | 参数描述 |
 |    仲裁员    | Arbitrator Name               | name arbitrator       | name     |          |
 |   仲裁项ID   | Arbitration ID                | uint64_t arbitrate_id | 整型     |          |
-|   仲裁结果   | Arbitration Results           | uint8_t result        | 整型     |          |
-|   仲裁轮次   | Arbitration Process Record ID | uint8_t round         | 整型     |          |
+
 
 12. 上传仲裁结果接口  
 
@@ -459,7 +458,7 @@ tc_risk_guarantee};
 |  仲裁员名称  | Arbitrator Name                      | name  arbitrator        | 整型     |          |
 |   仲裁项ID   | Arbitration ID                       | uint64_t arbitration_id | 整型     |          |
 |   仲裁结果   | Arbitration Results                  | uint8_t result          | 整型     |          |
-|   仲裁轮次   | Arbitration Process Record ID        | uint8_t round           | 整型     |          |
+| 仲裁员评述  |         Arbitrator comment           | std::string comment | 字符串   |    
 
 # 4.  
 13. 上传证据接口

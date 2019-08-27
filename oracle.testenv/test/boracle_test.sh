@@ -118,9 +118,7 @@ test_subs5() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
     for i in {1..5}; do
         c='consumer'${i}${i}${i}${i}
-        ${!cleos} push action ${contract_oracle} subscribe '{"service_id":"1", 
-    "contract_account":"consumercon'${i}'",  "publickey":"",
-                          "account":"'${c}'", "amount":"10.0000 BOS", "memo":""}' -p ${c}@active
+        ${!cleos} push action ${contract_oracle} subscribe '{"service_id":"1",     "contract_account":"consumercon'${i}'",  "publickey":"", "account":"'${c}'", "amount":"10.0000 BOS", "memo":""}' -p ${c}@active
 
         sleep .1
     done

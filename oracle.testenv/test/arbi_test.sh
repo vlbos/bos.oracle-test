@@ -43,13 +43,7 @@ test_respcase() {
      ${!cleos} push action ${contract_oracle} respcase '["provider1111", 0, "1.0000 BOS",1]' -p provider1111@active
 }
 
-test_acceptarbi() {
-     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
-     ###=============================================== acceptarbi 仲裁员应诉, ok
-     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator14", "1.0000 BOS", 0, 0]' -p arbitrator14@active
-     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator12", "1.0000 BOS", 0, 0]' -p arbitrator12@active
-     ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator13", "1.0000 BOS", 0, 0]' -p arbitrator13@active
-}
+
 
 test_uploadeviden() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
@@ -106,6 +100,23 @@ test_rerespcase2() {
      ${!cleos} push action ${contract_oracle} rerespcase '["provider1111", 0, 0, 1, true]' -p appeallant1@active
 }
 
+     ACCOUNTS=("arbitrator45" "arbitrator12" "arbitrator52")
+
+test_acceptarbi() {
+     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
+     ###=============================================== acceptarbi 仲裁员应诉, ok
+     # ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator45", 1]' -p arbitrator45@active
+     # ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator12", 1]' -p arbitrator12@active
+     # ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator52", 1]' -p arbitrator13@active
+
+
+     for account in ${ACCOUNTS[*]}; do
+          ${!cleos} push action ${contract_oracle} acceptarbi '["'$account'", 1]' -p $account@active 
+          sleep 1
+     done
+
+}
+
 test_uploadresult() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
      ###=============================================== uploadresult 仲裁员上传仲裁结果, ok
@@ -114,10 +125,8 @@ test_uploadresult() {
      # ${!cleos} push action ${contract_oracle} uploadresult '["arbitrator23", 0, 1, 0,""]' -p arbitrator23@active
      # ${!cleos} push action ${contract_oracle} uploadresult '["arbitrator31", 0, 1, 0,""]' -p arbitrator31@active
 
-     ACCOUNTS=("arbitrator14" "arbitrator23" "arbitrator31")
-
      for account in ${ACCOUNTS[*]}; do
-          ${!cleos} push action ${contract_oracle} uploadresult '["'${account}'", 1, 1,"comment:result=1"]' -p ${account}@active
+          ${!cleos} push action ${contract_oracle} uploadresult '["'${account}'", 1, 1,"comment:"'${account}']' -p ${account}@active
           sleep 1
      done
 
@@ -137,7 +146,7 @@ case "$1" in
 "upev") test_uploadeviden ;;
 "upre") test_uploadresult ;;
 
-*) echo "usage: arbi rega|comp|resp|acc|upev|upre|reap|reresp" ;;
+*) echo "usage: rega|comp|resp|acc|upev|upre|reap|reresp" ;;
 esac
 
 arbi() {

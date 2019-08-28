@@ -154,8 +154,8 @@ ${!cleos} get table ${contract_oracle} ${contract_oracle} arbitrators
 
 ```
 
-    #appeal
-    ${!cleos} transfer  appeallant11 ${contract_oracle} "200.0000 BOS" "3,1,'evidence','info','reason',0" -p appeallant11
+    #appeal   role_type 1 consume 2 provider
+    ${!cleos} transfer  appeallant11 ${contract_oracle} "200.0000 BOS" "3,1,'evidence','info','reason',1" -p appeallant11
 
 
 ```
@@ -192,7 +192,7 @@ cleos push action $EOS_ORACLE uploadeviden '["appeallant1", 0, "evidence"]' - p 
 6.再申诉（抵押）
 
 ```
-  ${!cleos} transfer  appeallant11 ${contract_oracle} "400.0000 BOS" "3,1,'evidence','info','reason',0" -p appeallant11
+  ${!cleos} transfer  appeallant11 ${contract_oracle} "400.0000 BOS" "3,1,'evidence','info','reason',1" -p appeallant11
 ```
 
 7.再应诉（抵押）
@@ -227,8 +227,8 @@ tc_risk_guarantee};
 # //  deposit_category,deposit_from ,deposit_to,deposit_notify 
 
 申诉
-'类型=3，服务id，公示信息，证据，申诉原因'
-# //  appeal_category,index_id ,index_info,index_evidence,index_reason,is_provider
+'类型=3，服务id，公示信息，证据，申诉原因,角色（1=consumer,2=provider)'
+# //  appeal_category,index_id ,index_info,index_evidence,index_reason,role_type
 注册仲裁员
 '类型=4，仲裁员类型'
 # // arbitrator_category,index_type 
@@ -238,7 +238,7 @@ tc_risk_guarantee};
 # //  resp_case_category,index_id ,index_evidence
 
 添加风险担保金
-'类型=8，服务id，有效时长'
+'类型=6，服务id，有效时长'
 # //  risk_guarantee_category,index_id ,index_duration
 
 

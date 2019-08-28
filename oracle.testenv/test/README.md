@@ -192,13 +192,13 @@ cleos push action $EOS_ORACLE uploadeviden '["appeallant1", 0, "evidence"]' - p 
 6.再申诉（抵押）
 
 ```
-cleos push action $EOS_ORACLE reappeal '["appeallant1", 0, 0, 1, 1, false, "1.0000 BOS", 1, "数据使用者不服, 再次申诉"]' -p appeallant1@active
+  ${!cleos} transfer  appeallant11 ${contract_oracle} "400.0000 BOS" "3,1,'evidence','info','reason',0" -p appeallant11
 ```
 
 7.再应诉（抵押）
 
 ```
-cleos push action $EOS_ORACLE rerespcase '["provider1111", 0, 0, 1, true]' -p appeallant1@active
+  ${!cleos}  transfer ${provider1111} ${contract_oracle} "400.0000 BOS" "5,1,''" -p ${provider1111}
 ```
 
 
@@ -429,7 +429,6 @@ tc_risk_guarantee};
 |  接口功能描述   | 定义注册仲裁员接口，包括职业仲裁员，大众仲裁员 |                         |          |                               |
 |   中文参数名    |                   英文参数名                   | 参数定义                | 参数类型 | 参数描述                      |
 |   仲裁员账户    |               Arbitrator Account               | name account            | 整型     |                               |
-| 仲裁员publickey |              Arbitrator publickey              | public_key pubkey       | 公钥     |                               |
 |   仲裁员类型    |                Arbitrator type                 | uint8_t type            | 整型     | 1 - 职业仲裁员，2 -大众仲裁员 |
 | 仲裁员抵押金额  |           Arbitrator Mortgage Amount           | asset amount            | 整型     |                               |
 | 仲裁员公示信息  |         Arbitrator Public Information          | std::string public_info | 字符串   |                               |

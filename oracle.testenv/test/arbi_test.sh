@@ -100,7 +100,7 @@ test_rerespcase2() {
      ${!cleos} push action ${contract_oracle} rerespcase '["provider1111", 0, 0, 1, true]' -p appeallant1@active
 }
 
-     ACCOUNTS=("arbitrator45" "arbitrator12" "arbitrator52")
+     ACCOUNTS=("arbitrator11" "arbitrator31" "arbitrator53")
 
 test_acceptarbi() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
@@ -132,10 +132,22 @@ test_uploadresult() {
 
 }
 
-# test_arbi() {
-#      #  transfer
 
-# }
+test_timer() {
+     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
+     ###=============================================== uploadresult 仲裁员上传仲裁结果, ok
+     # 数据提供者赢
+     ${!cleos} push action ${contract_oracle} timertimeout '[1, 1, 1]' -p ${contract_oracle}@active
+}
+
+
+test_arbi() {
+ cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
+
+      ${!cleos} get scope ${contract_oracle}  
+      ${!cleos} get table ${contract_oracle} 1 arbicase --limit 10
+      ${!cleos} get table ${contract_oracle} 1 arbiprocess
+}
 
 case "$1" in
 "rega") test_regarbitrat ;;
@@ -145,42 +157,49 @@ case "$1" in
 "acc") test_acceptarbi ;;
 "upev") test_uploadeviden ;;
 "upre") test_uploadresult ;;
+"arbi") test_arbi ;;
+"timer") test_timer ;;
 
 *) echo "usage: rega|comp|resp|acc|upev|upre|reap|reresp" ;;
 esac
 
 arbi() {
+          cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
+
      # Private key: 5JNzcBuxPGmF3Saw3cedYzE6jL7VksFayxqpjokMTRpARkCwmHa
      # Public key: EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq
 
-     PUBKEY=EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq
+     # PUBKEY=EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq
 
-     ###=============================================== 创建账号
+     # ###=============================================== 创建账号
 
-     EOS_TOKEN=eosio.token
-     ################################################################## 发币
-     cleos set contract $EOS_TOKEN /bos.contracts/build/contracts/eosio.token -p $EOS_TOKEN@active
-     cleos push action $EOS_TOKEN create '[ "eosio.token", "10000000000.0000 BOS", 0, 0, 0]' -p $EOS_TOKEN
-     cleos push action $EOS_TOKEN issue '["eosio.token", "1000000000.0000 BOS", ""]' -p $EOS_TOKEN
+     # EOS_TOKEN=eosio.token
+     # ################################################################## 发币
+     # cleos set contract $EOS_TOKEN /bos.contracts/build/contracts/eosio.token -p $EOS_TOKEN@active
+     # cleos push action $EOS_TOKEN create '[ "eosio.token", "10000000000.0000 BOS", 0, 0, 0]' -p $EOS_TOKEN
+     # cleos push action $EOS_TOKEN issue '["eosio.token", "1000000000.0000 BOS", ""]' -p $EOS_TOKEN
 
-     ###=============================================== 部署合约
-     EOS_ORACLE=bos.oracle
-     cleos set contract ${contract_oracle} /bos.contracts/contracts/bos.oracle -p ${contract_oracle}
-     ###=============================================== set permission
-     cleos set account permission ${contract_oracle} active '{"threshold": 1,"keys": [{"key": "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq","weight": 1}],"accounts": [{"permission":{"actor":"bos.oracle","permission":"eosio.code"},"weight":1}]}' -p ${contract_oracle}@active
+     # ###=============================================== 部署合约
+     # EOS_ORACLE=bos.oracle
+     # cleos set contract ${contract_oracle} /bos.contracts/contracts/bos.oracle -p ${contract_oracle}
+     # ###=============================================== set permission
+     # cleos set account permission ${contract_oracle} active '{"threshold": 1,"keys": [{"key": "EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq","weight": 1}],"accounts": [{"permission":{"actor":"bos.oracle","permission":"eosio.code"},"weight":1}]}' -p ${contract_oracle}@active
 
      # TODO: 测试大众仲裁人数不够
 
-     cleos get table ${contract_oracle} ${contract_oracle} arbitratcase
-     cleos get table ${contract_oracle} ${contract_oracle} arbiprocess
-     cleos get table ${contract_oracle} ${contract_oracle} arbiresults
+      ${!cleos} get table ${contract_oracle} 1 arbicase
+      ${!cleos} get table ${contract_oracle} 1 arbiprocess
+     # cleos get table ${contract_oracle} ${contract_oracle} arbiresults
 
-     ###=============================================== Tables
-     cleos get table ${contract_oracle} ${contract_oracle} arbitrators
-     cleos get table ${contract_oracle} ${contract_oracle} appeal_request
-     cleos get table ${contract_oracle} ${contract_oracle} arbitratcase
-
-     cleos get table ${contract_oracle} ${contract_oracle} dataservices
-     cleos get table ${contract_oracle} 0 svcprovision
+     # ###=============================================== Tables
+     # cleos get table ${contract_oracle} ${contract_oracle} arbitrators
+     # cleos get table ${contract_oracle} ${contract_oracle} appealreq
+     # cleos get table ${contract_oracle} ${contract_oracle} arbievidence
+     # cleos get table ${contract_oracle} ${contract_oracle} fairawards
+     # cleos get table ${contract_oracle} ${contract_oracle} arbistakeacc
+     # cleos get table ${contract_oracle} ${contract_oracle} arbistakes
+     # cleos get table ${contract_oracle} ${contract_oracle} arbiincomes
+     # cleos get table ${contract_oracle} ${contract_oracle} dataservices
+     # cleos get table ${contract_oracle} 0 svcprovision
 
 }

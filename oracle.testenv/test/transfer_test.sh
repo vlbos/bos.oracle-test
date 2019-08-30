@@ -5,7 +5,7 @@
 
 test_reg_service() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
-    ${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"'${provider1111}'", "data_format":"", "data_type":0, "criteria":"",
+    ${!cleos} push action ${contract_oracle} regservice '{  "account":"'${provider1111}'","base_stake_amount":"1000.0000 BOS","data_format":"", "data_type":0, "criteria":"",
                           "acceptance":0, "declaration":"", "injection_method":0, "duration":1,
                           "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${provider1111}@active
 
@@ -56,7 +56,7 @@ transfer_appeal() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
     #appeal
-    ${!cleos} transfer  appeallant11 ${contract_oracle} "200.0000 BOS" "3,1,'evidence','info','reason',0" -p appeallant11
+    ${!cleos} transfer appeallant11 ${contract_oracle} "200.0000 BOS" "3,1,'evidence','info','reason',0" -p appeallant11
 }
 
 transfer_regarbi() {
@@ -70,11 +70,11 @@ transfer_regarbi() {
     for i in {1..5}; do
         for j in {1..5}; do
             account='arbitrator'${i}${j}
-            ${!cleos}  transfer ${account} ${contract_oracle} "10000.0000 BOS" "4,1" -p ${account}
+            ${!cleos} transfer ${account} ${contract_oracle} "10000.0000 BOS" "4,1" -p ${account}
             sleep 1
         done
     done
-${!cleos} get table ${contract_oracle} ${contract_oracle} arbitrators
+    ${!cleos} get table ${contract_oracle} ${contract_oracle} arbitrators
 }
 
 transfer_respcase() {
@@ -83,29 +83,28 @@ transfer_respcase() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
     #resp_case
-    ${!cleos}  transfer ${provider1111} ${contract_oracle} "200.0000 BOS" "5,1,''" -p ${provider1111}
+    ${!cleos} transfer ${provider1111} ${contract_oracle} "200.0000 BOS" "5,1,''" -p ${provider1111}
 }
 
 test_transfer() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
     #  transfer
-#     ./init_chains.sh 
-# ./boracle_test.sh set
-#   ./boracle_test.sh init reg
-# ./transfer_test.sh  regarbi
-# ./transfer_test.sh  appeal
-# ./transfer_test.sh  respcase
+    #     ./init_chains.sh
+    # ./boracle_test.sh set
+    #   ./boracle_test.sh init reg
+    # ./transfer_test.sh  regarbi
+    # ./transfer_test.sh  appeal
+    # ./transfer_test.sh  respcase
 
 }
 
-
-  case "$1" in
-    "stake") transfer0 ;;
-    "pay") transfer1 ;;
-    "deposit") transfer2 ;;
-    "regarbi") transfer_regarbi ;;
-    "appeal") transfer_appeal ;;
-    "respcase") transfer_respcase ;;
-    *) echo "usage: stake|pay|deposit|regarbi|appeal|respcase" ;;
-    esac
+case "$1" in
+"stake") transfer0 ;;
+"pay") transfer1 ;;
+"deposit") transfer2 ;;
+"regarbi") transfer_regarbi ;;
+"appeal") transfer_appeal ;;
+"respcase") transfer_respcase ;;
+*) echo "usage: stake|pay|deposit|regarbi|appeal|respcase" ;;
+esac

@@ -18,7 +18,7 @@ test_regs() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
      ###=============================================== regservice, ok
-     ${!cleos} push action ${contract_oracle} regservice '{"service_id":0,  "account":"provider1111",  "data_format":"", "data_type":0, "criteria":"",
+     ${!cleos} push action ${contract_oracle} regservice '{  "account":"provider1111", "base_stakeamount":"1000.0000 BOS", "data_format":"", "data_type":0, "criteria":"",
                           "acceptance":0, "declaration":"", "injection_method":0, "duration":1,
                           "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p provider1111@active
      ${!cleos} get table ${contract_oracle} ${contract_oracle} dataservices
@@ -42,8 +42,6 @@ test_respcase() {
      ###=============================================== respcase 数据提供者应诉, ok
      ${!cleos} push action ${contract_oracle} respcase '["provider1111", 0, "1.0000 BOS",1]' -p provider1111@active
 }
-
-
 
 test_uploadeviden() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
@@ -100,7 +98,7 @@ test_rerespcase2() {
      ${!cleos} push action ${contract_oracle} rerespcase '["provider1111", 0, 0, 1, true]' -p appeallant1@active
 }
 
-     ACCOUNTS=("arbitrator11" "arbitrator31" "arbitrator53")
+ACCOUNTS=("arbitrator11" "arbitrator31" "arbitrator53")
 
 test_acceptarbi() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
@@ -109,9 +107,8 @@ test_acceptarbi() {
      # ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator12", 1]' -p arbitrator12@active
      # ${!cleos} push action ${contract_oracle} acceptarbi '["arbitrator52", 1]' -p arbitrator13@active
 
-
      for account in ${ACCOUNTS[*]}; do
-          ${!cleos} push action ${contract_oracle} acceptarbi '["'$account'", 1]' -p $account@active 
+          ${!cleos} push action ${contract_oracle} acceptarbi '["'$account'", 1]' -p $account@active
           sleep 1
      done
 
@@ -132,7 +129,6 @@ test_uploadresult() {
 
 }
 
-
 test_timer() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
      ###=============================================== uploadresult 仲裁员上传仲裁结果, ok
@@ -140,31 +136,65 @@ test_timer() {
      ${!cleos} push action ${contract_oracle} timertimeout '[1, 1, 1]' -p ${contract_oracle}@active
 }
 
-
 test_arbi() {
- cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
+     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
-      ${!cleos} get scope ${contract_oracle}  
-      ${!cleos} get table ${contract_oracle} 1 arbicase --limit 10
-      ${!cleos} get table ${contract_oracle} 1 arbiprocess
+     ${!cleos} get scope ${contract_oracle}
+     ${!cleos} get table ${contract_oracle} 1 arbicase --limit 10
+     ${!cleos} get table ${contract_oracle} 1 arbiprocess
+}
+
+transfer_appeal() {
+     echo --- cleos1 transfer 3---
+
+     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
+
+     #appeal
+     ${!cleos} transfer appeallant11 ${contract_oracle} "200.0000 BOS" "3,1,'evidence','info','reason',0" -p appeallant11
+}
+
+transfer_regarbi() {
+     echo --- cleos1 transfer 3---
+
+     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
+
+     #arbitrator
+     # ${!cleos}  transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "4,1" -p ${consumer2222}
+
+     for i in {1..5}; do
+          for j in {1..5}; do
+               account='arbitrator'${i}${j}
+               ${!cleos} transfer ${account} ${contract_oracle} "10000.0000 BOS" "4,1" -p ${account}
+               sleep 1
+          done
+     done
+     ${!cleos} get table ${contract_oracle} ${contract_oracle} arbitrators
+}
+
+transfer_respcase() {
+     echo --- cleos1 transfer 3---
+
+     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
+
+     #resp_case
+     ${!cleos} transfer ${provider1111} ${contract_oracle} "200.0000 BOS" "5,1,''" -p ${provider1111}
 }
 
 case "$1" in
-"rega") test_regarbitrat ;;
 "regs") test_regs ;;
-"comp") test_appeal ;;
-"resp") test_respcase ;;
+"rega") transfer_regarbi ;;
+"appeal") transfer_appeal ;;
+"resp") transfer_respcase ;;
 "acc") test_acceptarbi ;;
-"upev") test_uploadeviden ;;
 "upre") test_uploadresult ;;
+"upev") test_uploadeviden ;;
 "arbi") test_arbi ;;
 "timer") test_timer ;;
-
-*) echo "usage: rega|comp|resp|acc|upev|upre|reap|reresp" ;;
+*) echo "usage: rega|appeal|resp|acc||upreupev" ;;
 esac
 
 arbi() {
-          cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
+     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
      # Private key: 5JNzcBuxPGmF3Saw3cedYzE6jL7VksFayxqpjokMTRpARkCwmHa
      # Public key: EOS7UCx8GSeEHC4XE8jQ1R5WJqw5Vp2vZqWgQx94obFVbebnYg6eq
@@ -187,8 +217,8 @@ arbi() {
 
      # TODO: 测试大众仲裁人数不够
 
-      ${!cleos} get table ${contract_oracle} 1 arbicase
-      ${!cleos} get table ${contract_oracle} 1 arbiprocess
+     ${!cleos} get table ${contract_oracle} 1 arbicase
+     ${!cleos} get table ${contract_oracle} 1 arbiprocess
      # cleos get table ${contract_oracle} ${contract_oracle} arbiresults
 
      # ###=============================================== Tables

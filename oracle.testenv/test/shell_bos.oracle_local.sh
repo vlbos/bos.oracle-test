@@ -46,7 +46,7 @@ cleos push action $EOS_ORACLE regarbitrat '["arbitrator15", "EOS7UCx8GSeEHC4XE8j
 cleos get table $EOS_ORACLE $EOS_ORACLE arbitrators
 
 ###=============================================== regservice, ok
-cleos push action $EOS_ORACLE regservice '{"service_id":0,  "account":"provider1111", "amount":"10.0000 BOS",  "data_format":"", "data_type":0, "criteria":"",
+cleos push action $EOS_ORACLE regservice '{ "account":"provider1111", "base_stake_amount":"1000.0000 BOS",  "data_format":"", "data_type":0, "criteria":"",
                           "acceptance":0, "declaration":"", "injection_method":0, "duration":1,
                           "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p provider1111@active
 cleos get table $EOS_ORACLE $EOS_ORACLE dataservices

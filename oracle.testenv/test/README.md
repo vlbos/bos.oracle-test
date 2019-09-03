@@ -1,8 +1,79 @@
+  
+oracle1.0 问题修复列表 
+推送数据
+1. 恢复注册服务基础抵押金额参数，注册服务实现创建服务功能 ，提供者抵押金额成为相应服务提供者
+2. 增加限制在系统里限制注册服务，基础抵押金额不低于1000,该服务提供者抵押不低于基础抵押金额
+3. 推送数据验证 服务是否可用 ，提供者是否注册
+4. 修复问题
+仲裁
+1. 申诉或再申诉修改参数is_provider为role_type 值有：consumer(1),provider(2)
+2. 申诉，应诉，接受邀请，上传结果，检查重复提交
+3. 检查接受邀请是否受邀账户，上传结果是否是接受邀请账户
+4. 修复计算仲裁正确率问题
+5. 修复计算仲裁结果，罚没计算问题
+
+
+
    合约账户以外需要创建账户
   static constexpr eosio::name provider_account{"provider.bos"_n};
   static constexpr eosio::name consumer_account{"consumer.bos"_n};
   static constexpr eosio::name riskctrl_account{"riskctrl.bos"_n};
   static constexpr eosio::name arbitrat_account{"arbitrat.bos"_n};
+
+
+transfer memo format type
+
+格式： ','隔开 
+第一元素 类型  
+具体类型如下
+索引号以0开始  tc_service_stake = 0 ,以次递增
+```
+enum transfer_category : 
+tc_service_stake  , 
+tc_pay_service,
+tc_deposit,
+tc_arbitration_stake_appeal,
+tc_arbitration_stake_arbitrator,
+tc_arbitration_stake_resp_case,
+tc_risk_guarantee};
+
+具体类型 格式  最后一个参数数量不在memo出现 
+数据提供者抵押，数据使用者支付充值
+'类型=0或1，id'
+# // index_category,index_id 
+风控存款
+'类型=2，转出账户，转入账户，是否通知，'
+# //  deposit_category,deposit_from ,deposit_to,deposit_notify 
+
+申诉
+'类型=3，服务id，公示信息，证据，申诉原因,角色（1=consumer,2=provider)'
+# //  appeal_category,index_id ,index_info,index_evidence,index_reason,role_type
+注册仲裁员
+'类型=4，仲裁员类型'
+# // arbitrator_category,index_type 
+
+应诉
+'类型=5，服务id，仲裁轮次，证据'
+# //  resp_case_category,index_id ,index_evidence
+
+添加风险担保金
+'类型=6，服务id，有效时长'
+# //  risk_guarantee_category,index_id ,index_duration
+
+
+执行状态
+ arbi_init = 1,
+   arbi_choosing_arbitrator,
+   arbi_wait_for_resp_appeal,
+   arbi_resp_appeal_timeout_end,
+   arbi_wait_for_accept_arbitrate_invitation,
+   arbi_wait_for_upload_result,
+   arbi_wait_for_reappeal,
+   arbi_reappeal_timeout_end,
+   arbi_reappeal,
+   arbi_public_end
+
+```
 
 ###### 1. 部署合约
 
@@ -80,27 +151,17 @@ transfer pay
 
 ```
 "mpush") test_multipush c1 "$2" ;;
-
   # ${!cleos}  set account permission ${provider1111}  active '{"threshold": 1,"keys": [{"key": "'${provider1111_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${provider1111}@owner
-
     # sleep .2
-    ${!cleos} push action ${contract_oracle} multipush '{"service_id":0, "provider":"'${provider1111}'", 
-                          "data_json":"test multipush data json","is_request":'${reqflag}'}' -p ${provider1111}
+    ${!cleos} push action ${contract_oracle} multipush '{"service_id":0, "provider":"'${provider1111}'",  "data_json":"test multipush data json","is_request":'${reqflag}'}' -p ${provider1111}
 
 "push") test_push c1 ;;
-
-
-    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"'${provider1111}'", "contract_account":"'${contract_consumer}'", 
-                         "request_id":0, "data_json":"test data json"}' -p ${provider1111}
+    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"'${provider1111}'", "contract_account":"'${contract_consumer}'",  "request_id":0, "data_json":"test data json"}' -p ${provider1111}
 
 "pushr") test_pushforreq c1 "$2" ;;
+    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"'${provider1111}'", "contract_account":"'${contract_consumer}'",  "request_id":'"$2"', "data_json":"test data json"}' -p ${provider1111}
 
-    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"'${provider1111}'", "contract_account":"'${contract_consumer}'", 
-                         "request_id":'"$2"', "data_json":"test data json"}' -p ${provider1111}
-
-
-${!cleos} push action ${contract_oracle} oraclepush '{"service_id":1, "provider":"'${p}'", 
-                         "request_id":0, "data_json":"auto publish test data json"}' -p ${p}
+${!cleos} push action ${contract_oracle} oraclepush '{"service_id":1, "provider":"'${p}'",  "request_id":0, "data_json":"auto publish test data json"}' -p ${p}
 
 ```
 
@@ -169,7 +230,6 @@ cleos push action $EOS_ORACLE uploadeviden '["appeallant1", 0, "evidence"]' - p 
 3.应诉（抵押）
 
 ```
-
     #resp_case
     ${!cleos}  transfer ${provider1111} ${contract_oracle} "200.0000 BOS" "5,1,''" -p ${provider1111}
 }
@@ -201,48 +261,6 @@ cleos push action $EOS_ORACLE uploadeviden '["appeallant1", 0, "evidence"]' - p 
   ${!cleos}  transfer ${provider1111} ${contract_oracle} "400.0000 BOS" "5,1,''" -p ${provider1111}
 ```
 
-
-transfer memo format type
-
-格式： ','隔开 
-第一元素 类型  
-具体类型如下
-索引号以0开始  tc_service_stake = 0 ,以次递增
-```
-enum transfer_category : 
-tc_service_stake  , 
-tc_pay_service,
-tc_deposit,
-tc_arbitration_stake_appeal,
-tc_arbitration_stake_arbitrator,
-tc_arbitration_stake_resp_case,
-tc_risk_guarantee};
-
-具体类型 格式  最后一个参数数量不在memo出现 
-数据提供者抵押，数据使用者支付充值
-'类型=0或1，id'
-# // index_category,index_id 
-风控存款
-'类型=2，转出账户，转入账户，是否通知，'
-# //  deposit_category,deposit_from ,deposit_to,deposit_notify 
-
-申诉
-'类型=3，服务id，公示信息，证据，申诉原因,角色（1=consumer,2=provider)'
-# //  appeal_category,index_id ,index_info,index_evidence,index_reason,role_type
-注册仲裁员
-'类型=4，仲裁员类型'
-# // arbitrator_category,index_type 
-
-应诉
-'类型=5，服务id，仲裁轮次，证据'
-# //  resp_case_category,index_id ,index_evidence
-
-添加风险担保金
-'类型=6，服务id，有效时长'
-# //  risk_guarantee_category,index_id ,index_duration
-
-
-```
 
 
 # 1. 部署合约 

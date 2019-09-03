@@ -1,11 +1,15 @@
   
 oracle1.0 问题修复列表 
-推送数据
+
+###### 推送数据
+
 1. 恢复注册服务基础抵押金额参数，注册服务实现创建服务功能 ，提供者抵押金额成为相应服务提供者
 2. 增加限制在系统里限制注册服务，基础抵押金额不低于1000,该服务提供者抵押不低于基础抵押金额
 3. 推送数据验证 服务是否可用 ，提供者是否注册
 4. 修复问题
-仲裁
+   
+###### 仲裁
+
 1. 申诉或再申诉修改参数is_provider为role_type 值有：consumer(1),provider(2)
 2. 申诉，应诉，接受邀请，上传结果，检查重复提交
 3. 检查接受邀请是否受邀账户，上传结果是否是接受邀请账户
@@ -14,11 +18,6 @@ oracle1.0 问题修复列表
 
 
 
-   合约账户以外需要创建账户
-  static constexpr eosio::name provider_account{"provider.bos"_n};
-  static constexpr eosio::name consumer_account{"consumer.bos"_n};
-  static constexpr eosio::name riskctrl_account{"riskctrl.bos"_n};
-  static constexpr eosio::name arbitrat_account{"arbitrat.bos"_n};
 
 
 transfer memo format type

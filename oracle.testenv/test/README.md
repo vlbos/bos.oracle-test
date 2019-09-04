@@ -17,7 +17,8 @@ oracle1.0 问题修复列表
 5. 修复计算仲裁结果, 罚没计算问题
 
 
-
+appealreq    scope  service_id*4+round
+arbiresults  scope  arbitration_id*4+round
 
 
 transfer memo format type

@@ -191,7 +191,7 @@ ${!cleos} push action ${contract_oracle} oraclepush '{"service_id":1, "provider"
 ##### 前提条件  
 注册服务
 
-1.注册仲裁员（抵押）
+ #####  注册仲裁员（抵押）
 专业，大众
 
 ```
@@ -211,7 +211,7 @@ ${!cleos} get table ${contract_oracle} ${contract_oracle} arbitrators
 
 ```
 
-2.申诉（抵押）仲裁开始
+ #####  申诉（抵押）仲裁开始
 
 ```
 
@@ -221,13 +221,13 @@ ${!cleos} get table ${contract_oracle} ${contract_oracle} arbitrators
 
 ```
 
-3.上传证据
+ ##### 上传证据
 
 ```  
 cleos push action $EOS_ORACLE uploadeviden '["appeallant1", 0, "evidence"]' - p appeallant1 @active
 ```
 
-3.应诉（抵押）
+ #####  应诉（抵押）
 
 ```
     #resp_case
@@ -236,32 +236,43 @@ cleos push action $EOS_ORACLE uploadeviden '["appeallant1", 0, "evidence"]' - p 
 
 ```
 
-4.接受仲裁邀请
+ #####  接受仲裁邀请
 
 ```
   ${!cleos} push action ${contract_oracle} acceptarbi '["'$account'", 1]' -p $account@active 
 ```
 
-5.上仲裁结果
+#####  上仲裁结果
 
 ```
  ${!cleos} push action ${contract_oracle} uploadresult '["'${account}'", 1, 1,"comment:"'${account}']' -p ${account}@active
 当前仲裁结果得出   通知transfer memo 再申诉等待
 ```
 
-6.再申诉（抵押）
+##### 再申诉（抵押）
 
 ```
   ${!cleos} transfer  appeallant11 ${contract_oracle} "400.0000 BOS" "3,1,'evidence','info','reason',1" -p appeallant11
 ```
 
-7.再应诉（抵押）
+#####  再应诉（抵押）
 
 ```
   ${!cleos}  transfer ${provider1111} ${contract_oracle} "400.0000 BOS" "5,1,''" -p ${provider1111}
 ```
 
+#####  解抵押
+  void unstakearbi(uint64_t arbitration_id, name account, asset amount, std::string memo);
+```  
+cleos push action $EOS_ORACLE unstakearbi '[1,"appeallant1",  "400.0000 BOS",'']' - p appeallant1 @active
+```
 
+#####   领取仲裁收益
+    void claimarbi(name account, name receive_account);
+
+```  
+cleos push action $EOS_ORACLE claimarbi '["appeallant1","appeallant1"]' - p appeallant1 @active
+```
 
 # 1. 部署合约 
 

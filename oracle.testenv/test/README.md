@@ -20,6 +20,65 @@ oracle1.0 问题修复列表
 appealreq    scope  service_id*4+round
 arbiresults  scope  arbitration_id*4+round
 
+update_number 计算公式
+
+c++ code
+```
+  uint32_t now_sec = bos_oracle::current_time_point_sec().sec_since_epoch();
+   uint32_t update_start_time = service_itr->update_start_time.sec_since_epoch();
+   uint32_t update_cycle = service_itr->update_cycle;
+   uint32_t duration = service_itr->duration;
+   uint32_t expected_update_number = (now_sec - update_start_time) / update_cycle + 1;
+   uint32_t current_duration_begin_time = time_point_sec(update_start_time + (expected_update_number - 1) * update_cycle).sec_since_epoch();
+   uint32_t current_duration_end_time = current_duration_begin_time + duration;
+```
+
+```
+service_duration=200
+update_cycle=300
+update_start_time_date="2019-07-29"
+update_start_time_time="15:27:33"
+update_start_time=$update_start_time_date"T"$update_start_time_time".216857+00:00"
+
+current_update_number=0
+datetime1=$(date "+%s#%N")
+datetime2=$(echo $datetime1 | cut -d"#" -f1) #取出秒
+
+get_current_date() {
+    datetime1=$(date "+%s#%N")
+    datetime2=$(echo $datetime1 | cut -d"#" -f1) #取出秒
+}
+
+waitnext() {
+    get_current_date
+    i=$(($datetime2))
+    while [ $i -le $1 ]; do
+        get_current_date
+        i=$datetime2
+        sleep 10
+    done
+}
+
+get_update_number() {
+    a=$1
+    b=$2
+    if [ $a -eq 0 ]; then return 0; fi
+    if [ $b -eq 0 ]; then return 0; fi
+
+    get_current_date
+    start_time=$(date -j -u -f "%Y-%m-%d %H:%M:%S" $update_start_time_date" "$update_start_time_time "+%s")
+    diff_time=$(($datetime2 - $start_time))
+    current_update_number=$(($diff_time / $a + 1))
+    begin_time=$(($start_time + ($current_update_number - 1) * $a))
+    end_time=$(($begin_time + $b))
+    if [ $datetime2 -le $end_time ]; then return $current_update_number; fi
+    next_begin_time=$(($begin_time + $a))
+    waitnext $next_begin_time
+    get_update_number $a $b
+
+}
+
+```
 
 transfer memo format type
 

@@ -3,7 +3,6 @@
 . env.sh
 #. chains_init.sh
 
-
 test_pushtotable() {
 
     test_reg_service5
@@ -40,7 +39,9 @@ consumer_transfer5() {
 
 service_duration=200
 update_cycle=300
-
+update_start_time_date="2019-07-29"
+update_start_time_time="15:27:33"
+update_start_time=$update_start_time_date"T"$update_start_time_time".216857+00:00"
 
 current_update_number=0
 datetime1=$(date "+%s#%N")
@@ -68,11 +69,11 @@ get_update_number() {
     if [ $b -eq 0 ]; then return 0; fi
 
     get_current_date
-
-    current_update_number=$(($datetime2 / $a))
-    begin_time=$(($current_update_number * $a))
+    start_time=$(date -j -u -f "%Y-%m-%d %H:%M:%S" $update_start_time_date" "$update_start_time_time "+%s")
+    diff_time=$(($datetime2 - $start_time))
+    current_update_number=$(($diff_time / $a + 1))
+    begin_time=$(($start_time + ($current_update_number - 1) * $a))
     end_time=$(($begin_time + $b))
-    # if [ 0 -le  $1 ]; then return 0; fi
     if [ $datetime2 -le $end_time ]; then return $current_update_number; fi
     next_begin_time=$(($begin_time + $a))
     waitnext $next_begin_time
@@ -80,13 +81,12 @@ get_update_number() {
 
 }
 
-
 test_reg_service5() {
     echo ==reg 5
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
     ${!cleos} push action ${contract_oracle} regservice '{"account":"'${provider1111}'", "base_stake_amount":"1000.0000 BOS",  "data_format":"", "data_type":0, "criteria":"",
                           "acceptance":0, "declaration":"", "injection_method":0, "duration":'${service_duration}',
-                          "provider_limit":3, "update_cycle":'${update_cycle}', "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${provider1111}@active
+                          "provider_limit":3, "update_cycle":'${update_cycle}', "update_start_time":"'$update_start_time'"}' -p ${provider1111}@active
 }
 
 test_subs5() {
@@ -94,9 +94,7 @@ test_subs5() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
     for i in {1..5}; do
         c='consumer'${i}${i}${i}${i}
-        ${!cleos} push action ${contract_oracle} subscribe '{"service_id":"1", 
-    "contract_account":"consumercon'${i}'",  "publickey":"",
-                          "account":"'${c}'", "amount":"10.0000 BOS", "memo":""}' -p ${c}@active
+        ${!cleos} push action ${contract_oracle} subscribe '{"service_id":"1",     "contract_account":"consumercon'${i}'",  "publickey":"",          "account":"'${c}'", "amount":"10.0000 BOS", "memo":""}' -p ${c}@active
 
         sleep .1
     done
@@ -106,8 +104,11 @@ test_indirectpush() {
     echo ==indipush
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
+    start_time=$(date -j -u -f "%Y-%m-%d %H:%M:%S" $update_start_time_date" "$update_start_time_time "+%s")
+    echo "start_time="$start_time
+    echo "datetime2="$datetime2
     get_update_number $update_cycle $service_duration
-
+    echo "current_update_number="$current_update_number
     if [ $current_update_number -ne 0 ]; then
         for i in {1..5}; do
             p='provider'${i}${i}${i}${i}
@@ -182,14 +183,12 @@ test_req() {
                          "requester":"'${consumer1111}'", "request_content":"eth usd"}' -p ${consumer1111}@active
 }
 
-
 test_() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
     ${!cleos} push action ${contract_oracle} requestdata '{"service_id":"0",  "contract_account":"", 
                          "account":"", "request_content":""}' -p ${contract_consumer}@active
 }
-
 
 get_account() {
     echo --- cleos1 --- $1
@@ -318,15 +317,14 @@ test_fetchdata() {
 
 }
 
-
- case "$1" in
-    "reg") test_reg_service c1 ;;
-    "fee") test_fee c1 ;;
-    "subs") test_subs c1 ;;
-    "mpush") test_multipush c1 "$2" ;;
-    "push") test_push c1 ;;
-    "pushr") test_pushforreq c1 "$2" ;;
-    "req") test_req c1 ;;
-    "pusht") test_pushtotable ;;
-    *) echo "usage: reg|fee|subs|pushr {reqid}|mpush {false|true|}|req" ;;
-    esac
+case "$1" in
+"reg") test_reg_service c1 ;;
+"fee") test_fee c1 ;;
+"subs") test_subs c1 ;;
+"mpush") test_multipush c1 "$2" ;;
+"push") test_push c1 ;;
+"pushr") test_pushforreq c1 "$2" ;;
+"req") test_req c1 ;;
+"pusht") test_pushtotable ;;
+*) echo "usage: reg|fee|subs|pushr {reqid}|mpush {false|true|}|req" ;;
+esac

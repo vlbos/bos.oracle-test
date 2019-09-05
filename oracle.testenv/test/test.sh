@@ -88,4 +88,71 @@ for a in ${ACCOUNTS[*]}; do
     done
 done
 }
-test_for
+# test_for
+
+
+# shell中获取时间戳的方式为：date -d “$currentTime” +%s
+
+# $ date -d @1337743485671 "+%c"
+# Sun 28 May 44361 12:41:11 PM CST
+
+# 如果要将一个日期转为时间戳，方式如下：
+
+# 1、得到当前时间
+
+# currentTime=`date “+%Y-%m-%d %H:%M:%S”`
+
+# 2、将日期转为时间戳
+
+# currentTimeStamp=`date -d “$currentTime” +%s`
+# echo $currentTimeStamp
+
+# 3.字符串转换为时间戳可以这样做：
+
+# date -d "2010-10-18 00:00:00" +%s
+
+# 输出形如：
+
+# 1287331200
+
+# 其中，-d参数表示显示指定的字符串所表示的时间，+%s表示输出时间戳。
+
+# 4.而时间戳转换为字符串可以这样做：
+
+# date -d @1287331200
+
+# 输出形如：
+
+# Mon Oct 18 00:00:00 CST 2010
+test_date_timestamp()
+{
+# currentTime="2019-07-29T15:27:33.216857+00:00"
+# currentTimeStamp="date -d "$currentTime" +%s"
+# echo $currentTimeStamp
+# currentTime=`date “+%Y-%m-%d %H:%M:%S”`
+
+
+# currentTimeStamp=`date -d "$currentTime" +%s`
+# echo $currentTimeStamp
+# date -d "2010-10-18 00:00:00" +%S
+# date -d @1287331200
+# date -d "1970-01-01 UTC 1287331200 seconds" "+%F %T"
+date +%s
+date -r 1456303554 
+date -j -f "%Y-%m-%d %H:%M:%S" "2018-12-01 00:00:00" "+%s"
+start_time=$(date -j -f "%Y-%m-%d %H:%M:%S" "2019-07-29 15:23:33" "+%s")
+datetime1=$(date "+%s#%N")
+datetime2=$(echo $datetime1 | cut -d"#" -f1) #取出秒
+diff_time=$(($datetime2-$start_time))
+echo $datetime2
+echo ${start_time}
+echo $diff_time
+update_start_time_date="2019-07-29"
+update_start_time_time="15:27:33"
+u_start_time=$(date -j -u -f "%Y-%m-%d %H:%M:%S" $update_start_time_date" "$update_start_time_time "+%s")
+echo $u_start_time
+
+echo $(((1564385253-1564414053)/3600))
+
+}
+test_date_timestamp

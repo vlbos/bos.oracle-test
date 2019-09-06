@@ -17,8 +17,24 @@ oracle1.0 问题修复列表
 5. 修复计算仲裁结果, 罚没计算问题
 
 
+arbistakeacc
+arbiincomes
+
 appealreq    scope  service_id*4+round
 arbiresults  scope  arbitration_id*4+round
+
+20190906 version
+###### 推送数据
+一个提供者表对多个服务存储
+update_number 检查验证
+push_data超时验证 单元测试 
+
+###### 仲裁
+修复多人申诉问题
+修复多人应诉问题
+修复接受邀请超时，上传结果超时问题，增加相应单元测试
+修改抵押金额超过服务提供者
+
 
 update_number 计算公式
 
@@ -129,7 +145,6 @@ tc_risk_guarantee};
    arbi_wait_for_upload_result,
    arbi_wait_for_reappeal,
    arbi_reappeal_timeout_end,
-   arbi_reappeal,
    arbi_public_end
 
 ```

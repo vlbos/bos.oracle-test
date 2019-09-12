@@ -160,6 +160,20 @@ tc_risk_guarantee};
    arbi_reappeal_timeout_end,
    arbi_public_end
 
+
+   参数合法性检查
+    check(provider_limit >= 3 && provider_limit <= 100, "provider_limit could not be less than 3 or greater than 100");
+   check(update_cycle >= 60 && update_cycle <= 3600 * 24 * uint32_t(100), "update_cycle could not be less than 60 seconds or greater than 100 days");
+   check(duration >= 30 && duration <= 3600, "duration could not be less than 30 or greater than 3600 seconds");
+   check(duration < update_cycle - 10, "duration could not be  greater than update_cycle-10 seconds");
+   check(injection_method == chain_indirect || injection_method == chain_direct || injection_method == chain_outside,
+         "injection_method only set chain_indirect(0) or chain_direct(1)or chain_outside(2)");
+   check(data_type == data_deterministic || data_type == data_non_deterministic, "data_type only set value data_deterministic(0) or data_non_deterministic(1)1");
+   check(acceptance >= 3 && acceptance <= 100, "acceptance could not be less than 3 or greater than 100 ");
+   check(data_format.size() <= 256, "data_format could not greater than 256");
+   check(criteria.size() <= 256, "criteria could not greater than 256");
+   check(declaration.size() <= 256, "declaration could not greater than 256");
+
 ```
 
 ###### 1. 部署合约
@@ -187,9 +201,9 @@ contract_consumer_folder=bos.dappuser
 
 ```
 test_reg_service
- ${!cleos} push action ${contract_oracle} regservice '{ "account":"'${provider1111}'", "base_stake_amount":"1000.0000 BOS","data_format":"", "data_type":0, "criteria":"",
+ ${!cleos} push action ${contract_oracle} regservice '{ "account":"provider1111", "base_stake_amount":"1000.0000 BOS","data_format":"", "data_type":0, "criteria":"",
                           "acceptance":3, "declaration":"", "injection_method":0, "duration":1,
-                          "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${provider1111}@active
+                          "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p provider1111@active
 
 ```
 
@@ -207,7 +221,7 @@ test_fee
 ```
 transfer stake
 stake unstake  eosio.code
-  $cleos1 transfer ${provider1111} ${contract_oracle} "0.0001 BOS" "0,0" -p ${provider1111}
+  $cleos1 transfer provider1111 ${contract_oracle} "0.0001 BOS" "0,0" -p provider1111
 
 ```
 
@@ -217,12 +231,12 @@ stake unstake  eosio.code
 test_subs
   ${!cleos} push action ${contract_oracle} subscribe '{"service_id":"0", 
     "contract_account":"'${contract_consumer}'",  "publickey":"",
-                          "account":"'${consumer1111}'", "amount":"10.0000 BOS", "memo":""}' -p ${consumer1111}@active
+                          "account":"consumer1111", "amount":"10.0000 BOS", "memo":""}' -p consumer1111@active
 }
 test_req
 
   ${!cleos} push action ${contract_oracle} requestdata '{"service_id":0,  "contract_account":"'${contract_consumer}'", 
-                         "requester":"'${consumer1111}'", "request_content":"eth usd"}' -p ${consumer1111}@active
+                         "requester":"consumer1111", "request_content":"eth usd"}' -p consumer1111@active
 
 ```
 
@@ -230,7 +244,7 @@ test_req
 
 ```
 transfer pay
-    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "1,0" -p ${consumer2222}
+    $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "1,0" -p consumer2222
 
 ```
 
@@ -238,15 +252,15 @@ transfer pay
 
 ```
 "mpush") test_multipush c1 "$2" ;;
-  # ${!cleos}  set account permission ${provider1111}  active '{"threshold": 1,"keys": [{"key": "'${provider1111_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${provider1111}@owner
+  # ${!cleos}  set account permission provider1111  active '{"threshold": 1,"keys": [{"key": "'${provider1111_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p provider1111@owner
     # sleep .2
-    ${!cleos} push action ${contract_oracle} multipush '{"service_id":0, "provider":"'${provider1111}'",  "data_json":"test multipush data json","is_request":'${reqflag}'}' -p ${provider1111}
+    ${!cleos} push action ${contract_oracle} multipush '{"service_id":0, "provider":"provider1111",  "data_json":"test multipush data json","is_request":'${reqflag}'}' -p provider1111
 
 "push") test_push c1 ;;
-    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"'${provider1111}'", "contract_account":"'${contract_consumer}'",  "request_id":0, "data_json":"test data json"}' -p ${provider1111}
+    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"provider1111", "contract_account":"'${contract_consumer}'",  "request_id":0, "data_json":"test data json"}' -p provider1111
 
 "pushr") test_pushforreq c1 "$2" ;;
-    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"'${provider1111}'", "contract_account":"'${contract_consumer}'",  "request_id":'"$2"', "data_json":"test data json"}' -p ${provider1111}
+    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"provider1111", "contract_account":"'${contract_consumer}'",  "request_id":'"$2"', "data_json":"test data json"}' -p provider1111
 
 ${!cleos} push action ${contract_oracle} oraclepush '{"service_id":1, "provider":"'${p}'",  "request_id":0, "data_json":"auto publish test data json"}' -p ${p}
 
@@ -259,7 +273,7 @@ ${!cleos} push action ${contract_oracle} oraclepush '{"service_id":1, "provider"
 ```
 "deposit") test_deposit c1 ;; dappuser()->dapp(data consumer) save
 
-    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "2,consumer2222,consumer1111,0" -p ${consumer2222}
+    $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "2,consumer2222,consumer1111,0" -p consumer2222
    
 ```
 
@@ -268,7 +282,7 @@ ${!cleos} push action ${contract_oracle} oraclepush '{"service_id":1, "provider"
 ```
 "withdraw") test_withdraw c1 ;; dapp(data consumer) -> dappuser()
 
-  ${!cleos} push action ${contract_oracle} withdraw '{"service_id":0,  "from":"'${consumer1111}'", "to":"oraclize1111",
+  ${!cleos} push action ${contract_oracle} withdraw '{"service_id":0,  "from":"consumer1111", "to":"oraclize1111",
                          "quantity":"1.0000 BOS", "memo":""}' -p ${contract_oracle}@active
 }
 ```
@@ -318,7 +332,7 @@ cleos push action $EOS_ORACLE uploadeviden '["appeallant1", 0, "evidence"]' - p 
 
 ```
     #resp_case
-    ${!cleos}  transfer ${provider1111} ${contract_oracle} "200.0000 BOS" "5,1,''" -p ${provider1111}
+    ${!cleos}  transfer provider1111 ${contract_oracle} "200.0000 BOS" "5,1,''" -p provider1111
 }
 
 ```
@@ -345,7 +359,7 @@ cleos push action $EOS_ORACLE uploadeviden '["appeallant1", 0, "evidence"]' - p 
 #####  再应诉（抵押）
 
 ```
-  ${!cleos}  transfer ${provider1111} ${contract_oracle} "400.0000 BOS" "5,1,''" -p ${provider1111}
+  ${!cleos}  transfer provider1111 ${contract_oracle} "400.0000 BOS" "5,1,''" -p provider1111
 ```
 
 #####  解抵押
@@ -392,9 +406,9 @@ cleos push action $EOS_ORACLE claimarbi '["appeallant1","appeallant1"]' - p appe
 
 
 ```
-  ${!cleos} push action ${contract_oracle} regservice '{ "account":"'${provider1111}'", "base_stake_amount":"1000.0000 BOS",  "data_format":"", "data_type":0, "criteria":"",
+  ${!cleos} push action ${contract_oracle} regservice '{ "account":"provider1111", "base_stake_amount":"1000.0000 BOS",  "data_format":"", "data_type":0, "criteria":"",
                           "acceptance":3, "declaration":"", "injection_method":0, "duration":1,
-                          "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${provider1111}@active
+                          "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p provider1111@active
 ```
 
 
@@ -455,7 +469,7 @@ cleos push action $EOS_ORACLE claimarbi '["appeallant1","appeallant1"]' - p appe
 
     ${!cleos} push action ${contract_oracle} subscribe '{"service_id":"0", 
     "contract_account":"'${contract_consumer}'", 
-                          "account":"'${consumer1111}'", "amount":"10.0000 BOS", "memo":""}' -p ${consumer1111}@active
+                          "account":"consumer1111", "amount":"10.0000 BOS", "memo":""}' -p consumer1111@active
 
 6. 请求服务数据接口
 
@@ -472,7 +486,7 @@ cleos push action $EOS_ORACLE claimarbi '["appeallant1","appeallant1"]' - p appe
 
 
     ${!cleos} push action ${contract_oracle} requestdata '{"service_id":0,  "contract_account":"'${contract_consumer}'", 
-                         "requester":"'${consumer1111}'", "request_content":"eth usd"}' -p ${consumer1111}@active
+                         "requester":"consumer1111", "request_content":"eth usd"}' -p consumer1111@active
 
 
 7. 推送服务数据接口  
@@ -489,24 +503,24 @@ cleos push action $EOS_ORACLE claimarbi '["appeallant1","appeallant1"]' - p appe
 | 数据提供者签名 |                      Data Provider Signature                       | uint64_t provider _signature | 字符串   |          |
 | 数据服务请求ID |                      Data Service Request ID                       | uint64_t request_id          | 整型     |          |
 
-  ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"'${provider1111}'", "contract_account":"'${contract_consumer}'", 
-                         "request_id":'"$2"', "data_json":"test data json"}' -p ${provider1111}
+  ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"provider1111", "contract_account":"'${contract_consumer}'", 
+                         "request_id":'"$2"', "data_json":"test data json"}' -p provider1111
 
-  # ${!cleos}  set account permission ${provider1111}  active '{"threshold": 1,"keys": [{"key": "'${provider1111_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${provider1111}@owner
+  # ${!cleos}  set account permission provider1111  active '{"threshold": 1,"keys": [{"key": "'${provider1111_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p provider1111@owner
 
 
     # sleep .2
-    ${!cleos} push action ${contract_oracle} multipush '{"service_id":0, "provider":"'${provider1111}'", 
-                          "data_json":"test multipush data json","is_request":'${reqflag}'}' -p ${provider1111}
+    ${!cleos} push action ${contract_oracle} multipush '{"service_id":0, "provider":"provider1111", 
+                          "data_json":"test multipush data json","is_request":'${reqflag}'}' -p provider1111
 
   reqflag=false && if [ "$2" != "" ]; then reqflag="$2"; fi
 
     echo ===multipush
-    # ${!cleos}  set account permission ${provider1111}  active '{"threshold": 1,"keys": [{"key": "'${provider1111_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${provider1111}@owner
+    # ${!cleos}  set account permission provider1111  active '{"threshold": 1,"keys": [{"key": "'${provider1111_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p provider1111@owner
 
     # sleep .2
-    ${!cleos} push action ${contract_oracle} multipush '{"service_id":0, "provider":"'${provider1111}'", 
-                          "data_json":"test multipush data json","is_request":'${reqflag}'}' -p ${provider1111}
+    ${!cleos} push action ${contract_oracle} multipush '{"service_id":0, "provider":"provider1111", 
+                          "data_json":"test multipush data json","is_request":'${reqflag}'}' -p provider1111
 
 # 2.  
 8. 申诉接口

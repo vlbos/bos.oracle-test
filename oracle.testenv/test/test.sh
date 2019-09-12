@@ -241,6 +241,9 @@ test_date_timestamp() {
 
   echo end
 
+
+ test_start_time=$(date -j -u -f "%Y-%m-%d %H:%M:%S" "2019-09-12 09:09:09" "+%s")
+ echo $test_start_time
 }
 test_date_timestamp
 

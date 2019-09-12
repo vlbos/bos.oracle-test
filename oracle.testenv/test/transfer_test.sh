@@ -5,9 +5,9 @@
 
 test_reg_service() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
-    ${!cleos} push action ${contract_oracle} regservice '{  "account":"'${provider1111}'","base_stake_amount":"1000.0000 BOS","data_format":"", "data_type":0, "criteria":"",
+    ${!cleos} push action ${contract_oracle} regservice '{  "account":"provider1111","base_stake_amount":"1000.0000 BOS","data_format":"", "data_type":0, "criteria":"",
                           "acceptance":3, "declaration":"", "injection_method":0, "duration":1,
-                          "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${provider1111}@active
+                          "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p provider1111@active
 
 }
 
@@ -24,7 +24,7 @@ transfer2() {
     echo --- riskaccounts before transfer 2---
     test_get_table1 consumer1111 riskaccounts
     echo --- deposit transfer 2---
-    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "2,consumer2222,consumer1111,0" -p ${consumer2222}
+    $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "2,consumer2222,consumer1111,0" -p consumer2222
     echo --- riskaccounts after transfer 2---
     test_get_table1 consumer1111 riskaccounts
 }
@@ -42,11 +42,11 @@ transfer3() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
     #appeal
-    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "3,1,'','','reason'" -p ${consumer2222}
+    $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "3,1,'','','reason'" -p consumer2222
     # #arbitrator
-    # $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "4,1" -p ${consumer2222}
+    # $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "4,1" -p consumer2222
     # #resp_case
-    # $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "5,0,1" -p ${consumer2222}
+    # $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "5,0,1" -p consumer2222
 
 }
 
@@ -65,7 +65,7 @@ transfer_regarbi() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
     #arbitrator
-    # ${!cleos}  transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "4,1" -p ${consumer2222}
+    # ${!cleos}  transfer consumer2222 ${contract_oracle} "0.0001 BOS" "4,1" -p consumer2222
 
     for i in {1..5}; do
         for j in {1..5}; do
@@ -83,7 +83,7 @@ transfer_respcase() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
     #resp_case
-    ${!cleos} transfer ${provider1111} ${contract_oracle} "200.0000 BOS" "5,1,''" -p ${provider1111}
+    ${!cleos} transfer provider1111 ${contract_oracle} "200.0000 BOS" "5,1,''" -p provider1111
 }
 
 test_transfer() {

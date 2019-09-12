@@ -19,6 +19,7 @@ create_wallet(){
 create_wallet
 
 import_key(){
+    echo prikey=$1
     cleos wallet import --private-key $1
 }
 

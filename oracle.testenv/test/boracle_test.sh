@@ -99,9 +99,9 @@ get_update_number() {
 test_reg_service5() {
     echo ==reg 5
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
-    ${!cleos} push action ${contract_oracle} regservice '{ "account":"'${provider1111}'", "base_stake_amount":"1000.0000 BOS",  "data_format":"", "data_type":0, "criteria":"",
+    ${!cleos} push action ${contract_oracle} regservice '{ "account":"provider1111", "base_stake_amount":"1000.0000 BOS",  "data_format":"", "data_type":0, "criteria":"",
                           "acceptance":3, "declaration":"", "injection_method":0, "duration":'${service_duration}',
-                          "provider_limit":3, "update_cycle":'${update_cycle}', "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${provider1111}@active
+                          "provider_limit":3, "update_cycle":'${update_cycle}', "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p provider1111@active
 
     for i in {2..5}; do
         p='provider'${i}${i}${i}${i}
@@ -144,9 +144,9 @@ test_indirectpush() {
 
 test_reg_service() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
-    ${!cleos} push action ${contract_oracle} regservice '{"account":"'${provider1111}'","base_stake_amount":"1000.0000 BOS","data_format":"", "data_type":0, "criteria":"",
+    ${!cleos} push action ${contract_oracle} regservice '{"account":"provider1111","base_stake_amount":"1000.0000 BOS","data_format":"", "data_type":0, "criteria":"",
                           "acceptance":3, "declaration":"", "injection_method":0, "duration":1,
-                          "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p ${provider1111}@active
+                          "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p provider1111@active
 
 }
 
@@ -162,14 +162,14 @@ test_subs() {
 
     ${!cleos} push action ${contract_oracle} subscribe '{"service_id":"0", 
     "contract_account":"'${contract_consumer}'",  "publickey":"",
-                          "account":"'${consumer1111}'",  "memo":""}' -p ${consumer1111}@active
+                          "account":"consumer1111",  "memo":""}' -p consumer1111@active
 }
 
 test_push() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
-    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"'${provider1111}'", "contract_account":"'${contract_consumer}'", 
-                         "request_id":0, "data_json":"test data json"}' -p ${provider1111}
+    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"provider1111", "contract_account":"'${contract_consumer}'", 
+                         "request_id":0, "data_json":"test data json"}' -p provider1111
 
 }
 
@@ -180,8 +180,8 @@ test_pushforreq() {
     echo "$1"
     echo "$2"
 
-    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"'${provider1111}'", "contract_account":"'${contract_consumer}'", 
-                         "request_id":'"$2"', "data_json":"test data json"}' -p ${provider1111}
+    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"provider1111", "contract_account":"'${contract_consumer}'", 
+                         "request_id":'"$2"', "data_json":"test data json"}' -p provider1111
 
 }
 
@@ -190,31 +190,31 @@ test_multipush() {
     reqflag=false && if [ "$2" != "" ]; then reqflag="$2"; fi
 
     echo ===multipush
-    # ${!cleos}  set account permission ${provider1111}  active '{"threshold": 1,"keys": [{"key": "'${provider1111_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${provider1111}@owner
+    # ${!cleos}  set account permission provider1111  active '{"threshold": 1,"keys": [{"key": "'${provider1111_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p provider1111@owner
 
     # sleep .2
-    ${!cleos} push action ${contract_oracle} multipush '{"service_id":0, "provider":"'${provider1111}'", 
-                          "data_json":"test multipush data json","is_request":'${reqflag}'}' -p ${provider1111}
+    ${!cleos} push action ${contract_oracle} multipush '{"service_id":0, "provider":"provider1111", 
+                          "data_json":"test multipush data json","is_request":'${reqflag}'}' -p provider1111
 }
 
 test_req() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
     ${!cleos} push action ${contract_oracle} requestdata '{"service_id":0,  "contract_account":"'${contract_consumer}'", 
-                         "requester":"'${consumer1111}'", "request_content":"eth usd"}' -p ${consumer1111}@active
+                         "requester":"consumer1111", "request_content":"eth usd"}' -p consumer1111@active
 }
 
 test_deposit() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
-    ${!cleos} push action ${contract_oracle} deposit '{"service_id":0,  "from":"oraclize1111", "to":"'${consumer1111}'",
+    ${!cleos} push action ${contract_oracle} deposit '{"service_id":0,  "from":"oraclize1111", "to":"consumer1111",
                          "quantity":"10.0000 BOS", "memo":"","is_notify":false}' -p ${contract_oracle}@active
 }
 
 test_withdraw() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
-    ${!cleos} push action ${contract_oracle} withdraw '{"service_id":0,  "from":"'${consumer1111}'", "to":"oraclize1111",
+    ${!cleos} push action ${contract_oracle} withdraw '{"service_id":0,  "from":"consumer1111", "to":"oraclize1111",
                          "quantity":"1.0000 BOS", "memo":""}' -p ${contract_oracle}@active
 }
 
@@ -242,10 +242,10 @@ test_get_account() {
 
 transfer() {
     echo --- cleos1 transfer ---
-    $cleos1 transfer ${provider1111} ${contract_oracle} "0.0001 BOS" "0,0" -p ${provider1111}
-    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "1,0" -p ${consumer2222}
-    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "2,consumer2222,consumer1111,0" -p ${consumer2222}
-    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "3,0" -p ${consumer2222}
+    $cleos1 transfer provider1111 ${contract_oracle} "0.0001 BOS" "0,0" -p provider1111
+    $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "1,0" -p consumer2222
+    $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "2,consumer2222,consumer1111,0" -p consumer2222
+    $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "3,0" -p consumer2222
 
     # $cleos2 transfer  testblklist1 testblklist2 "10.0000 BOS" "ibc receiver=chengsong111" -p testblklist1
     #
@@ -271,7 +271,7 @@ transfer0() {
     echo --- servicestake before transfer ---
     test_get_table servicestake
     echo --- cleos1 transfer service stake---
-    $cleos1 transfer ${provider1111} ${contract_oracle} "0.0001 BOS" "0,0" -p ${provider1111}
+    $cleos1 transfer provider1111 ${contract_oracle} "0.0001 BOS" "0,0" -p provider1111
     echo --- providers after transfer ---
     test_get_table providers
     echo --- svcprovision after transfer ---
@@ -493,7 +493,7 @@ transfer2() {
     echo --- riskaccounts before transfer 2---
     test_get_table1 consumer1111 riskaccounts
     echo --- deposit transfer 2---
-    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "2,consumer2222,consumer1111,0" -p ${consumer2222}
+    $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "2,consumer2222,consumer1111,0" -p consumer2222
     echo --- riskaccounts after transfer 2---
     test_get_table1 consumer1111 riskaccounts
 }
@@ -511,11 +511,11 @@ transfer3() {
  cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
     #appeal
-    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "3,1,'','','reason'" -p ${consumer2222}
+    $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "3,1,'','','reason'" -p consumer2222
     # #arbitrator
-    # $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "4,1" -p ${consumer2222}
+    # $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "4,1" -p consumer2222
     # #resp_case
-    # $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "5,0,1" -p ${consumer2222}
+    # $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "5,0,1" -p consumer2222
 
 }
 
@@ -526,11 +526,11 @@ transfer_appeal() {
  cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
     #appeal
-    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "3,1,'','','reason'" -p ${consumer2222}
+    $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "3,1,'','','reason'" -p consumer2222
     # #arbitrator
-    # $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "4,1" -p ${consumer2222}
+    # $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "4,1" -p consumer2222
     # #resp_case
-    # $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "5,0,1" -p ${consumer2222}
+    # $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "5,0,1" -p consumer2222
 }
 
 transfer_regarbi() {
@@ -539,7 +539,7 @@ transfer_regarbi() {
  cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
     #arbitrator
-    cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "4,1" -p ${consumer2222}
+    cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "4,1" -p consumer2222
 
 }
 
@@ -549,7 +549,7 @@ transfer_respcase() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
     #resp_case
-    $cleos1 transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "5,0,1" -p ${consumer2222}
+    $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "5,0,1" -p consumer2222
 }
 
 

@@ -159,7 +159,7 @@ transfer_regarbi() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
      #arbitrator
-     # ${!cleos}  transfer ${consumer2222} ${contract_oracle} "0.0001 BOS" "4,1" -p ${consumer2222}
+     # ${!cleos}  transfer consumer2222 ${contract_oracle} "0.0001 BOS" "4,1" -p consumer2222
 
      for i in {1..5}; do
           for j in {1..5}; do
@@ -184,7 +184,7 @@ transfer_respcase() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
      #resp_case
-     ${!cleos} transfer ${provider1111} ${contract_oracle} "200.0000 BOS" "5,1,''" -p ${provider1111}
+     ${!cleos} transfer provider1111 ${contract_oracle} "200.0000 BOS" "5,1,''" -p provider1111
 }
 
 case "$1" in

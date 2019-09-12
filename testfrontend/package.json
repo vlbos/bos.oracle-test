@@ -1,5 +1,5 @@
 {
-  "name": "bos-oracle-utils",
+  "name": "delpi-oracle-utils",
   "version": "1.0.0",
   "description": "",
   "main": "updater.js",
@@ -9,8 +9,9 @@
   "author": "Guillaume Babin-Tremblay",
   "license": "ISC",
   "dependencies": {
-    "eosjs": "*",
-    "dotenv": "*",
-    "axios": "*"
+    "eosjs": "^16.0.9",
+    "dotenv": "^6.0.0",
+    "request": "*",
+    "colors": "*"
   }
 }

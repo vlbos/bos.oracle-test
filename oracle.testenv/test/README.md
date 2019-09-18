@@ -149,14 +149,14 @@ tc_risk_guarantee};
 # //  risk_guarantee_category,index_id ,index_duration
 
 
-执行状态
- arbi_init = 1,
+    执行状态
+   arbi_init = 1,
    arbi_choosing_arbitrator,
    arbi_wait_for_resp_appeal,
-   arbi_resp_appeal_timeout_end,
    arbi_wait_for_accept_arbitrate_invitation,
    arbi_wait_for_upload_result,
    arbi_wait_for_reappeal,
+   arbi_resp_appeal_timeout_end,
    arbi_reappeal_timeout_end,
    arbi_public_end
 
@@ -183,13 +183,13 @@ tc_risk_guarantee};
 
 - test_set_contracts
 - oracle.bos
-- dappuser.bos
+- consumer.bos
 
 contract_oracle=oraclebosbos
 contract_oracle_folder=bos.oracle
 
 contract_consumer=consumer1234
-contract_consumer_folder=bos.dappuser
+contract_consumer_folder=consumer.contract
 
   ${!cleos} set contract ${contract_oracle} ${CONTRACTS_DIR}/${contract_oracle_folder} -x 1000 -p ${contract_oracle}
  
@@ -271,7 +271,7 @@ ${!cleos} push action ${contract_oracle} oraclepush '{"service_id":1, "provider"
 ##### 1. 存入金额
 
 ```
-"deposit") test_deposit c1 ;; dappuser()->dapp(data consumer) save
+"deposit") test_deposit c1 ;; consumer()->dapp(data consumer) save
 
     $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "2,consumer2222,consumer1111,0" -p consumer2222
    
@@ -280,7 +280,7 @@ ${!cleos} push action ${contract_oracle} oraclepush '{"service_id":1, "provider"
 ##### 2. 提取金额 
 
 ```
-"withdraw") test_withdraw c1 ;; dapp(data consumer) -> dappuser()
+"withdraw") test_withdraw c1 ;; dapp(data consumer) -> consumer()
 
   ${!cleos} push action ${contract_oracle} withdraw '{"service_id":0,  "from":"consumer1111", "to":"oraclize1111",
                          "quantity":"1.0000 BOS", "memo":""}' -p ${contract_oracle}@active
@@ -317,7 +317,7 @@ ${!cleos} get table ${contract_oracle} ${contract_oracle} arbitrators
 ```
 
     #appeal   role_type 1 consume 2 provider
-    ${!cleos} transfer  appeallant11 ${contract_oracle} "200.0000 BOS" "3,1,'evidence','info','reason',1" -p appeallant11
+    ${!cleos} transfer  appellants11 ${contract_oracle} "200.0000 BOS" "3,1,'evidence','info','reason',1" -p appellants11
 
 
 ```
@@ -325,7 +325,7 @@ ${!cleos} get table ${contract_oracle} ${contract_oracle} arbitrators
  ##### 上传证据
 
 ```  
-cleos push action $EOS_ORACLE uploadeviden '["appeallant1", 0, "evidence"]' - p appeallant1 @active
+cleos push action $EOS_ORACLE uploadeviden '["appellant1", 0, "evidence"]' - p appellant1 @active
 ```
 
  #####  应诉（抵押）
@@ -353,7 +353,7 @@ cleos push action $EOS_ORACLE uploadeviden '["appeallant1", 0, "evidence"]' - p 
 ##### 再申诉（抵押）
 
 ```
-  ${!cleos} transfer  appeallant11 ${contract_oracle} "400.0000 BOS" "3,1,'evidence','info','reason',1" -p appeallant11
+  ${!cleos} transfer  appellants11 ${contract_oracle} "400.0000 BOS" "3,1,'evidence','info','reason',1" -p appellants11
 ```
 
 #####  再应诉（抵押）
@@ -365,14 +365,14 @@ cleos push action $EOS_ORACLE uploadeviden '["appeallant1", 0, "evidence"]' - p 
 #####  解抵押
   void unstakearbi(uint64_t arbitration_id, name account, asset amount, std::string memo);
 ```  
-cleos push action $EOS_ORACLE unstakearbi '[1,"appeallant1",  "400.0000 BOS",'']' - p appeallant1 @active
+cleos push action $EOS_ORACLE unstakearbi '[1,"appellant1",  "400.0000 BOS",'']' - p appellant1 @active
 ```
 
 #####   领取仲裁收益
     void claimarbi(name account, name receive_account);
 
 ```  
-cleos push action $EOS_ORACLE claimarbi '["appeallant1","appeallant1"]' - p appeallant1 @active
+cleos push action $EOS_ORACLE claimarbi '["appellant1","appellant1"]' - p appellant1 @active
 ```
 
 # 1. 部署合约 
@@ -531,7 +531,7 @@ cleos push action $EOS_ORACLE claimarbi '["appeallant1","appeallant1"]' - p appe
 |    定义接口名    | appeal                                         |                         |          |                              |
 |   接口功能描述   | 定义数据服务使用者对提供数据质疑时提出申诉接口 |                         |          |                              |
 |    中文参数名    | 英文参数名                                     | 参数定义                | 参数类型 | 参数描述                     |
-|    申诉者签名    | Appellant                                      | name appeallant         | 整型     |                              |
+|    申诉者签名    | Appellant                                      | name appellant         | 整型     |                              |
 |    数据服务ID    | Data Service ID                                | uint64_t service_id     | 整型     |                              |
 |   申诉抵押金额   | stake amount                                   | asset amount            | 整型     |                              |
 |     申诉原因     | Reason for appeal                              | std::string reason      | 字符串   |                              |

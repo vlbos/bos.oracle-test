@@ -31,7 +31,7 @@ test_regs() {
 test_appeal() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
      ###=============================================== appeal 申诉, ok
-     # ${!cleos} push action ${contract_oracle} appeal '["appeallant1", 1, "1.0000 BOS", "appeallant1", 1]' -p appeallant1@active
+     # ${!cleos} push action ${contract_oracle} appeal '["appellant1", 1, "1.0000 BOS", "appellant1", 1]' -p appellant1@active
      ${!cleos} get table ${contract_oracle} ${contract_oracle} appeal_request
      ${!cleos} get table ${contract_oracle} ${contract_oracle} arbitratcase
      ${!cleos} get table ${contract_oracle} ${contract_oracle} arbiprocess
@@ -46,7 +46,7 @@ test_respcase() {
 test_uploadeviden() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
      ###=============================================== uploadeviden, 申诉者上传证据, ok
-     ${!cleos} push action ${contract_oracle} uploadeviden '["appeallant1", 0, "evidence"]' -p appeallant1@active
+     ${!cleos} push action ${contract_oracle} uploadeviden '["appellant1", 0, "evidence"]' -p appellant1@active
 }
 
 test_reappeal() {
@@ -58,7 +58,7 @@ test_reappeal() {
 test_rerespcase() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
      ###=============================================== rerespcase, 数据使用者再次应诉, ok
-     ${!cleos} push action ${contract_oracle} rerespcase '["appeallant1", 0, 0, 0, false]' -p appeallant1@active
+     ${!cleos} push action ${contract_oracle} rerespcase '["appellant1", 0, 0, 0, false]' -p appellant1@active
 }
 
 test_acceptarbi2() {
@@ -89,13 +89,13 @@ test_uploadresult2() {
 test_reappeal2() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
      ###=============================================== reappeal, 数据使用者再次申诉, ok
-     ${!cleos} push action ${contract_oracle} reappeal '["appeallant1", 0, 0, 1, 1, false, "1.0000 BOS", 1, "数据使用者不服, 再次申诉"]' -p appeallant1@active
+     ${!cleos} push action ${contract_oracle} reappeal '["appellant1", 0, 0, 1, 1, false, "1.0000 BOS", 1, "数据使用者不服, 再次申诉"]' -p appellant1@active
 }
 
 test_rerespcase2() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
      ###=============================================== rerespcase, 数据提供者再次应诉, ok
-     ${!cleos} push action ${contract_oracle} rerespcase '["provider1111", 0, 0, 1, true]' -p appeallant1@active
+     ${!cleos} push action ${contract_oracle} rerespcase '["provider1111", 0, 0, 1, true]' -p appellant1@active
 }
 
 ACCOUNTS=("arbitrator11" "arbitrator31" "arbitrator53")
@@ -150,7 +150,7 @@ transfer_appeal() {
      cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
      #appeal
-     ${!cleos} transfer appeallant11 ${contract_oracle} "200.0000 BOS" "3,1,'evidence','info','reason',0" -p appeallant11
+     ${!cleos} transfer appellants11 ${contract_oracle} "200.0000 BOS" "3,1,'evidence','info','reason',0" -p appellants11
 }
 
 transfer_regarbi() {

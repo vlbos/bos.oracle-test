@@ -56,7 +56,7 @@ transfer_appeal() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
     #appeal
-    ${!cleos} transfer appeallant11 ${contract_oracle} "200.0000 BOS" "3,1,'evidence','info','reason',0" -p appeallant11
+    ${!cleos} transfer appellants11 ${contract_oracle} "200.0000 BOS" "3,1,'evidence','info','reason',0" -p appellants11
 }
 
 transfer_regarbi() {

@@ -46,9 +46,9 @@ consumer_transfer5() {
 
 }
 
-service_duration=60
-update_cycle=600
-update_start_time_date="2019-09-12"
+service_duration=30
+update_cycle=120
+update_start_time_date="2019-09-16"
 update_start_time_time="09:09:09"
 update_start_time=$update_start_time_date"T"$update_start_time_time".216857+00:00"
 
@@ -141,22 +141,20 @@ test_reg_service() {
 test_fee() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
-    ${!cleos} push action ${contract_oracle} addfeetypes '{"service_id":"0","fee_types":[0,1],"service_prices":["1.0000 BOS","2.0000 BOS"] }' -p ${contract_oracle}@active
+    ${!cleos} push action ${contract_oracle} addfeetypes '{"service_id":"1","fee_types":[0,1],"service_prices":["1.0000 BOS","2.0000 BOS"] }' -p ${contract_oracle}@active
 
 }
 
 test_subs() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
-    ${!cleos} push action ${contract_oracle} subscribe '{"service_id":"0", 
-    "contract_account":"'${contract_consumer}'",  "publickey":"",
-                          "account":"consumer1111", "amount":"10.0000 BOS", "memo":""}' -p consumer1111@active
+    ${!cleos} push action ${contract_oracle} subscribe '{"service_id":"1", "contract_account":"'${contract_consumer}'",  "publickey":"",  "account":"consumer1111", "amount":"10.0000 BOS", "memo":""}' -p consumer1111@active
 }
 
 test_push() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
-    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"provider1111", "contract_account":"'${contract_consumer}'", 
+    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":1, "provider":"provider1111", "contract_account":"'${contract_consumer}'", 
                          "request_id":0, "data_json":"test data json"}' -p provider1111
 
 }
@@ -168,7 +166,7 @@ test_pushforreq() {
     echo "$1"
     echo "$2"
 
-    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":0, "provider":"provider1111", "contract_account":"'${contract_consumer}'", 
+    ${!cleos} push action ${contract_oracle} pushdata '{"service_id":1, "provider":"provider1111", "contract_account":"'${contract_consumer}'", 
                          "request_id":'"$2"', "data_json":"test data json"}' -p provider1111
 
 }

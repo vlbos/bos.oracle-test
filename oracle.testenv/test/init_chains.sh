@@ -95,7 +95,7 @@ create_pro_con_accounts
 
 create_arbi_test_account() {
 
-    ACCOUNTS=("appeallant" "arbitrator")
+    ACCOUNTS=("appellants" "arbitrator")
     for a in ${ACCOUNTS[*]}; do
         for i in {1..5}; do
             for j in {1..5}; do

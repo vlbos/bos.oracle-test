@@ -16,7 +16,7 @@ contract_oracle=oraclebosbos
 contract_oracle_folder=bos.oracle
 
 contract_consumer=consumer1234
-contract_consumer_folder=bos.dappuser
+contract_consumer_folder=consumer.contract
 
 oraclize_c_pubkey=EOS6FZoCJr1o6VJAB4d1hduGjb1Z1FC69jNXZ6BtvrzPbnssik5DH
 oraclize_c_prikey=5JhNVeWb8DnMwczC54PSeGBYeQgjvW4SJhVWXMXW7o4f3xh7sYk

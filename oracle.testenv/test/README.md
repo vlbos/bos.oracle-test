@@ -170,9 +170,9 @@ tc_risk_guarantee};
          "injection_method only set chain_indirect(0) or chain_direct(1)or chain_outside(2)");
    check(data_type == data_deterministic || data_type == data_non_deterministic, "data_type only set value data_deterministic(0) or data_non_deterministic(1)1");
    check(acceptance >= 3 && acceptance <= 100, "acceptance could not be less than 3 or greater than 100 ");
-   check(data_format.size() <= 256, "data_format could not greater than 256");
-   check(criteria.size() <= 256, "criteria could not greater than 256");
-   check(declaration.size() <= 256, "declaration could not greater than 256");
+   check(data_format.size() <= 256, "data_format could not be greater than 256");
+   check(criteria.size() <= 256, "criteria could not be greater than 256");
+   check(declaration.size() <= 256, "declaration could not be greater than 256");
 
 ```
 

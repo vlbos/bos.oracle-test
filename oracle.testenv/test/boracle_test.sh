@@ -11,6 +11,12 @@ set_contracts() {
     ${!cleos} set contract ${contract_consumer} ${CONTRACTS_DIR}/${contract_consumer_folder} -x 1000 -p ${contract_consumer}@active
     sleep .2
 
+    ${!cleos} set contract ${contract_consumer} ${CONTRACTS_DIR}/${contract_consumer_folder} -x 1000 -p ${contract_consumer}@active
+    sleep .2
+
+    ${!cleos} set contract ${contract_ocbc} ${CONTRACTS_DIR}/${contract_ocbc_folder} -x 1000 -p ${contract_ocbc}@active
+    sleep .2
+
     ${!cleos} set account permission ${contract_oracle} active '{"threshold": 1,"keys": [{"key": "'${oracle_c_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_oracle}@owner
 }
 
@@ -579,8 +585,17 @@ test_init_contracts() {
     # init_contracts c2
 }
 
-case "$1" in
+test_ocbc() {
+        # $cleos1 transfer consumer2222 ${contract_ocbc} "0.0001 BOS" "5,0,1" -p consumer2222
 
+# $cleos1 push action ${contract_ocbc}  xrefund '{"owner":"consumer4444"}' -p ${contract_ocbc} 
+# $cleos1 push action ${contract_ocbc}  xundelegate '{"owner":"consumer4444"}' -p consumer4444
+
+$cleos1 push action ${contract_ocbc}  xrefund '["consumer4444"]' -p ${contract_ocbc} 
+$cleos1 push action ${contract_ocbc}  xundelegate '["consumer4444"]' -p consumer4444
+}
+case "$1" in
+"ocbc") test_ocbc ;;
 "set") test_set_contracts ;;
 "init") test_init_contracts "$2" "$3" ;;
 "acc") test_get_account "$2" ;;

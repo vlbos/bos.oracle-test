@@ -19,8 +19,7 @@ test_regs() {
 
      ###=============================================== regservice, ok
      ${!cleos} push action ${contract_oracle} regservice '{  "account":"provider1111", "base_stakeamount":"1000.0000 BOS", "data_format":"", "data_type":0, "criteria":"",
-                          "acceptance":3, "declaration":"", "injection_method":0, "duration":1,
-                          "provider_limit":3, "update_cycle":1, "update_start_time":"2019-07-29T15:27:33.216857+00:00"}' -p provider1111@active
+                          "acceptance":3,  "injection_method":0, "duration":1, "provider_limit":3, "update_cycle":1}' -p provider1111@active
      ${!cleos} get table ${contract_oracle} ${contract_oracle} dataservices
      ${!cleos} get table ${contract_oracle} ${contract_oracle} providers
      ${!cleos} get table ${contract_oracle} provider1111 provservices

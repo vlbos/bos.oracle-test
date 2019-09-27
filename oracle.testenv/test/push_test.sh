@@ -122,7 +122,7 @@ test_indirectpush() {
         for i in {1..5}; do
             p='provider'${i}${i}${i}${i}
             ${!cleos} push action ${contract_oracle} pushdata '{"service_id":1, "provider":"'${p}'", "update_number":"'${current_update_number}'", 
-                         "request_id":0, "data_json":"indi publish test data json"}' -p ${p}
+                         "request_id":0, "data":"indi publish test data json"}' -p ${p}
             sleep 2
         done
     else
@@ -155,7 +155,7 @@ test_push() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
     ${!cleos} push action ${contract_oracle} pushdata '{"service_id":1, "provider":"provider1111", "contract_account":"'${contract_consumer}'", 
-                         "request_id":0, "data_json":"test data json"}' -p provider1111
+                         "request_id":0, "data":"test data json"}' -p provider1111
 
 }
 
@@ -167,7 +167,7 @@ test_pushforreq() {
     echo "$2"
 
     ${!cleos} push action ${contract_oracle} pushdata '{"service_id":1, "provider":"provider1111", "contract_account":"'${contract_consumer}'", 
-                         "request_id":'"$2"', "data_json":"test data json"}' -p provider1111
+                         "request_id":'"$2"', "data":"test data json"}' -p provider1111
 
 }
 
@@ -180,7 +180,7 @@ test_multipush() {
 
     # sleep .2
     ${!cleos} push action ${contract_oracle} multipush '{"service_id":0, "provider":"provider1111", 
-                          "data_json":"test multipush data json","is_request":'${reqflag}'}' -p provider1111
+                          "data":"test multipush data json","is_request":'${reqflag}'}' -p provider1111
 }
 
 test_req() {

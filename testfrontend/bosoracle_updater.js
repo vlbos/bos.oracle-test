@@ -165,7 +165,7 @@ function write(updat_number) {
 								provider: provider,
 								update_number: update_number,
 								request_id: request_id,
-								data_json: "" +  eosprice
+								data: "" +  eosprice
 							},
 								{
 									scope: oracleContract,

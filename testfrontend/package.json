@@ -12,6 +12,7 @@
     "eosjs": "^16.0.9",
     "dotenv": "^6.0.0",
     "request": "*",
-    "colors": "*"
+    "colors": "*",
+    "coingecko-api": "^1.0.6"
   }
 }

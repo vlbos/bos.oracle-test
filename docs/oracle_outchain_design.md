@@ -6,7 +6,7 @@
 | history_id   | int64   | 主键,自增   | 
 | sid   | int64   | 服务ID   | 
 | request_id   | int64   | 请求ID   | 
-| update_number   | int64   | 更新序列号   | 
+| cycle_number   | int64   | 更新序列号   | 
 | timestamp   | int64   | 时间戳   | 
 | provider   | string   | 数据提供者   | 
 | data   | string   | 服务数据内容   | 
@@ -22,7 +22,7 @@ action oracle 合约 pushdata
 | history_id   | int64   | 主键,自增   | 
 | sid   | int64   | 服务ID   | 
 | request_id   | int64   | 请求ID   | 
-| update_number   | int64   | 更新序列号   | 
+| cycle_number   | int64   | 更新序列号   | 
 | timestamp   | int64   | 时间戳   | 
 | consumer   | string   | 数据使用者   | 
 | consumer_contract   | string   | 数据使用者 合约账户   | 

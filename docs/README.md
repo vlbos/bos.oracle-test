@@ -199,7 +199,7 @@ contract_consumer_folder=consumer.contract
 
 ```
 test_reg_service
- ${!cleos} push action ${contract_oracle} regservice '{ "account":"provider1111", "base_stake_amount":"1000.0000 BOS","data_format":"", "data_type":0, "criteria":"",
+ ${!cleos} push action ${contract_oracle} regservice '{ "account":"provider1111", "base_stake_amount":"1000.0000 BOS","data_format":"", "data_type":1, "criteria":"",
                           "acceptance":3, "injection_method":0, "duration":1,
                           "provider_limit":3, "update_cycle":1}' -p provider1111@active
 
@@ -391,13 +391,13 @@ cleos push action $EOS_ORACLE claimarbi '["appellant1","appellant1"]' - p appell
 | 接受方式         | accept_mode                            | uint64_t  acceptance       | 整型     | 数据接受规则  比例/人数                                                                                                 |
 | 数据注入方式     | Data injection method                  | uint64_t injection _method | 整型     | 数据注入方式    链上直接，链接间接（over oracle），链外                                                                 |
 | 基础抵押金额     | basic_mortgage_amount                  | uint64_t amount            | 整型     | 基础抵押金额                                                                                                            |
-| 数据收集持续时间 | Data Collection Duration               | uint32_t duration          | 整型     | 数据收集持续时间（从第一个数据提供者注入数据算起，多久后不再接受同一project_id ^update_number 的数据）duration 单位：秒 |
+| 数据收集持续时间 | Data Collection Duration               | uint32_t duration          | 整型     | 数据收集持续时间（从第一个数据提供者注入数据算起，多久后不再接受同一project_id ^cycle_number 的数据）duration 单位：秒 |
 | 数据提供者下限   | Data Provider Limit                    | uint8_t provider_limit     | 整型     | 数据提供者下限（大于3） data_provider_min_number                                                                        |
 | 数据更新周期     | Data Update Cycle                      | uint32_t update_cycle      | 整型     | 数据更新周期 单位：秒                                                                                                   |
 
 
 ```
-  ${!cleos} push action ${contract_oracle} regservice '{ "account":"provider1111", "base_stake_amount":"1000.0000 BOS",  "data_format":"", "data_type":0, "criteria":"",
+  ${!cleos} push action ${contract_oracle} regservice '{ "account":"provider1111", "base_stake_amount":"1000.0000 BOS",  "data_format":"", "data_type":1, "criteria":"",
                           "acceptance":3,  "injection_method":0, "duration":1,
                           "provider_limit":3, "update_cycle":1}' -p provider1111@active
 ```
@@ -470,7 +470,7 @@ cleos push action $EOS_ORACLE claimarbi '["appellant1","appellant1"]' - p appell
 |   定义接口名   | reqservdata                          |                          |          |          |
 |  接口功能描述  | 定义数据使用者主动请求数据服务的接口 |                          |          |          |
 |   中文参数名   | 英文参数名                           | 参数定义                 | 参数类型 | 参数描述 |
-| 请求更新序列号 | update_number                        | uint64_t update _number  | 整型     |          |
+| 请求更新序列号 | cycle_number                        | uint64_t update _number  | 整型     |          |
 | 请求数据服务ID | Request Data Service ID              | uint64_t service _id     | 整型     |          |
 |    请求签名    | Request Signature                    | name request_signature   | 字符串   |          |
 |    请求内容    | Request Content                      | uint64_t request_content | 字符串   | 定义规则 |
@@ -489,7 +489,7 @@ cleos push action $EOS_ORACLE claimarbi '["appellant1","appellant1"]' - p appell
 |  接口功能描述  | 定义推送服务数据，包括直接推送数据使用者，间接通过oracle合约推送。 |                              |          |          |
 |   中文参数名   |                             英文参数名                             | 参数定义                     | 参数类型 | 参数描述 |
 |   数据服务ID   |                          Data Service ID                           | uint64_t service _id         | 整型     |          |
-| 数据更新序列号 |                     Data Update Serial Number                      | uint64_t update_number       | 整型     |          |
+| 数据更新序列号 |                     Data Update Serial Number                      | uint64_t cycle_number       | 整型     |          |
 |  具体数据json  |                         Specific data json                         | uint64_t data           | 字符串   |          |
 | 数据提供者签名 |                      Data Provider Signature                       | uint64_t provider _signature | 字符串   |          |
 | 数据服务请求ID |                      Data Service Request ID                       | uint64_t request_id          | 整型     |          |

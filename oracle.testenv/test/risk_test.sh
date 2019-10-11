@@ -131,7 +131,7 @@ test_indirectpush() {
     if [ $current_update_number -ne 0 ]; then
         for i in {1..5}; do
             p='provider'${i}${i}${i}${i}
-            ${!cleos} push action ${contract_oracle} pushdata '{"service_id":1, "provider":"'${p}'", "update_number":"'${current_update_number}'", 
+            ${!cleos} push action ${contract_oracle} pushdata '{"service_id":1, "provider":"'${p}'", "cycle_number":"'${current_update_number}'", 
                          "request_id":0, "data":"indi publish test data json"}' -p ${p}
             sleep 2
         done
@@ -332,21 +332,21 @@ test_fetchdatawithp() {
     echo == fetchdata number
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
-    ${!cleos} push action ${contract_consumer} fetchdata '{"oracle":"'${contract_oracle}'","service_id":1, "update_number":'$2', "request_id":0}' -p ${contract_consumer}
+    ${!cleos} push action ${contract_consumer} fetchdata '{"oracle":"'${contract_oracle}'","service_id":1, "cycle_number":'$2', "request_id":0}' -p ${contract_consumer}
 }
 
 test_fetchdatawithreq() {
     echo == fetchdata req
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
-    ${!cleos} push action ${contract_consumer} fetchdata '{"oracle":"'${contract_oracle}'","service_id":1, "update_number":0, "request_id":'$2'}' -p ${contract_consumer}
+    ${!cleos} push action ${contract_consumer} fetchdata '{"oracle":"'${contract_oracle}'","service_id":1, "cycle_number":0, "request_id":'$2'}' -p ${contract_consumer}
 }
 
 test_fetchdata() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
-    # ${!cleos} push action ${contract_consumer} fetchdata '{"oracle":"'${contract_oracle}'","service_id":1, "update_number":'$current_update_number'}' -p ${contract_consumer}
-    ${!cleos} push action ${contract_consumer} fetchdata '{"oracle":"'${contract_oracle}'","service_id":1, "update_number":1565749229, "request_id":0}' -p ${contract_consumer}
+    # ${!cleos} push action ${contract_consumer} fetchdata '{"oracle":"'${contract_oracle}'","service_id":1, "cycle_number":'$current_update_number'}' -p ${contract_consumer}
+    ${!cleos} push action ${contract_consumer} fetchdata '{"oracle":"'${contract_oracle}'","service_id":1, "cycle_number":1565749229, "request_id":0}' -p ${contract_consumer}
 
 }
 

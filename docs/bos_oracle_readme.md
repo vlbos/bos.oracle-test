@@ -31,7 +31,7 @@ ${provi_account} 服务的数据提供者
 
 创建服务命令：
 ```
-cleos push action ${contract_oracle} regservice '{"account":"${create_account}","base_stake_amount":"1000.0000 BOS","data_format":"json", "data_type":0, "criteria":"以多数人为准", "acceptance":0, "declaration":"该数据具有时效性", "injection_method":0, "duration":500,"provider_limit":3, "update_cycle":600}' -p ${account}
+cleos push action ${contract_oracle} regservice '{"account":"${create_account}","base_stake_amount":"1000.0000 BOS","data_format":"json", "data_type":1, "criteria":"以多数人为准", "acceptance":0, "declaration":"该数据具有时效性", "injection_method":0, "duration":500,"provider_limit":3, "update_cycle":600}' -p ${account}
 ```
 
 参数说明：
@@ -156,13 +156,13 @@ cleos push action ${contract_oracle} unstakeasset '{"service_id":${service_id},"
 
 单个上传命令：
 ```
-cleos push action ${contract_oracle} pushdata '{"service_id":1,"provider":"${provi_account} ","update_number":"3","request_id":0,"data_json":"1 test data json 3 "}' -p ${provi_account} 
+cleos push action ${contract_oracle} pushdata '{"service_id":1,"provider":"${provi_account} ","cycle_number":"3","request_id":0,"data_json":"1 test data json 3 "}' -p ${provi_account} 
 ```
 
 参数说明：
 * service_id：服务id
 * provider：上传数据的提供者
-* update_number：更新编号，编号是根据服务的update_start_time和update_cycle计算出来的，计算公式update_number=**(当前时间-update_start_time)/update_cycle;**其中超过duration时，是不允许上传数据的
+* cycle_number：更新编号，编号是根据服务的update_start_time和update_cycle计算出来的，计算公式update_number=**(当前时间-update_start_time)/update_cycle;**其中超过duration时，是不允许上传数据的
 * request_id：数据使用者发起请求的时候带的id，数据提供者上传数据需要对应，1.0版本request_Id为0
 * data_json：为上传数据的格式，所有的数据提供者需要按照服务的规定上传数据，否则回认为数据不一致，服务无法显示上传的数据
 # 四、DAPP项目方如何使用预言机服务提供的数据
@@ -184,13 +184,13 @@ cleos get table ${contract_oracle} ${service_id} oracledata
   "rows": [{
       "record_id": 0,
       "request_id": 0,
-      "update_number": 2,
+      "cycle_number": 2,
       "data": "02 03 01 17 12 04 05",
       "timestamp": 1569554558
     },{
       "record_id": 1,
       "request_id": 0,
-      "update_number": 4,
+      "cycle_number": 4,
       "data": "02 12 34 11 02 04 15",
       "timestamp": 1569563694
     }
@@ -234,19 +234,19 @@ cleos get table ${contract_oracle} ${service_id} oracledata
   "rows": [{
       "record_id": 0,
       "request_id": 0,
-      "update_number": 1,
+      "cycle_number": 1,
       "data": "time:2019-09-27T03:27:33.216857+00:00,price:8901 USDT",
       "timestamp": 1569552869
     },{
       "record_id": 1,
       "request_id": 0,
-      "update_number": 1,
+      "cycle_number": 1,
       "data": "time:2019-09-27T03:29:33.216857+00:00,price:8911 USDT",
       "timestamp": 1569552932
     },{
       "record_id": 2,
       "request_id": 0,
-      "update_number": 1,
+      "cycle_number": 1,
       "data": "time:2019-09-27T03:29:33.216857+00:00,price:8910 USDT",
       "timestamp": 1569552965
     }

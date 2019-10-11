@@ -184,8 +184,8 @@ class OracleTimer {
 		this.update_start_time = update_start_time;
 	}
 
-	pushdatax(update_number, data, begin, end) {
-		console.log("update_number=", update_number);
+	pushdatax(cycle_number, data, begin, end) {
+		console.log("cycle_number=", cycle_number);
 		eos.contract(oracleContract)
 			.then((contract) => {
 				sleep.sleep(1);
@@ -194,7 +194,7 @@ class OracleTimer {
 					contract.pushdata({
 						service_id: this.service_id,
 						provider: provider,
-						update_number: update_number,
+						cycle_number: cycle_number,
 						request_id: request_id,
 						data: "" + JSON.stringify(data)
 					},
@@ -219,7 +219,7 @@ class OracleTimer {
 			});
 	}
 
-	write(update_number) {
+	write(cycle_number) {
 		// const pricesWs = new WebSocket('wss://ws.coincap.io/prices?assets=bitcoin,ethereum,monero,litecoin')
 
 		// pricesWs.onmessage = function (msg) {
@@ -253,7 +253,7 @@ class OracleTimer {
 					}
 					console.log("EOSUSDeosprice:", newdata);
 
-					myself.pushdatax(update_number, newdata, 1, 2);
+					myself.pushdatax(cycle_number, newdata, 1, 2);
 
 				});
 			});
@@ -263,7 +263,7 @@ class OracleTimer {
 
 
 
-	writeusd(update_number) {
+	writeusd(cycle_number) {
 		myself = this;
 		request.get(oilUrl, function (err, res, oilRes) {
 			request.get(goldUrl, function (err, res, goldRes) {
@@ -347,7 +347,7 @@ class OracleTimer {
 					}
 					console.log("EOSUSDeosprice:", newdata);
 
-					myself.pushdatax(update_number, newdata, 1, 5);
+					myself.pushdatax(cycle_number, newdata, 1, 5);
 
 				});
 			});
@@ -361,17 +361,17 @@ class OracleTimer {
 		//to_timestamp(update_start_time) + 8 * 3600;
 		console.log(" update_start_timestamp", update_start_timestamp);
 		var now_sec = current_time();
-		var update_number = Math.round((now_sec - update_start_timestamp) / this.update_cycle + 1);
-		var begin_time = update_start_timestamp + (update_number - 1) * this.update_cycle;
+		var cycle_number = Math.round((now_sec - update_start_timestamp) / this.update_cycle + 1);
+		var begin_time = update_start_timestamp + (cycle_number - 1) * this.update_cycle;
 		var end_time = begin_time + this.duration;
-		var next_begin_time = update_start_timestamp + (update_number) * this.update_cycle;
+		var next_begin_time = update_start_timestamp + (cycle_number) * this.update_cycle;
 		if (now_sec >= begin_time && now_sec < end_time) {
 			if ("coin" == this.timer_type) {
-				this.write(update_number);
-				this.test_bos(update_number);
+				this.write(cycle_number);
+				this.test_bos(cycle_number);
 			}
 			else {
-				this.writeusd(update_number);
+				this.writeusd(cycle_number);
 			}
 
 			console.log(" now_sec", now_sec);
@@ -385,7 +385,7 @@ class OracleTimer {
 		setInterval(function () { TIMER.apply(THIS) }, (next_begin_time - now_sec) * 1000);
 	}
 
-	test_bos(update_number) {
+	test_bos(cycle_number) {
 		var CoinGeckoClient = new CoinGecko();
 
 		CoinGeckoClient.simple.price({
@@ -416,7 +416,7 @@ class OracleTimer {
 				"bitcoin": data.data.bitcoin.usd,
 				"boscore": data.data.boscore.usd
 			}
-			this.pushdatax(update_number, newdata, 3, 5);
+			this.pushdatax(cycle_number, newdata, 3, 5);
 			console.log(newdata);
 		});
 	}
@@ -517,7 +517,7 @@ function test_time() {
 	// 			}
 	// 			console.log("EOSUSDeosprice:", newdata);
 
-	// 			// myself.pushdatax(update_number, newdata, 1, 2);
+	// 			// myself.pushdatax(cycle_number, newdata, 1, 2);
 
 	// 		});
 	// 	});

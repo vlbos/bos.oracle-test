@@ -26,7 +26,7 @@ arbiresults  scope  arbitration_id*4+round
 20190906 version
 ###### 推送数据
 一个提供者表对多个服务存储
-update_number 检查验证
+cycle_number 检查验证
 pushdata超时验证 单元测试 
 
 ###### 仲裁
@@ -49,7 +49,7 @@ pushdata超时定时器优化
 
 
 
-update_number 计算公式
+cycle_number 计算公式
 
 c++ code
 ```
@@ -399,7 +399,7 @@ cleos push action $EOS_ORACLE claimarbi '["appellant1","appellant1"]' - p appell
 | 声明             | registration_instructions              | std::string declaration    |          |                                                                                                                         |
 | 数据注入方式     | Data injection method                  | uint64_t injection _method | 整型     | 数据注入方式    链上直接，链接间接（over oracle），链外                                                                 |
 | 基础抵押金额     | basic_mortgage_amount                  | uint64_t amount            | 整型     | 基础抵押金额                                                                                                            |
-| 数据收集持续时间 | Data Collection Duration               | uint32_t duration          | 整型     | 数据收集持续时间（从第一个数据提供者注入数据算起，多久后不再接受同一project_id ^update_number 的数据）duration 单位：秒 |
+| 数据收集持续时间 | Data Collection Duration               | uint32_t duration          | 整型     | 数据收集持续时间（从第一个数据提供者注入数据算起，多久后不再接受同一project_id ^cycle_number 的数据）duration 单位：秒 |
 | 数据提供者下限   | Data Provider Limit                    | uint8_t provider_limit     | 整型     | 数据提供者下限（大于3） data_provider_min_number                                                                        |
 | 数据更新周期     | Data Update Cycle                      | uint32_t update_cycle      | 整型     | 数据更新周期 单位：秒                                                                                                   |
 | 数据更新开始时间 | Data update start time                 | uint64_t update_start_time | 整型     | 数据更新开始时间                                                                                                        |
@@ -479,7 +479,7 @@ cleos push action $EOS_ORACLE claimarbi '["appellant1","appellant1"]' - p appell
 |   定义接口名   | reqservdata                          |                          |          |          |
 |  接口功能描述  | 定义数据使用者主动请求数据服务的接口 |                          |          |          |
 |   中文参数名   | 英文参数名                           | 参数定义                 | 参数类型 | 参数描述 |
-| 请求更新序列号 | update_number                        | uint64_t update _number  | 整型     |          |
+| 请求更新序列号 | cycle_number                        | uint64_t update _number  | 整型     |          |
 | 请求数据服务ID | Request Data Service ID              | uint64_t service _id     | 整型     |          |
 |    请求签名    | Request Signature                    | name request_signature   | 字符串   |          |
 |    请求内容    | Request Content                      | uint64_t request_content | 字符串   | 定义规则 |
@@ -498,7 +498,7 @@ cleos push action $EOS_ORACLE claimarbi '["appellant1","appellant1"]' - p appell
 |  接口功能描述  | 定义推送服务数据，包括直接推送数据使用者，间接通过oracle合约推送。 |                              |          |          |
 |   中文参数名   |                             英文参数名                             | 参数定义                     | 参数类型 | 参数描述 |
 |   数据服务ID   |                          Data Service ID                           | uint64_t service _id         | 整型     |          |
-| 数据更新序列号 |                     Data Update Serial Number                      | uint64_t update_number       | 整型     |          |
+| 数据更新序列号 |                     Data Update Serial Number                      | uint64_t cycle_number       | 整型     |          |
 |  具体数据json  |                         Specific data json                         | uint64_t data           | 字符串   |          |
 | 数据提供者签名 |                      Data Provider Signature                       | uint64_t provider _signature | 字符串   |          |
 | 数据服务请求ID |                      Data Service Request ID                       | uint64_t request_id          | 整型     |          |
@@ -657,8 +657,8 @@ cleos push action $EOS_ORACLE claimarbi '["appellant1","appellant1"]' - p appell
 
 # 5. 疑问
 ### 5.0.1. 申诉接口: appeal
-初次申诉时, `arbitratcase`表, `update_number` 更新逻辑
-答：`arbitratcase`表, `update_number` 更新逻辑，暂时没有了。表设计时申诉考虑具体到哪条数据。上次讨论具体到服务ID。
+初次申诉时, `arbitratcase`表, `cycle_number` 更新逻辑
+答：`arbitratcase`表, `cycle_number` 更新逻辑，暂时没有了。表设计时申诉考虑具体到哪条数据。上次讨论具体到服务ID。
 ### 5.0.2. 应诉接口: acceptarbi
 应诉接口签名参数有什么用？签名验证的内容是什么? 应诉逻辑? 修改arbitratcase哪几个字段?
 答：签名为出现争议使用，链就行了，action验证有效格式就行了。应诉，转账抵押金额。更新arbitratcase，arbi_step为应诉状态，触发仲裁启动。判断仲裁方式，执行仲裁流程逻辑。

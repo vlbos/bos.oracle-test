@@ -7,9 +7,9 @@ test_regservice() {
 
     test_reg_service5
     provider_transfer5
-    test_fee
-    test_subs5
-    consumer_transfer5
+    # test_fee
+    # test_subs5
+    # consumer_transfer5
 }
 
 test_pushtotable() {
@@ -338,10 +338,7 @@ case "$1" in
 "reg") test_reg_service c1 ;;
 "fee") test_fee c1 ;;
 "subs") test_subs c1 ;;
-"mpush") test_multipush c1 "$2" ;;
-"push") test_push c1 ;;
-"pushr") test_pushforreq c1 "$2" ;;
 "req") test_req c1 ;;
 "pusht") test_pushtotable ;;
-*) echo "usage: regs|reg|fee|subs|pushr {reqid}|mpush {false|true|}|req" ;;
+*) echo "usage: regs|reg|fee|subs|req|pusht" ;;
 esac

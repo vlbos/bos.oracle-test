@@ -95,13 +95,13 @@ get_update_number() {
 test_reg_service5() {
     echo ==reg 5
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
-    ${!cleos} push action ${contract_oracle} regservice '{"account":"provider1111", "base_stake_amount":"1000.0000 BOS",  "data_format":"", "data_type":0, "criteria":"",
+    ${!cleos} push action ${contract_oracle} regservice '{"account":"provider1111", "base_stake_amount":"1000.0000 BOS",  "data_format":"", "data_type":1, "criteria":"",
                           "acceptance":3,  "injection_method":0, "duration":'${service_duration}',
                           "provider_limit":3, "update_cycle":'${update_cycle}'}' -p provider1111@active
 
     for i in {2..5}; do
         p='provider'${i}${i}${i}${i}
-        ${!cleos} push action ${contract_oracle} regservice '{  "account":"'${p}'", "base_stake_amount":"1000.0000 BOS", "data_format":"", "data_type":0, "criteria":"",
+        ${!cleos} push action ${contract_oracle} regservice '{  "account":"'${p}'", "base_stake_amount":"1000.0000 BOS", "data_format":"", "data_type":1, "criteria":"",
                           "acceptance":3,  "injection_method":0, "duration":20,
                           "provider_limit":3, "update_cycle":120}' -p ${p}@active
 
@@ -142,7 +142,7 @@ test_indirectpush() {
 
 test_reg_service() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
-    ${!cleos} push action ${contract_oracle} regservice '{ "account":"provider1111", "base_stake_amount":"1000.0000 BOS","data_format":"", "data_type":0, "criteria":"",
+    ${!cleos} push action ${contract_oracle} regservice '{ "account":"provider1111", "base_stake_amount":"1000.0000 BOS","data_format":"", "data_type":1, "criteria":"",
                           "acceptance":3,  "injection_method":0, "duration":1,
                           "provider_limit":3, "update_cycle":1}' -p provider1111@active
 
@@ -365,7 +365,7 @@ test_regs() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
     ###=============================================== regservice, ok
-    ${!cleos} push action ${contract_oracle} regservice '{ "account":"provider1111", "base_stake_amount":"1000.0000 BOS",  "data_format":"", "data_type":0, "criteria":"",
+    ${!cleos} push action ${contract_oracle} regservice '{ "account":"provider1111", "base_stake_amount":"1000.0000 BOS",  "data_format":"", "data_type":1, "criteria":"",
                           "acceptance":3,  "injection_method":0, "duration":1,
                           "provider_limit":3, "update_cycle":1}' -p provider1111@active
     ${!cleos} get table ${contract_oracle} ${contract_oracle} dataservices

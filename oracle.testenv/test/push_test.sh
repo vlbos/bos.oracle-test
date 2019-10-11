@@ -48,14 +48,14 @@ consumer_transfer5() {
 
 service_duration=30
 update_cycle=120
-update_start_time_date="2019-09-16"
+update_start_time_date="2019-10-10"
 update_start_time_time="09:09:09"
-update_start_time=$update_start_time_date"T"$update_start_time_time".216857+00:00"
+update_start_time=1570758862
+#$update_start_time_date"T"$update_start_time_time".000000+00:00"
 
 current_update_number=0
 datetime1=$(date "+%s#%N")
 datetime2=$(echo $datetime1 | cut -d"#" -f1) #取出秒
-
 get_current_date() {
     datetime1=$(date "+%s#%N")
     datetime2=$(echo $datetime1 | cut -d"#" -f1) #取出秒
@@ -77,12 +77,18 @@ get_update_number() {
     if [ $a -eq 0 ]; then return 0; fi
     if [ $b -eq 0 ]; then return 0; fi
 
+    echo "a="$a
+    echo "b="$b
     get_current_date
-    start_time=$(date -j -u -f "%Y-%m-%d %H:%M:%S" $update_start_time_date" "$update_start_time_time "+%s")
+    start_time=$update_start_time
+    #$update_start_time
+    #$(date -j -u -f "%Y-%m-%d %H:%M:%S" $update_start_time_date" "$update_start_time_time "+%s")
     diff_time=$(($datetime2 - $start_time))
     current_update_number=$(($diff_time / $a + 1))
     begin_time=$(($start_time + ($current_update_number - 1) * $a))
     end_time=$(($begin_time + $b))
+    echo "begin_time="$begin_time
+    echo "end_time="$end_time
     if [ $datetime2 -le $end_time ]; then return $current_update_number; fi
     next_begin_time=$(($begin_time + $a))
     waitnext $next_begin_time
@@ -93,9 +99,9 @@ get_update_number() {
 test_reg_service5() {
     echo ==reg 5
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
-    ${!cleos} push action ${contract_oracle} regservice '{"account":"provider1111", "base_stake_amount":"1000.0000 BOS",  "data_format":"", "data_type":0, "criteria":"",
+    ${!cleos} push action ${contract_oracle} regservice '{"account":"provider1111", "base_stake_amount":"1000.0000 BOS",  "data_format":"", "data_type":1, "criteria":"",
                           "acceptance":3,  "injection_method":0, "duration":'${service_duration}',
-                          "provider_limit":3, "update_cycle":'${update_cycle}', "update_start_time":"'$update_start_time'"}' -p provider1111@active
+                          "provider_limit":3, "update_cycle":'${update_cycle}'}' -p provider1111@active
 }
 
 test_subs5() {
@@ -113,9 +119,12 @@ test_indirectpush() {
     echo ==indipush
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
-    start_time=$(date -j -u -f "%Y-%m-%d %H:%M:%S" $update_start_time_date" "$update_start_time_time "+%s")
+    start_time=$update_start_time
+    #$(date -j -u -f "%Y-%m-%d %H:%M:%S" $update_start_time_date" "$update_start_time_time "+%s")
     echo "start_time="$start_time
     echo "datetime2="$datetime2
+    echo "update_cycle="$update_cycle
+    echo "service_duration="$service_duration
     get_update_number $update_cycle $service_duration
     echo "current_update_number="$current_update_number
     if [ $current_update_number -ne 0 ]; then
@@ -132,7 +141,7 @@ test_indirectpush() {
 
 test_reg_service() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
-    ${!cleos} push action ${contract_oracle} regservice '{"account":"provider1111","base_stake_amount":"1000.0000 BOS","data_format":"", "data_type":0, "criteria":"",
+    ${!cleos} push action ${contract_oracle} regservice '{"account":"provider1111","base_stake_amount":"1000.0000 BOS","data_format":"", "data_type":1, "criteria":"",
                           "acceptance":3,  "injection_method":0, "duration":1,
                           "provider_limit":3, "update_cycle":1}' -p provider1111@active
 

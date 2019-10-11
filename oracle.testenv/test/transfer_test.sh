@@ -5,7 +5,7 @@
 
 test_reg_service() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
-    ${!cleos} push action ${contract_oracle} regservice '{  "account":"provider1111","base_stake_amount":"1000.0000 BOS","data_format":"", "data_type":0, "criteria":"",
+    ${!cleos} push action ${contract_oracle} regservice '{  "account":"provider1111","base_stake_amount":"1000.0000 BOS","data_format":"", "data_type":1, "criteria":"",
                           "acceptance":3,  "injection_method":0, "duration":1,
                           "provider_limit":3, "update_cycle":1}' -p provider1111@active
 

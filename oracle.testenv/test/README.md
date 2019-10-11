@@ -27,7 +27,7 @@ arbiresults  scope  arbitration_id*4+round
 ###### 推送数据
 一个提供者表对多个服务存储
 update_number 检查验证
-push_data超时验证 单元测试 
+pushdata超时验证 单元测试 
 
 ###### 仲裁
 修复多人申诉问题
@@ -201,7 +201,7 @@ contract_consumer_folder=consumer.contract
 
 ```
 test_reg_service
- ${!cleos} push action ${contract_oracle} regservice '{ "account":"provider1111", "base_stake_amount":"1000.0000 BOS","data_format":"", "data_type":0, "criteria":"",
+ ${!cleos} push action ${contract_oracle} regservice '{ "account":"provider1111", "base_stake_amount":"1000.0000 BOS","data_format":"", "data_type":1, "criteria":"",
                           "acceptance":3,  "injection_method":0, "duration":1,
                           "provider_limit":3, "update_cycle":1}' -p provider1111@active
 
@@ -406,7 +406,7 @@ cleos push action $EOS_ORACLE claimarbi '["appellant1","appellant1"]' - p appell
 
 
 ```
-  ${!cleos} push action ${contract_oracle} regservice '{ "account":"provider1111", "base_stake_amount":"1000.0000 BOS",  "data_format":"", "data_type":0, "criteria":"",
+  ${!cleos} push action ${contract_oracle} regservice '{ "account":"provider1111", "base_stake_amount":"1000.0000 BOS",  "data_format":"", "data_type":1, "criteria":"",
                           "acceptance":3,  "injection_method":0, "duration":1,
                           "provider_limit":3, "update_cycle":1}' -p provider1111@active
 ```

@@ -441,21 +441,66 @@ function start_usd_timer() {
 	// timer.writeusd(1);
 
 }
-start_usd_timer();
+// start_usd_timer();
 // write();
 //setInterval(write, 60000);
 
 
 function test_time() {
-	const update_start_time = "2019-09-12 09:09:09";
-	update_start_timestamp = to_timestamp(update_start_time);
-	console.log(" update_start_timestamp", update_start_timestamp);
-	now_sec = current_time();
-	console.log(" now_sec", now_sec);
+	// const update_start_time = "2019-09-12 09:09:09";
+	// update_start_timestamp = to_timestamp(update_start_time);
+	// console.log(" update_start_timestamp", update_start_timestamp);
+	// now_sec = current_time();
+	// console.log(" now_sec", now_sec);
 
+		const pricesWs = new WebSocket('wss://ws.coincap.io/prices?assets=bitcoin,ethereum,monero,litecoin')
+
+		pricesWs.onmessage = function (msg) {
+			console.log(msg.data)
+		}
+
+		// myself = this;
+		// request.get(eosUrl, function (err, res, eosRes) {
+		// 	request.get(ethereumUrl, function (err, res, ethereumRes) {
+		// 		request.get(bitcoinUrl, function (err, res, bitcoinRes) {
+
+		// 			// {
+		// 			// 	"data": {
+		// 			// 		"id": "eos",
+		// 			// 		"rank": "7",
+		// 			// 		"symbol": "EOS",
+		// 			// 		"name": "EOS",
+		// 			// 		"supply": "931377543.1387000000000000",
+		// 			// 		"maxSupply": null,
+		// 			// 		"marketCapUsd": "3459800395.6626011241621507",
+		// 			// 		"volumeUsd24Hr": "694193196.4939930771219022",
+		// 			// 		"priceUsd": "3.7147131377070044",
+		// 			// 		"changePercent24Hr": "-1.1373653211375365",
+		// 			// 		"vwap24Hr": "3.7271304162291967"
+		// 			// 	},
+		// 			// 	"timestamp": 1568274617161
+		// 			// }
+
+		// 			console.log("EOSUSD:", JSON.parse(eosRes).data.priceUsd);
+		// 			console.log("ETHUSD:", JSON.parse(ethereumRes).data.priceUsd);
+		// 			console.log("BTCUSD:", JSON.parse(bitcoinRes).data.priceUsd);
+		// 			var eosprice = JSON.parse(eosRes).data.priceUsd;
+		// 			var newdata = {
+		// 				"eos": JSON.parse(eosRes).data.priceUsd,
+		// 				"ethereum": JSON.parse(ethereumRes).data.priceUsd,
+		// 				"bitcoin": JSON.parse(bitcoinRes).data.priceUsd,
+		// 				"boscore": 0
+		// 			}
+		// 			console.log("EOSUSDeosprice:", newdata);
+
+		// 			// myself.pushdatax(update_number, newdata, 1, 2);
+
+		// 		});
+		// 	});
+		// });
 }
 
-// test_time();
+test_time();
 
 
 // test_bos();

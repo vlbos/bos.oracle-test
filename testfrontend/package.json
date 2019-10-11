@@ -9,10 +9,12 @@
   "author": "Guillaume Babin-Tremblay",
   "license": "ISC",
   "dependencies": {
-    "eosjs": "^16.0.9",
-    "dotenv": "^6.0.0",
-    "request": "*",
+    "coingecko-api": "^1.0.6",
     "colors": "*",
-    "coingecko-api": "^1.0.6"
+    "dotenv": "^6.0.0",
+    "eosjs": "^16.0.9",
+    "request": "*",
+    "sleep": "^6.1.0",
+    "ws": "^7.1.2"
   }
 }

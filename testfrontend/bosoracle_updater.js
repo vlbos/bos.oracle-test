@@ -174,7 +174,6 @@ const request_id = 0;
 // const update_cycle = 120;
 // const duration = 30;
 // const update_start_time = "2019-09-16 09:09:09";
-var myself;
 class OracleTimer {
 	constructor(timer_type, service_id, update_cycle, duration, update_start_time) {
 		this.timer_type = timer_type;
@@ -206,9 +205,9 @@ class OracleTimer {
 							// //console.log("results:", results);
 						})
 						.catch(error => {
-							//console.log("error:", error);
+							console.log("error:", error);
 						});
-					//console.log(new Date());
+					console.log(new Date(),"provider=",provider,"cycle_number=",cycle_number);
 					sleep.sleep(2);
 					//console.log(new Date());
 				}
@@ -226,7 +225,7 @@ class OracleTimer {
 		// 	//console.log(msg.data)
 		// }
 
-		myself = this;
+		var THIS = this;
 		request.get(eosUrl, function (err, res, eosRes) {
 			request.get(ethereumUrl, function (err, res, ethereumRes) {
 				request.get(bitcoinUrl, function (err, res, bitcoinRes) {
@@ -253,7 +252,7 @@ class OracleTimer {
 					}
 					//console.log("EOSUSDeosprice:", newdata);
 
-					myself.pushdatax(cycle_number, newdata, 1, 2);
+					THIS.pushdatax(cycle_number, newdata, 1, 2);
 
 				});
 			});
@@ -264,7 +263,7 @@ class OracleTimer {
 
 
 	writeusd(cycle_number) {
-		myself = this;
+		var THIS = this;
 		request.get(oilUrl, function (err, res, oilRes) {
 			request.get(goldUrl, function (err, res, goldRes) {
 				request.get(rmbUrl, function (err, res, rmbRes) {
@@ -331,8 +330,8 @@ class OracleTimer {
 					//console.log(oilRes);
 					//console.log(JSON.parse(oilRes).dataset_data.data[0][4]);
 					//console.log("OILUSD:", JSON.parse(oilRes).dataset_data.data[0][4]);
-					//console.log("GOLDUSD:", goldRes);
-					//console.log("GOLDUSD:", JSON.parse(goldRes).dataset_data);
+					console.log("GOLDUSD:", goldRes);
+					console.log("GOLDUSD:", JSON.parse(goldRes).dataset_data);
 					//console.log("GOLDUSD:", JSON.parse(goldRes).dataset_data.data[0][2]);
 
 					// //console.log("RMBUSD:", rmbRes);
@@ -347,7 +346,7 @@ class OracleTimer {
 					}
 					//console.log("EOSUSDeosprice:", newdata);
 
-					myself.pushdatax(cycle_number, newdata, 1, 5);
+					THIS.pushdatax(cycle_number, newdata, 1, 5);
 
 				});
 			});

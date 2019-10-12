@@ -24,7 +24,7 @@
 ## 2.4 说明
 下文出现的变量的含义：
 ${contract_oracle} 均为预言机服务在BOS上部署的合约账户
-${provi_account} 服务的数据提供者
+${provider_account} 服务的数据提供者
 # 三、数据提供者如何使用预言机服务
 ## 3.1 创建服务
         任何人都可以创建数据服务，服务的基本参数由创建者设置。数据服务创建好后，任何人也均可以注册成为数据提供者，注册时需要**抵押保证金**，**不低于服务设置**的保证金才可以成功成为该服务的提供者。
@@ -56,7 +56,7 @@ cleos get table ${contract_oracle}  ${contract_oracle} dataservices
 
 命令：
 ```
-cleos transfer ${provi_account}  ${contract_oracle}  "1000.0000 BOS" "0,${service_id}" 
+cleos transfer ${provider_account}  ${contract_oracle}  "1000.0000 BOS" "0,${service_id}" 
 ```
 
 参数说明：
@@ -143,7 +143,7 @@ cleos get table oracletest32 1 svcprovision
 
 命令：
 ```
-cleos push action ${contract_oracle} unstakeasset '{"service_id":${service_id},"account":"${provi_account}","amount":"1.0000 BOS","memo":"unstake mount"}' -p ${provi_account} 
+cleos push action ${contract_oracle} unstakeasset '{"service_id":${service_id},"account":"${provider_account}","amount":"1.0000 BOS","memo":"unstake mount"}' -p ${provider_account} 
 ```
 
 参数说明：
@@ -156,7 +156,7 @@ cleos push action ${contract_oracle} unstakeasset '{"service_id":${service_id},"
 
 单个上传命令：
 ```
-cleos push action ${contract_oracle} pushdata '{"service_id":1,"provider":"${provi_account} ","cycle_number":"3","request_id":0,"data_json":"1 test data json 3 "}' -p ${provi_account} 
+cleos push action ${contract_oracle} pushdata '{"service_id":1,"provider":"${provider_account} ","cycle_number":"3","request_id":0,"data_json":"1 test data json 3 "}' -p ${provider_account} 
 ```
 
 参数说明：
@@ -260,7 +260,7 @@ cleos get table ${contract_oracle} ${service_id} oracledata
 
 命令：
 ```
-cleos transfer ${provi_account}  ${contract_oracle} "10000.0000 BOS" "4,1" -p ${provi_account}  
+cleos transfer ${provider_account}  ${contract_oracle} "10000.0000 BOS" "4,1" -p ${provider_account}  
 ```
 
 参数说明:
@@ -339,7 +339,7 @@ cleos get table ${contract_oracle} ${service_id} arbicase
 
 命令:
 ```
-cleos transfer ${provi_account}  ${contract_oracle} "200.0000 BOS" "3,${service_id},'evidence','info','reason'" -p ${provi_account} 
+cleos transfer ${provider_account}  ${contract_oracle} "200.0000 BOS" "3,${service_id},'evidence','info','reason'" -p ${provider_account} 
 ```
 
 参数说明:
@@ -356,7 +356,7 @@ cleos transfer ${provi_account}  ${contract_oracle} "200.0000 BOS" "3,${service_
 
 命令：
 ```
-cleos  transfer ${provi_account}   ${contract_oracle}  "200.0000 BOS" "5,${arbitrat_id}],'evidence'" -p ${provi_account} 
+cleos  transfer ${provider_account}   ${contract_oracle}  "200.0000 BOS" "5,${arbitrat_id}],'evidence'" -p ${provider_account} 
 ```
 
 参数说明:
@@ -440,28 +440,28 @@ memo说明："功能类型,服务id,....."
 
 memo说明："0,服务id"
 ```
-cleos transfer ${provi_account}  ${contract_oracle}  "1000.0000 BOS" "0,${service_id}" 
+cleos transfer ${provider_account}  ${contract_oracle}  "1000.0000 BOS" "0,${service_id}" 
 ```
 
 1. **申诉服务：**
 
 memo说明："3,服务id,证据,公示信息,申诉原因"
 ```
-cleos transfer ${provi_account}  ${contract_oracle} "200.0000 BOS" "3,${service_id},'evidence','info','reason'" -p ${provi_account}   
+cleos transfer ${provider_account}  ${contract_oracle} "200.0000 BOS" "3,${service_id},'evidence','info','reason'" -p ${provider_account}   
 ```
 
 1. **应诉：**
 
 memo说明："5,服务id,证据"
 ```
-cleos transfer ${provi_account}  ${contract_oracle} "200.0000 BOS" "5,${service_id},'evidence'" -p ${provi_account} 
+cleos transfer ${provider_account}  ${contract_oracle} "200.0000 BOS" "5,${service_id},'evidence'" -p ${provider_account} 
 ```
 
 1. **注册仲裁员：**
 
 memo说明："4,服务id"
 ```
-cleos transfer ${provi_account}  ${contract_oracle} "10000.0000 BOS" "4,1" -p ${provi_account}  
+cleos transfer ${provider_account}  ${contract_oracle} "10000.0000 BOS" "4,1" -p ${provider_account}  
 ```
 # 七、预言机合约表查表汇总
 1. **查询所有当前服务信息**

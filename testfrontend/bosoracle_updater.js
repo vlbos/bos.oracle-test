@@ -107,7 +107,7 @@ const allowContract = (auth, key, contract, parent) => {
 
 // function* sleep(ms) {
 // 	yield new Promise(function (resolve, reject) {
-// 		console.log(new Date());
+// 		//console.log(new Date());
 // 		setTimeout(resolve, ms);
 // 	})
 // }
@@ -119,10 +119,10 @@ const allowContract = (auth, key, contract, parent) => {
 
 
 // 	 ff(){
-// 		 console.log("ff");
-// 	 console.log(new Date());
+// 		 //console.log("ff");
+// 	 //console.log(new Date());
 // 	 sleep.sleep(1);
-// 	 console.log(new Date());
+// 	 //console.log(new Date());
 // 	}
 // 	// setTimeout(f,50); //错误
 
@@ -139,11 +139,11 @@ const allowContract = (auth, key, contract, parent) => {
 // }
 function test() {
 	// var temple = await sleep(1000);
-	// console.log(new Date());
+	// //console.log(new Date());
 	// return temple
-	console.log(new Date());
+	//console.log(new Date());
 	sleep.sleep(1);
-	console.log(new Date());
+	//console.log(new Date());
 }
 // test();
 
@@ -185,10 +185,10 @@ class OracleTimer {
 	}
 
 	pushdatax(cycle_number, data, begin, end) {
-		console.log("cycle_number=", cycle_number);
+		//console.log("cycle_number=", cycle_number);
 		eos.contract(oracleContract)
 			.then((contract) => {
-				sleep.sleep(1);
+				sleep.sleep(2);
 				for (var i = begin; i <= end; i++) {
 					var provider = "provider" + repeat(i, 4);
 					contract.pushdata({
@@ -203,19 +203,19 @@ class OracleTimer {
 							authorization: [`${provider}@${process.env.ORACLE_PERMISSION || 'active'}`]
 						})
 						.then(results => {
-							// console.log("results:", results);
+							// //console.log("results:", results);
 						})
 						.catch(error => {
-							console.log("error:", error);
+							//console.log("error:", error);
 						});
-					console.log(new Date());
-					sleep.sleep(1);
-					console.log(new Date());
+					//console.log(new Date());
+					sleep.sleep(2);
+					//console.log(new Date());
 				}
 
 			})
 			.catch(error => {
-				console.log("error:", error);
+				//console.log("error:", error);
 			});
 	}
 
@@ -223,7 +223,7 @@ class OracleTimer {
 		// const pricesWs = new WebSocket('wss://ws.coincap.io/prices?assets=bitcoin,ethereum,monero,litecoin')
 
 		// pricesWs.onmessage = function (msg) {
-		// 	console.log(msg.data)
+		// 	//console.log(msg.data)
 		// }
 
 		myself = this;
@@ -241,9 +241,9 @@ class OracleTimer {
 					// 	"timestamp": 1570783620323
 					// }
 
-					console.log("EOSUSD:", JSON.parse(eosRes).data.rateUsd);
-					console.log("ETHUSD:", JSON.parse(ethereumRes).data.rateUsd);
-					console.log("BTCUSD:", JSON.parse(bitcoinRes).data.rateUsd);
+					//console.log("EOSUSD:", JSON.parse(eosRes).data.rateUsd);
+					//console.log("ETHUSD:", JSON.parse(ethereumRes).data.rateUsd);
+					//console.log("BTCUSD:", JSON.parse(bitcoinRes).data.rateUsd);
 					var eosprice = JSON.parse(eosRes).data.rateUsd;
 					var newdata = {
 						"eos": JSON.parse(eosRes).data.rateUsd,
@@ -251,7 +251,7 @@ class OracleTimer {
 						"bitcoin": JSON.parse(bitcoinRes).data.rateUsd,
 						"boscore": 0
 					}
-					console.log("EOSUSDeosprice:", newdata);
+					//console.log("EOSUSDeosprice:", newdata);
 
 					myself.pushdatax(cycle_number, newdata, 1, 2);
 
@@ -328,24 +328,24 @@ class OracleTimer {
 					// 	  "database_id": 139
 					// 	}
 					//   }
-					console.log(oilRes);
-					console.log(JSON.parse(oilRes).dataset_data.data[0][4]);
-					console.log("OILUSD:", JSON.parse(oilRes).dataset_data.data[0][4]);
-					console.log("GOLDUSD:", goldRes);
-					console.log("GOLDUSD:", JSON.parse(goldRes).dataset_data);
-					console.log("GOLDUSD:", JSON.parse(goldRes).dataset_data.data[0][2]);
+					//console.log(oilRes);
+					//console.log(JSON.parse(oilRes).dataset_data.data[0][4]);
+					//console.log("OILUSD:", JSON.parse(oilRes).dataset_data.data[0][4]);
+					//console.log("GOLDUSD:", goldRes);
+					//console.log("GOLDUSD:", JSON.parse(goldRes).dataset_data);
+					//console.log("GOLDUSD:", JSON.parse(goldRes).dataset_data.data[0][2]);
 
-					// console.log("RMBUSD:", rmbRes);
-					// console.log("RMBUSD:", JSON.parse(rmbRes).rates);
+					// //console.log("RMBUSD:", rmbRes);
+					// //console.log("RMBUSD:", JSON.parse(rmbRes).rates);
 					var arr = find_from_array(JSON.parse(rmbRes).rates);
-					console.log("RMBUSD:", arr);
-					console.log("RMBUSD:", arr[0].rate);
+					//console.log("RMBUSD:", arr);
+					//console.log("RMBUSD:", arr[0].rate);
 					var newdata = {
 						"oil": JSON.parse(oilRes).dataset_data.data[0][4],
 						"gold": JSON.parse(goldRes).dataset_data.data[0][2],
 						"rmb": arr[0].rate,
 					}
-					console.log("EOSUSDeosprice:", newdata);
+					//console.log("EOSUSDeosprice:", newdata);
 
 					myself.pushdatax(cycle_number, newdata, 1, 5);
 
@@ -359,7 +359,7 @@ class OracleTimer {
 	start_timer() {
 		var update_start_timestamp = this.update_start_time;//1570758862;
 		//to_timestamp(update_start_time) + 8 * 3600;
-		console.log(" update_start_timestamp", update_start_timestamp);
+		//console.log(" update_start_timestamp", update_start_timestamp);
 		var now_sec = current_time();
 		var cycle_number = Math.round((now_sec - update_start_timestamp) / this.update_cycle + 1);
 		var begin_time = update_start_timestamp + (cycle_number - 1) * this.update_cycle;
@@ -374,10 +374,10 @@ class OracleTimer {
 				this.writeusd(cycle_number);
 			}
 
-			console.log(" now_sec", now_sec);
+			//console.log(" now_sec", now_sec);
 		}
 		else {
-			console.log(" (next_begin_time-now_sec)*1000", (next_begin_time - now_sec) * 1000);
+			//console.log(" (next_begin_time-now_sec)*1000", (next_begin_time - now_sec) * 1000);
 		}
 
 		var THIS = this;
@@ -393,7 +393,7 @@ class OracleTimer {
 			ids: ['bitcoin', 'ethereum', 'eos', 'boscore'],
 		}).then((data) => {
 			this.data = data;
-			console.log(data);
+			//console.log(data);
 			// {
 			// 	success: true,
 			// 	message: 'OK',
@@ -404,11 +404,11 @@ class OracleTimer {
 			// 	  bitcoin: { usd: 8555.88 },
 			// 	  boscore: { usd: 0.03517988 }
 			// 	}
-			console.log("eos", data.data.eos.usd);
-			console.log("eos", data.data.eos.usd);
-			console.log("ethereum", data.data.ethereum.usd);
-			console.log("bitcoin", data.data.bitcoin.usd);
-			console.log("boscore", data.data.boscore.usd);
+			//console.log("eos", data.data.eos.usd);
+			//console.log("eos", data.data.eos.usd);
+			//console.log("ethereum", data.data.ethereum.usd);
+			//console.log("bitcoin", data.data.bitcoin.usd);
+			//console.log("boscore", data.data.boscore.usd);
 
 			var newdata = {
 				"eos": data.data.eos.usd,
@@ -417,7 +417,7 @@ class OracleTimer {
 				"boscore": data.data.boscore.usd
 			}
 			this.pushdatax(cycle_number, newdata, 3, 5);
-			console.log(newdata);
+			//console.log(newdata);
 		});
 	}
 }
@@ -427,7 +427,7 @@ function start_coin_timer() {
 	const service_id = 1;
 	const update_cycle = 120;
 	const duration = 30;
-	const update_start_time = 1570770587;
+	const update_start_time = 1570845058;
 	var timer = new OracleTimer("coin", service_id, update_cycle, duration, update_start_time);
 	timer.start_timer();
 	// timer.write(1);
@@ -438,7 +438,7 @@ function start_usd_timer() {
 	const service_id = 2;
 	const update_cycle = 120;
 	const duration = 30;
-	const update_start_time = 1570799912;
+	const update_start_time = 1570845092;
 	var timer = new OracleTimer("usd", service_id, update_cycle, duration, update_start_time);
 	timer.start_timer();
 	// timer.writeusd(1);
@@ -456,14 +456,14 @@ start_usd_timer();
 function test_time() {
 	// const update_start_time = "2019-09-12 09:09:09";
 	// update_start_timestamp = to_timestamp(update_start_time);
-	// console.log(" update_start_timestamp", update_start_timestamp);
+	// //console.log(" update_start_timestamp", update_start_timestamp);
 	// now_sec = current_time();
-	// console.log(" now_sec", now_sec);
+	// //console.log(" now_sec", now_sec);
 
 	// const pricesWs = new WebSocket('wss://ws.coincap.io/prices?assets=bitcoin,ethereum,monero,litecoin')
 
 	// pricesWs.onmessage = function (msg) {
-	// 	console.log(msg.data)
+	// 	//console.log(msg.data)
 	// }
 
 	const ws = new WebSocket('wss://ws.coincap.io/prices?assets=bitcoin,ethereum,monero,litecoin');
@@ -473,14 +473,14 @@ function test_time() {
 	});
 
 	ws.on('message', function incoming(data) {
-		console.log(data);
+		//console.log(data);
 	});
 
 
 	// request.get("wss://ws.coincap.io/prices?assets=bitcoin,ethereum,monero,litecoin", function (err, res, eosRes) {
-	// 	console.log(err);
-	// 	console.log(res);
-	// console.log(eosRes);
+	// 	//console.log(err);
+	// 	//console.log(res);
+	// //console.log(eosRes);
 	// });
 
 	// myself = this;
@@ -505,9 +505,9 @@ function test_time() {
 	// 			// 	"timestamp": 1568274617161
 	// 			// }
 
-	// 			console.log("EOSUSD:", JSON.parse(eosRes).data.priceUsd);
-	// 			console.log("ETHUSD:", JSON.parse(ethereumRes).data.priceUsd);
-	// 			console.log("BTCUSD:", JSON.parse(bitcoinRes).data.priceUsd);
+	// 			//console.log("EOSUSD:", JSON.parse(eosRes).data.priceUsd);
+	// 			//console.log("ETHUSD:", JSON.parse(ethereumRes).data.priceUsd);
+	// 			//console.log("BTCUSD:", JSON.parse(bitcoinRes).data.priceUsd);
 	// 			var eosprice = JSON.parse(eosRes).data.priceUsd;
 	// 			var newdata = {
 	// 				"eos": JSON.parse(eosRes).data.priceUsd,
@@ -515,7 +515,7 @@ function test_time() {
 	// 				"bitcoin": JSON.parse(bitcoinRes).data.priceUsd,
 	// 				"boscore": 0
 	// 			}
-	// 			console.log("EOSUSDeosprice:", newdata);
+	// 			//console.log("EOSUSDeosprice:", newdata);
 
 	// 			// myself.pushdatax(cycle_number, newdata, 1, 2);
 

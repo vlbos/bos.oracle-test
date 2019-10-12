@@ -185,6 +185,9 @@ class OracleTimer {
 
 	pushdatax(cycle_number, data, begin, end) {
 		//console.log("cycle_number=", cycle_number);
+		var timer_type = this.timer_type;
+		var service_id = this.service_id;
+
 		eos.contract(oracleContract)
 			.then((contract) => {
 				sleep.sleep(2);
@@ -207,7 +210,8 @@ class OracleTimer {
 						.catch(error => {
 							console.log("error:", error);
 						});
-					console.log(new Date(),"provider=",provider,"cycle_number=",cycle_number);
+					console.log(new Date(), "provider=", provider, "cycle_number=", cycle_number);
+					console.log("timer_type=", timer_type, "service_id=", service_id);
 					sleep.sleep(2);
 					//console.log(new Date());
 				}
@@ -240,19 +244,25 @@ class OracleTimer {
 					// 	"timestamp": 1570783620323
 					// }
 
-					//console.log("EOSUSD:", JSON.parse(eosRes).data.rateUsd);
-					//console.log("ETHUSD:", JSON.parse(ethereumRes).data.rateUsd);
-					//console.log("BTCUSD:", JSON.parse(bitcoinRes).data.rateUsd);
-					var eosprice = JSON.parse(eosRes).data.rateUsd;
-					var newdata = {
-						"eos": JSON.parse(eosRes).data.rateUsd,
-						"ethereum": JSON.parse(ethereumRes).data.rateUsd,
-						"bitcoin": JSON.parse(bitcoinRes).data.rateUsd,
-						"boscore": 0
-					}
-					//console.log("EOSUSDeosprice:", newdata);
+					try {
+						//console.log("EOSUSD:", JSON.parse(eosRes).data.rateUsd);
+						//console.log("ETHUSD:", JSON.parse(ethereumRes).data.rateUsd);
+						//console.log("BTCUSD:", JSON.parse(bitcoinRes).data.rateUsd);
+						var eosprice = JSON.parse(eosRes).data.rateUsd;
+						var newdata = {
+							"eos": JSON.parse(eosRes).data.rateUsd,
+							"ethereum": JSON.parse(ethereumRes).data.rateUsd,
+							"bitcoin": JSON.parse(bitcoinRes).data.rateUsd,
+							"boscore": 0
+						}
+						//console.log("EOSUSDeosprice:", newdata);
 
-					THIS.pushdatax(cycle_number, newdata, 1, 2);
+						THIS.pushdatax(cycle_number, newdata, 1, 2);
+					}
+					catch (err) {
+						console.log("Error name: " + err.name + "");
+						console.log("Error message: " + err.message);
+					}
 
 				});
 			});
@@ -330,28 +340,84 @@ class OracleTimer {
 					//console.log(oilRes);
 					//console.log(JSON.parse(oilRes).dataset_data.data[0][4]);
 					//console.log("OILUSD:", JSON.parse(oilRes).dataset_data.data[0][4]);
-					console.log("GOLDUSD:", goldRes);
-					console.log("GOLDUSD:", JSON.parse(goldRes).dataset_data);
-					//console.log("GOLDUSD:", JSON.parse(goldRes).dataset_data.data[0][2]);
+					// 					EvalError：eval()的使用与定义不一致
+					// RangeError：数值越界
+					// ReferenceError：非法或不能识别的引用数值
+					// SyntaxError：发生语法解析错误
+					// TypeError：操作数类型错误
+					// URIError：URI处理函数使用不当
+					try {
+						console.log("GOLDUSD:", goldRes);
+						console.log("GOLDUSD:", JSON.parse(goldRes).dataset_data);
+						//console.log("GOLDUSD:", JSON.parse(goldRes).dataset_data.data[0][2]);
 
-					// //console.log("RMBUSD:", rmbRes);
-					// //console.log("RMBUSD:", JSON.parse(rmbRes).rates);
-					var arr = find_from_array(JSON.parse(rmbRes).rates);
-					//console.log("RMBUSD:", arr);
-					//console.log("RMBUSD:", arr[0].rate);
-					var newdata = {
-						"oil": JSON.parse(oilRes).dataset_data.data[0][4],
-						"gold": JSON.parse(goldRes).dataset_data.data[0][2],
-						"rmb": arr[0].rate,
+						// //console.log("RMBUSD:", rmbRes);
+						// //console.log("RMBUSD:", JSON.parse(rmbRes).rates);
+						var arr = find_from_array(JSON.parse(rmbRes).rates);
+						//console.log("RMBUSD:", arr);
+						//console.log("RMBUSD:", arr[0].rate);
+						var newdata = {
+							"oil": JSON.parse(oilRes).dataset_data.data[0][4],
+							"gold": JSON.parse(goldRes).dataset_data.data[0][2],
+							"rmb": arr[0].rate,
+						}
+						//console.log("EOSUSDeosprice:", newdata);
+
+						THIS.pushdatax(cycle_number, newdata, 1, 5);
+
 					}
-					//console.log("EOSUSDeosprice:", newdata);
-
-					THIS.pushdatax(cycle_number, newdata, 1, 5);
+					catch (err) {
+						console.log("Error name: " + err.name + "");
+						console.log("Error message: " + err.message);
+					}
 
 				});
 			});
 		});
 
+	}
+
+	test_bos(cycle_number) {
+		var CoinGeckoClient = new CoinGecko();
+
+		CoinGeckoClient.simple.price({
+			vs_currencies: 'usd',
+			ids: ['bitcoin', 'ethereum', 'eos', 'boscore'],
+		}).then((data) => {
+			this.data = data;
+			//console.log(data);
+			// {
+			// 	success: true,
+			// 	message: 'OK',
+			// 	code: 200,
+			// 	data: {
+			// 	  eos: { usd: 3.18 },
+			// 	  ethereum: { usd: 192.94 },
+			// 	  bitcoin: { usd: 8555.88 },
+			// 	  boscore: { usd: 0.03517988 }
+			// 	}
+			try {
+				//console.log("eos", data.data.eos.usd);
+				//console.log("eos", data.data.eos.usd);
+				//console.log("ethereum", data.data.ethereum.usd);
+				//console.log("bitcoin", data.data.bitcoin.usd);
+				//console.log("boscore", data.data.boscore.usd);
+
+				var newdata = {
+					"eos": data.data.eos.usd,
+					"ethereum": data.data.ethereum.usd,
+					"bitcoin": data.data.bitcoin.usd,
+					"boscore": data.data.boscore.usd
+				}
+				this.pushdatax(cycle_number, newdata, 3, 5);
+				//console.log(newdata);
+			}
+			catch (err) {
+				console.log("Error name: " + err.name + "");
+				console.log("Error message: " + err.message);
+			}
+
+		});
 	}
 
 
@@ -384,41 +450,7 @@ class OracleTimer {
 		setInterval(function () { TIMER.apply(THIS) }, (next_begin_time - now_sec) * 1000);
 	}
 
-	test_bos(cycle_number) {
-		var CoinGeckoClient = new CoinGecko();
 
-		CoinGeckoClient.simple.price({
-			vs_currencies: 'usd',
-			ids: ['bitcoin', 'ethereum', 'eos', 'boscore'],
-		}).then((data) => {
-			this.data = data;
-			//console.log(data);
-			// {
-			// 	success: true,
-			// 	message: 'OK',
-			// 	code: 200,
-			// 	data: {
-			// 	  eos: { usd: 3.18 },
-			// 	  ethereum: { usd: 192.94 },
-			// 	  bitcoin: { usd: 8555.88 },
-			// 	  boscore: { usd: 0.03517988 }
-			// 	}
-			//console.log("eos", data.data.eos.usd);
-			//console.log("eos", data.data.eos.usd);
-			//console.log("ethereum", data.data.ethereum.usd);
-			//console.log("bitcoin", data.data.bitcoin.usd);
-			//console.log("boscore", data.data.boscore.usd);
-
-			var newdata = {
-				"eos": data.data.eos.usd,
-				"ethereum": data.data.ethereum.usd,
-				"bitcoin": data.data.bitcoin.usd,
-				"boscore": data.data.boscore.usd
-			}
-			this.pushdatax(cycle_number, newdata, 3, 5);
-			//console.log(newdata);
-		});
-	}
 }
 
 // start_timer();

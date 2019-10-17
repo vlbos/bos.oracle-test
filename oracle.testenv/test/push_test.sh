@@ -99,7 +99,7 @@ test_reg_service5() {
 
 test_subs5() {
     echo ===subs5
-    cleos=cleos1 
+    cleos=cleos1
     #&& if [ "$1" == "c2" ]; then cleos=cleos2; fi
     for i in {1..5}; do
         c='consumer'${i}${i}${i}${i}
@@ -112,7 +112,7 @@ test_subs5() {
 test_indirectpush() {
     update_start_time=$2
     echo ==indipush
-    cleos=cleos1 
+    cleos=cleos1
     #&& if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
     start_time=$update_start_time
@@ -150,6 +150,42 @@ test_fee() {
 
 }
 
+test_para() {
+    cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
+
+    core_symbol="BOS"
+    precision=4
+    min_service_stake_limit=1000
+    min_appeal_stake_limit=100
+    min_reg_arbitrator_stake_limit=10000
+    arbitration_correct_rate=60
+    round_limit=3
+    arbi_timeout_value=3600
+    arbi_freeze_stake_duration=$((3600 * 24))
+    time_deadline=$((3600 * 24))
+    clear_data_time_length=10800
+    max_data_size=256
+    min_provider_limit=1
+    max_provider_limit=100
+    min_update_cycle=1
+    max_update_cycle=$((3600 * 24 * 100))
+    min_duration=1
+    max_duration=100000
+    min_acceptance=1
+    max_acceptance=100
+    current_oracle_version=1
+
+    ${!cleos} push action ${contract_oracle} setparameter '{"version":'$current_oracle_version',"parameters":{"core_symbol":"'$core_symbol'","precision":'$precision',"min_service_stake_limit":'$min_service_stake_limit',"min_appeal_stake_limit":'$min_appeal_stake_limit',"min_reg_arbitrator_stake_limit":'$min_reg_arbitrator_stake_limit',"arbitration_correct_rate":'$arbitration_correct_rate',"round_limit":'$round_limit',"arbi_timeout_value":'$arbi_timeout_value',"arbi_freeze_stake_duration":'$arbi_freeze_stake_duration',"time_deadline":'$time_deadline',"clear_data_time_length":'$clear_data_time_length',"max_data_size":'$max_data_size',"min_provider_limit":'$min_provider_limit',"max_provider_limit":'$max_provider_limit',"min_update_cycle":'$min_update_cycle',"max_update_cycle":'$max_update_cycle',"min_duration":'$min_duration', "max_duration":'$max_duration',"min_acceptance":'$min_acceptance',"max_acceptance":'$max_acceptance'}}' -p ${contract_oracle}@active
+
+}
+
+test_getpara() {
+    cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
+
+    ${!cleos} push action ${contract_oracle} getparameter '{"value":1}' -p ${contract_oracle}@active
+
+}
+
 test_subs() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
@@ -181,7 +217,7 @@ test_multipush() {
     reqflag=false && if [ "$2" != "" ]; then reqflag="$2"; fi
 
     echo ===multipush
-    # ${!cleos}  set account permission provider1111  active '{"threshold": 1,"keys": [{"key": "'${provider1111_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p provider1111@owner
+    # ${!cleos}  set account permission provider1111  active '{"threshold":1,"keys":[{"key":"'${provider1111_pubkey}'","weight":1}],"accounts":[{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p provider1111@owner
 
     # sleep .2
     ${!cleos} push action ${contract_oracle} multipush '{"service_id":0, "provider":"provider1111", 
@@ -330,11 +366,13 @@ test_fetchdata() {
 }
 
 case "$1" in
-"regs") test_regservice "$2";;
+"regs") test_regservice "$2" ;;
 "reg") test_reg_service c1 ;;
-"fee") test_fee c1 "$2";;
-"subs") test_subs c1 "$2";;
+"fee") test_fee c1 "$2" ;;
+"para") test_para c1 ;;
+"gpara") test_getpara c1 ;;
+"subs") test_subs c1 "$2" ;;
 "req") test_req c1 ;;
-"pusht") test_pushtotable "$2" "$3";;
-*) echo "usage: regs|reg|fee|subs|req|pusht" ;;
+"pusht") test_pushtotable "$2" "$3" ;;
+*) echo "usage:regs|reg|fee|subs|req|pusht" ;;
 esac

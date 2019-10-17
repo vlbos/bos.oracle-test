@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 const request = require('request');
 //Helpers
 const CoinGecko = require('./lib/CoinGecko');
-var sleep = require('sleep');
+let sleep = require('sleep');
 // https://api.coincap.io/v2/rates/bitcoin
 const eosUrl = "https://api.coincap.io/v2/rates/eos";
 const bitcoinUrl = "https://api.coincap.io/v2/rates/bitcoin";
@@ -115,7 +115,7 @@ const allowContract = (auth, key, contract, parent) => {
 
 // class Person(name){
 // 	this.name=name;
-// 	var f=function(){alert('My name is '+this.name)};
+// 	let f=function(){alert('My name is '+this.name)};
 
 
 // 	 ff(){
@@ -126,7 +126,7 @@ const allowContract = (auth, key, contract, parent) => {
 // 	}
 // 	// setTimeout(f,50); //错误
 
-// 	var THIS=this;
+// 	let THIS=this;
 // 	setTimeout(function(){ff.apply(THIS)},50); //正确，通用
 // 	// setTimeout(function(){ff.call(THIS)},50); //正确，通用
 // }
@@ -138,7 +138,7 @@ const allowContract = (auth, key, contract, parent) => {
 // 	return new Promise((resolve) => setTimeout(resolve, ms));
 // }
 function test() {
-	// var temple = await sleep(1000);
+	// let temple = await sleep(1000);
 	// //console.log(new Date());
 	// return temple
 	//console.log(new Date());
@@ -149,7 +149,7 @@ function test() {
 
 
 function find_from_array(arr) {
-	var newArr = arr.filter(function (p) {
+	let newArr = arr.filter(function (p) {
 		return p.name === "United States";
 	});
 
@@ -185,14 +185,14 @@ class OracleTimer {
 
 	pushdatax(cycle_number, data, begin, end) {
 		//console.log("cycle_number=", cycle_number);
-		var timer_type = this.timer_type;
-		var service_id = this.service_id;
+		let timer_type = this.timer_type;
+		let service_id = this.service_id;
 
 		eos.contract(oracleContract)
 			.then((contract) => {
 				sleep.sleep(2);
-				for (var i = begin; i <= end; i++) {
-					var provider = "provider" + repeat(i, 4);
+				for (let i = begin; i <= end; i++) {
+					let provider = "provider" + repeat(i, 4);
 					contract.pushdata({
 						service_id: this.service_id,
 						provider: provider,
@@ -222,14 +222,13 @@ class OracleTimer {
 			});
 	}
 
-	write(cycle_number) {
+	write(cycle_number, retrytimes=1) {
 		// const pricesWs = new WebSocket('wss://ws.coincap.io/prices?assets=bitcoin,ethereum,monero,litecoin')
-
 		// pricesWs.onmessage = function (msg) {
 		// 	//console.log(msg.data)
 		// }
 
-		var THIS = this;
+		let THIS = this;
 		request.get(eosUrl, function (err, res, eosRes) {
 			request.get(ethereumUrl, function (err, res, ethereumRes) {
 				request.get(bitcoinUrl, function (err, res, bitcoinRes) {
@@ -248,8 +247,8 @@ class OracleTimer {
 						//console.log("EOSUSD:", JSON.parse(eosRes).data.rateUsd);
 						//console.log("ETHUSD:", JSON.parse(ethereumRes).data.rateUsd);
 						//console.log("BTCUSD:", JSON.parse(bitcoinRes).data.rateUsd);
-						var eosprice = JSON.parse(eosRes).data.rateUsd;
-						var newdata = {
+						let eosprice = JSON.parse(eosRes).data.rateUsd;
+						let newdata = {
 							"eos": JSON.parse(eosRes).data.rateUsd,
 							"ethereum": JSON.parse(ethereumRes).data.rateUsd,
 							"bitcoin": JSON.parse(bitcoinRes).data.rateUsd,
@@ -262,6 +261,9 @@ class OracleTimer {
 					catch (err) {
 						console.log("Error name: " + err.name + "");
 						console.log("Error message: " + err.message);
+						if (retrytimes < 3) {
+							writeusd(cycle_number, retrytimes + 1);
+						}
 					}
 
 				});
@@ -272,8 +274,8 @@ class OracleTimer {
 
 
 
-	writeusd(cycle_number) {
-		var THIS = this;
+	writeusd(cycle_number, retrytimes=1) {
+		let THIS = this;
 		request.get(oilUrl, function (err, res, oilRes) {
 			request.get(goldUrl, function (err, res, goldRes) {
 				request.get(rmbUrl, function (err, res, rmbRes) {
@@ -353,10 +355,10 @@ class OracleTimer {
 
 						// //console.log("RMBUSD:", rmbRes);
 						// //console.log("RMBUSD:", JSON.parse(rmbRes).rates);
-						var arr = find_from_array(JSON.parse(rmbRes).rates);
+						let arr = find_from_array(JSON.parse(rmbRes).rates);
 						//console.log("RMBUSD:", arr);
 						//console.log("RMBUSD:", arr[0].rate);
-						var newdata = {
+						let newdata = {
 							"oil": JSON.parse(oilRes).dataset_data.data[0][4],
 							"gold": JSON.parse(goldRes).dataset_data.data[0][2],
 							"rmb": arr[0].rate,
@@ -369,6 +371,9 @@ class OracleTimer {
 					catch (err) {
 						console.log("Error name: " + err.name + "");
 						console.log("Error message: " + err.message);
+						if (retrytimes < 3) {
+							writeusd(cycle_number, retrytimes + 1);
+						}
 					}
 
 				});
@@ -377,8 +382,8 @@ class OracleTimer {
 
 	}
 
-	test_bos(cycle_number) {
-		var CoinGeckoClient = new CoinGecko();
+	test_bos(cycle_number, retrytimes=1) {
+		let CoinGeckoClient = new CoinGecko();
 
 		CoinGeckoClient.simple.price({
 			vs_currencies: 'usd',
@@ -403,7 +408,7 @@ class OracleTimer {
 				//console.log("bitcoin", data.data.bitcoin.usd);
 				//console.log("boscore", data.data.boscore.usd);
 
-				var newdata = {
+				let newdata = {
 					"eos": data.data.eos.usd,
 					"ethereum": data.data.ethereum.usd,
 					"bitcoin": data.data.bitcoin.usd,
@@ -415,6 +420,9 @@ class OracleTimer {
 			catch (err) {
 				console.log("Error name: " + err.name + "");
 				console.log("Error message: " + err.message);
+				if (retrytimes < 3) {
+					test_bos(cycle_number, retrytimes + 1);
+				}
 			}
 
 		});
@@ -422,14 +430,14 @@ class OracleTimer {
 
 
 	start_timer() {
-		var update_start_timestamp = this.update_start_time;//1570758862;
+		let update_start_timestamp = this.update_start_time;//1570758862;
 		//to_timestamp(update_start_time) + 8 * 3600;
 		//console.log(" update_start_timestamp", update_start_timestamp);
-		var now_sec = current_time();
-		var cycle_number = Math.round((now_sec - update_start_timestamp) / this.update_cycle + 1);
-		var begin_time = update_start_timestamp + (cycle_number - 1) * this.update_cycle;
-		var end_time = begin_time + this.duration;
-		var next_begin_time = update_start_timestamp + (cycle_number) * this.update_cycle;
+		let now_sec = current_time();
+		let cycle_number = Math.round((now_sec - update_start_timestamp) / this.update_cycle + 1);
+		let begin_time = update_start_timestamp + (cycle_number - 1) * this.update_cycle;
+		let end_time = begin_time + this.duration;
+		let next_begin_time = update_start_timestamp + (cycle_number) * this.update_cycle;
 		if (now_sec >= begin_time && now_sec < end_time) {
 			if ("coin" == this.timer_type) {
 				this.write(cycle_number);
@@ -445,8 +453,8 @@ class OracleTimer {
 			//console.log(" (next_begin_time-now_sec)*1000", (next_begin_time - now_sec) * 1000);
 		}
 
-		var THIS = this;
-		var TIMER = function () { this.start_timer(); };
+		let THIS = this;
+		let TIMER = function () { this.start_timer(); };
 		setInterval(function () { TIMER.apply(THIS) }, (next_begin_time - now_sec) * 1000);
 	}
 
@@ -458,8 +466,8 @@ function start_coin_timer() {
 	const service_id = 1;
 	const update_cycle = 120;
 	const duration = 30;
-	const update_start_time = 1570845058;
-	var timer = new OracleTimer("coin", service_id, update_cycle, duration, update_start_time);
+	const update_start_time = 1571038003;
+	let timer = new OracleTimer("coin", service_id, update_cycle, duration, update_start_time);
 	timer.start_timer();
 	// timer.write(1);
 }
@@ -469,8 +477,8 @@ function start_usd_timer() {
 	const service_id = 2;
 	const update_cycle = 120;
 	const duration = 30;
-	const update_start_time = 1570845092;
-	var timer = new OracleTimer("usd", service_id, update_cycle, duration, update_start_time);
+	const update_start_time = 1571038008;
+	let timer = new OracleTimer("usd", service_id, update_cycle, duration, update_start_time);
 	timer.start_timer();
 	// timer.writeusd(1);
 
@@ -481,10 +489,23 @@ start_usd_timer();
 // write();
 //setInterval(write, 60000);
 
-// var ws = require("nodejs-websocket")
+// let ws = require("nodejs-websocket")
 // const WebSocket = require('ws');
+// import {JsonRpc} from 'eosjs'
 
+// const rpc = new JsonRpc('http://127.0.0.1:8888');
 function test_time() {
+
+
+	// (async ()=>{
+	// 	let ret = await rpc.get_table_rows({
+	// 	  code:'eosio.token',
+	// 	  table:'stats',
+	// 	  scope:'SYS'
+	// 	})
+	// 	console.log(ret)
+	//   })()
+
 	// const update_start_time = "2019-09-12 09:09:09";
 	// update_start_timestamp = to_timestamp(update_start_time);
 	// //console.log(" update_start_timestamp", update_start_timestamp);
@@ -497,15 +518,15 @@ function test_time() {
 	// 	//console.log(msg.data)
 	// }
 
-	const ws = new WebSocket('wss://ws.coincap.io/prices?assets=bitcoin,ethereum,monero,litecoin');
+	// const ws = new WebSocket('wss://ws.coincap.io/prices?assets=bitcoin,ethereum,monero,litecoin');
 
-	ws.on('open', function open() {
-		ws.send('something');
-	});
+	// ws.on('open', function open() {
+	// 	ws.send('something');
+	// });
 
-	ws.on('message', function incoming(data) {
-		//console.log(data);
-	});
+	// ws.on('message', function incoming(data) {
+	// 	//console.log(data);
+	// });
 
 
 	// request.get("wss://ws.coincap.io/prices?assets=bitcoin,ethereum,monero,litecoin", function (err, res, eosRes) {
@@ -539,8 +560,8 @@ function test_time() {
 	// 			//console.log("EOSUSD:", JSON.parse(eosRes).data.priceUsd);
 	// 			//console.log("ETHUSD:", JSON.parse(ethereumRes).data.priceUsd);
 	// 			//console.log("BTCUSD:", JSON.parse(bitcoinRes).data.priceUsd);
-	// 			var eosprice = JSON.parse(eosRes).data.priceUsd;
-	// 			var newdata = {
+	// 			let eosprice = JSON.parse(eosRes).data.priceUsd;
+	// 			let newdata = {
 	// 				"eos": JSON.parse(eosRes).data.priceUsd,
 	// 				"ethereum": JSON.parse(ethereumRes).data.priceUsd,
 	// 				"bitcoin": JSON.parse(bitcoinRes).data.priceUsd,

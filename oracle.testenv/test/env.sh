@@ -13,7 +13,9 @@ cleos1='cleos -u http://127.0.0.1:8888'
 cleos2='cleos -u http://127.0.0.1:8889'
 
 contract_oracle=oraclebosbos
-contract_oracle_folder=bos.oracle
+# contract_oracle_folder=bos.oracle
+
+contract_oracle_folder=bos.burn
 
 contract_consumer=consumer1234
 contract_consumer_folder=bos.oracle/consumer.contract

@@ -47,6 +47,14 @@ transfer() {
     # $cleos2 transfer  testblklist1 testblklist2 "10.0000 BOS" "ibc receiver=chengsong111" -p testblklist1
     #
 }
+test_importaccounts()
+{
+    # $cleos1 push action ${contract_oracle} importacnts '[[{"account":"provider3333", "quantity":"0.0001 BOS"},{"account":"provider2222", "quantity":"0.0001 BOS"}]]' -p ${contract_oracle}
+    $cleos1 push action ${contract_oracle} importacnts '[[["provider1111","0.0001 BOS"],["provider2222","0.0001 BOS"]]]' -p ${contract_oracle}
+    test_get_table accounts
+
+}
+
 # dataservices
 # servicefees
 # providers
@@ -132,11 +140,12 @@ test_get_info() {
 case "$1" in
 "set") test_set_contracts ;;
 "acc") test_get_account "$2" ;;
+"imp") test_importaccounts "$2" ;;
 "transfer") test_transfer "$2" ;;
 "keys") test_list_pri_key ;;
 "table") test_get_table "$2" ;;
 "table1") test_get_table1 "$2" "$3" ;;
 "info") test_get_info ;;
 "scope") test_get_scope ;;
-*) echo "usage: boracle_test.sh set|acc|keys|table {name}|table1 {scope name}|info|scope|data" ;;
+*) echo "usage: boracle_test.sh set|acc|imp|transfer|keys|table {name}|table1 {scope name}|info|scope|data" ;;
 esac

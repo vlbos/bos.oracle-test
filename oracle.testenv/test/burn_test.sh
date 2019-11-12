@@ -52,7 +52,6 @@ test_importaccounts()
     # $cleos1 push action ${contract_oracle} importacnts '[[{"account":"provider3333", "quantity":"0.0001 BOS"},{"account":"provider2222", "quantity":"0.0001 BOS"}]]' -p ${contract_oracle}
     $cleos1 push action ${contract_oracle} importacnts '[[["provider1111","0.0001 BOS"],["provider2222","0.0001 BOS"]]]' -p ${contract_oracle}
     test_get_table accounts
-
 }
 
 # dataservices

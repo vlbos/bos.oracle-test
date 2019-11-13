@@ -381,3 +381,8 @@ else
     esac
 fi
 }
+count=1
+if (($count == 1)) 
+then
+ echo "==1"
+fi

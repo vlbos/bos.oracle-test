@@ -2,3 +2,4 @@ logs/*
 keys.txt
 *.log
 *.csv
+*.txt

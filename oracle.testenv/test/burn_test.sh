@@ -47,12 +47,7 @@ transfer() {
     # $cleos2 transfer  testblklist1 testblklist2 "10.0000 BOS" "ibc receiver=chengsong111" -p testblklist1
     #
 }
-test_importaccounts()
-{
-    # $cleos1 push action ${contract_oracle} importacnts '[[{"account":"provider3333", "quantity":"0.0001 BOS"},{"account":"provider2222", "quantity":"0.0001 BOS"}]]' -p ${contract_oracle}
-    $cleos1 push action ${contract_oracle} importacnts '[[["provider1111","0.0001 BOS"],["provider2222","0.0001 BOS"]]]' -p ${contract_oracle}
-    test_get_table accounts
-}
+
 
 # dataservices
 # servicefees
@@ -124,6 +119,7 @@ get_scope() {
 
     #cleos get table ${contract_token} ${contract_token} globals
     ${!cleos} get scope -t stat eosio.token
+    ${!cleos} get scope -t accounts ${contract_oracle}
 
 }
 
@@ -135,8 +131,81 @@ test_get_info() {
     get_info c1
 }
 
+test_importaccounts()
+{
+    # $cleos1 push action ${contract_oracle} importacnts '[[{"account":"provider3333", "quantity":"0.0001 BOS"},{"account":"provider2222", "quantity":"0.0001 BOS"}]]' -p ${contract_oracle}
+    ${cleos1} push action ${contract_oracle} importacnts '[[["provider3333","0.0001 BOS"],["provider4444","0.0001 BOS"]]]' -p ${contract_oracle}
+
+    test_get_table1 provider3333 accounts
+   
+}
+
+
+flag=0
+count=0
+limits=1000
+accs=''
+
+test_importaccs()
+{
+    OLD_IFS=$IFS #保存原始值
+    IFS="" 
+    cleos -u http://127.0.0.1:8888 push action ${contract_oracle} importacnts '[['$accs']]'  -p ${contract_oracle}
+    IFS=$OLD_IFS #还原IFS的原始值
+}
+
+cat_acc()
+{
+    if (($flag == 1)) 
+    then 
+    accs=$accs','
+    else
+    flag=1
+    fi
+    accs=$accs'["'$1'","'$2'"]'
+    import_acc
+}
+
+import_acc()
+{
+    count=$(($count+1))
+    if  (( $(($count%$limits)) == 0 )) 
+    then 
+    test_importaccs 
+    flag=0
+    count=0
+    accs=''
+    fi
+}
+
+test_csv()
+{
+test_get_info
+
+file=msig_unactive_acc.csv
+OLD_IFS=$IFS #保存原始值
+IFS=","
+firstname=''
+while read name quantity seq
+do
+#   echo name=$name quantity=$quantity seq=$seq
+  firstname=$name
+  cat_acc $name $quantity
+done <  $file
+
+IFS=$OLD_IFS #还原IFS的原始值
+
+if  (( $count > 0 )) 
+then 
+    test_importaccs 
+fi
+
+test_get_table1 $firstname accounts
+
+}
 
 case "$1" in
+"csv") test_csv ;;
 "set") test_set_contracts ;;
 "acc") test_get_account "$2" ;;
 "imp") test_importaccounts "$2" ;;
@@ -146,5 +215,5 @@ case "$1" in
 "table1") test_get_table1 "$2" "$3" ;;
 "info") test_get_info ;;
 "scope") test_get_scope ;;
-*) echo "usage: boracle_test.sh set|acc|imp|transfer|keys|table {name}|table1 {scope name}|info|scope|data" ;;
+*) echo "usage: burn_test.sh set|acc|imp|transfer|keys|table {name}|table1 {scope name}|info|scope|data" ;;
 esac

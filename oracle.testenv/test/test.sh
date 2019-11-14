@@ -336,8 +336,8 @@ else
 fi
 }
 
-t2dusage 1569467251
-t2dusage 1569469800
+# t2dusage 1569467251
+# t2dusage 1569469800
 
 function usage2(){
     echo "-h --help \n" \
@@ -381,8 +381,39 @@ else
     esac
 fi
 }
+function getTiming(){ 
+    start=$1
+    end=$2
+    # datetime2=$(echo $datetime1 | cut -d"#" -f1) #取出秒
+    start_s=`echo $start| cut -d '.' -f 1` 
+    start_ns=`echo $start| cut -d '.' -f 2` 
+    end_s=`echo $end| cut -d '.' -f 1` 
+    end_ns=`echo $end| cut -d '.' -f 2` 
+  
+    time_micro=$(( (10#$end_s-10#$start_s)*1000000 + (10#$end_ns/1000 - 10#$start_ns/1000) )) 
+    time_ms=`expr $time_micro/1000  | bc ` 
+  
+    echo "$time_micro microseconds"
+    echo "$time_ms ms"
+} 
+ 
+
 count=1
 if (($count == 1)) 
 then
- echo "==1"
+  accs="afdasf,dasf],"
+  accs=${accs%","}
+  
+  echo $accs"==1"
+  currentTimeStamp="date -d "$currentTime" +%s"
+  echo $currentTimeStamp
+  datetime1=$(date "+%s#%N")
+
+  echo $datetime1
+
+  begin_time=`date +%s.%N` 
+sleep 10 
+end_time=`date +%s.%N` 
+  
+getTiming $begin_time$end_time
 fi

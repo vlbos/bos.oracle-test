@@ -11,7 +11,6 @@ set_contracts() {
     ${!cleos} set contract ${contract_consumer} ${CONTRACTS_DIR}/${contract_consumer_folder} -x 1000 -p ${contract_consumer}@active
     sleep .2
 
-
     ${!cleos} set account permission ${contract_oracle} active '{"threshold": 1,"keys": [{"key": "'${oracle_c_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_oracle}@owner
 }
 
@@ -19,9 +18,6 @@ test_set_contracts() {
     set_contracts c1
     # set_contracts c2
 }
-
-
-
 
 get_account() {
     echo --- cleos1 --- $1
@@ -47,7 +43,6 @@ transfer() {
     # $cleos2 transfer  testblklist1 testblklist2 "10.0000 BOS" "ibc receiver=chengsong111" -p testblklist1
     #
 }
-
 
 # dataservices
 # servicefees
@@ -131,80 +126,91 @@ test_get_info() {
     get_info c1
 }
 
-test_importaccounts()
-{
+test_importaccounts() {
     # $cleos1 push action ${contract_oracle} importacnts '[[{"account":"provider3333", "quantity":"0.0001 BOS"},{"account":"provider2222", "quantity":"0.0001 BOS"}]]' -p ${contract_oracle}
     ${cleos1} push action ${contract_oracle} importacnts '[[["provider3333","0.0001 BOS"],["provider4444","0.0001 BOS"]]]' -p ${contract_oracle}
 
     test_get_table1 provider3333 accounts
-   
-}
 
+}
 
 flag=0
 count=0
 limits=1000
 accs=''
-
-test_importaccs()
-{
+ofile=./airdrop_dataset/files/dst/o.csv
+test_importaccs() {
     OLD_IFS=$IFS #保存原始值
-    IFS="" 
-    cleos -u http://127.0.0.1:8888 push action ${contract_oracle} importacnts '[['$accs']]'  -p ${contract_oracle}
+    IFS="="
+    cleos -u http://127.0.0.1:8888 push action ${contract_oracle} importacnts '[['$accs']]' -p ${contract_oracle}
     IFS=$OLD_IFS #还原IFS的原始值
 }
 
-cat_acc()
-{
-    if (($flag == 1)) 
-    then 
-    accs=$accs','
-    else
-    flag=1
-    fi
-    accs=$accs'["'$1'","'$2'"]'
-    import_acc
-}
+test_csvi() {
+    Start=$(date +%s)
 
-import_acc()
-{
-    count=$(($count+1))
-    if  (( $(($count%$limits)) == 0 )) 
-    then 
-    test_importaccs 
-    flag=0
+    OLD_IFS=$IFS #保存原始值
+    IFS=";"
+    firstname=''
     count=0
-    accs=''
-    fi
+    while read name; do
+        accs=$name
+        test_importaccs
+        End =$(date +%s)
+        count=$(($count + 1))
+        echo $count"=====importing==Time========"$End
+    done <$ofile
+
+    IFS=$OLD_IFS #还原IFS的原始值
+
+    End =$(date +%s)
+    Time=$(($Start - $End))
+    echo "=====imp==Time========"$Time
+    echo "==============imp end============="
 }
 
-test_csv()
-{
-test_get_info
+test_csv() {
+    Start=$(date +%s)
+    file=./airdrop_dataset/files/dst/airdrop_unactive_account.csv
+    OLD_IFS=$IFS #保存原始值
+    IFS=","
+    firstname=''
+    while read name quantity; do
+        quantityx=$(echo $quantity | tr -d '\r')
+        accs=$accs$(echo '["'$name'","'$quantityx'"]')
+        count=$(($count + 1))
+        if (($(($count % $limits)) == 0)); then
+            accs=$accs';'
+            echo $accs >>$ofile
+            echo "=========count========"$count
+            End =$(date +%s)
+            echo $End
+            accs=''
+        else
+            accs=$accs','
+        fi
 
-file=msig_unactive_acc.csv
-OLD_IFS=$IFS #保存原始值
-IFS=","
-firstname=''
-while read name quantity seq
-do
-#   echo name=$name quantity=$quantity seq=$seq
-  firstname=$name
-  cat_acc $name $quantity
-done <  $file
+        #   firstname=$name
+        #   cat_acc $name $quantity
+    done <$file
 
-IFS=$OLD_IFS #还原IFS的原始值
+    IFS=$OLD_IFS #还原IFS的原始值
 
-if  (( $count > 0 )) 
-then 
-    test_importaccs 
-fi
+    if (($(($count % $limits)) > 0)); then
+        accs=${accs%","}
+        echo $accs >>$ofile
+        echo "=========count========"$count
+    fi
+    End =$(date +%s)
+    Time=$(($Start - $End))
+    echo "=====csv=Time========"$Time
 
-test_get_table1 $firstname accounts
-
+    echo "==============csv end============="
+    test_csvi
 }
 
 case "$1" in
+"ci") test_csvi ;;
 "csv") test_csv ;;
 "set") test_set_contracts ;;
 "acc") test_get_account "$2" ;;

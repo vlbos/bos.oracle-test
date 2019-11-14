@@ -40,10 +40,6 @@ setup_system_contracts_and_issue_token(){
 
 }
 
-
-
-
-
 create_firstaccount(){
     cleos=cleos1 sym=BOS && if [ "$1" == "c2" ];then cleos=cleos2 sym=EOS ;fi
     echo "create first user account."
@@ -72,7 +68,7 @@ create_account_by_pub_key(){
     name=$2
     pub_key=$3
     ${!cleos} system newaccount \
-        --stake-net "1000.0000 "$sym --stake-cpu "1000.0000 "$sym --buy-ram "1000.0000 "$sym \
+        --stake-net "1000.0000 "$sym --stake-cpu "1000.0000 "$sym --buy-ram "100000.0000 "$sym \
         firstaccount $name $pub_key $pub_key -p firstaccount
     ${!cleos} transfer firstaccount $name "20000.0000 "$sym
 }

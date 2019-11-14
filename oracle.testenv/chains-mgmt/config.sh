@@ -37,6 +37,14 @@ plugin = eosio::history_api_plugin
 p2p-max-nodes-per-host = 50
 max-clients = 25
 greylist-account = testblklist3
+# Maximum size (in MiB) of the chain state database (eosio::chain_plugin)
+chain-state-db-size-mb = 10240
+# Safely shut down node when free space remaining in the chain state database drops below this size (in MiB). (eosio::chain_plugin)
+chain-state-db-guard-size-mb = 100
+# Maximum size (in MiB) of the reversible blocks database (eosio::chain_plugin)
+reversible-blocks-db-size-mb = 10240
+# Safely shut down node when free space remaining in the reverseible blocks database drops below this size (in MiB). (eosio::chain_plugin)
+reversible-blocks-db-guard-size-mb = 20
 # ibc-chain-contract = ibc2chain555
 # ibc-token-contract = ibc2token555
 # ibc-relay-name = ibc2relay555

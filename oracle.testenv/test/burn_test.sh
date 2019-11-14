@@ -134,11 +134,28 @@ test_importaccounts() {
 
 }
 
+test_clear() {
+    ${cleos1} push action ${contract_oracle} clear '[["provider3333","provider4444"]]' -p ${contract_oracle}
+}
+
+test_setparameter() {
+    ${cleos1} push action ${contract_oracle} setparameter '['${contract_oracle}']' -p ${contract_oracle}
+}
+
+test_burn() {
+    ${cleos1} push action ${contract_oracle} burn '["0.0001 BOS"]' -p ${contract_oracle}
+}
+
+test_trnasferair() {
+    ${cleos1} push action ${contract_oracle} transferair '["provider3333"]' -p provider4444
+}
+
+
 flag=0
 count=0
 limits=1000
 accs=''
-ofile=./airdrop_dataset/files/dst/o.csv
+file=./airdropburn/output/airdrop_unactive_account.csv
 test_importaccs() {
     OLD_IFS=$IFS #保存原始值
     IFS="="
@@ -146,20 +163,25 @@ test_importaccs() {
     IFS=$OLD_IFS #还原IFS的原始值
 }
 
-test_csvi() {
-    Start=$(date +%s)
+test_transferairs() {
+    OLD_IFS=$IFS #保存原始值
+    IFS="="
+    cleos -u http://127.0.0.1:8888 push action ${contract_oracle} transferairs '[['$1']]' -p ${contract_oracle}
+    IFS=$OLD_IFS #还原IFS的原始值
+}
 
+test_csvburn() {
+    Start=$(date +%s)
     OLD_IFS=$IFS #保存原始值
     IFS=";"
     firstname=''
     count=0
-    while read name; do
-        accs=$name
-        test_importaccs
+    while read name quantity; do
+        test_transferairs $name
         End =$(date +%s)
         count=$(($count + 1))
         echo $count"=====importing==Time========"$End
-    done <$ofile
+    done <$file
 
     IFS=$OLD_IFS #还原IFS的原始值
 
@@ -169,9 +191,9 @@ test_csvi() {
     echo "==============imp end============="
 }
 
-test_csv() {
+test_csvimport() {
     Start=$(date +%s)
-    file=./airdrop_dataset/files/dst/airdrop_unactive_account.csv
+    
     OLD_IFS=$IFS #保存原始值
     IFS=","
     firstname=''
@@ -180,10 +202,11 @@ test_csv() {
         accs=$accs$(echo '["'$name'","'$quantityx'"]')
         count=$(($count + 1))
         if (($(($count % $limits)) == 0)); then
-            accs=$accs';'
-            echo $accs >>$ofile
+            # accs=$accs';'
+            test_importaccs
+            # echo $accs >>$ofile
             echo "=========count========"$count
-            End =$(date +%s)
+            End=$(date +%s)
             echo $End
             accs=''
         else
@@ -201,17 +224,16 @@ test_csv() {
         echo $accs >>$ofile
         echo "=========count========"$count
     fi
-    End =$(date +%s)
+    End=$(date +%s)
     Time=$(($Start - $End))
     echo "=====csv=Time========"$Time
 
     echo "==============csv end============="
-    test_csvi
 }
 
 case "$1" in
-"ci") test_csvi ;;
-"csv") test_csv ;;
+"cb") test_csvburn ;;
+"ci") test_csvimport ;;
 "set") test_set_contracts ;;
 "acc") test_get_account "$2" ;;
 "imp") test_importaccounts "$2" ;;

@@ -59,7 +59,7 @@ def unionset():
     cfile.close()
     
     print('len of unactive include msig',len(resCsv))
-    print('sumBurn',sumBurn+sumBurnmsig)
+    print('sumBurn inclue msig',sumBurn+sumBurnmsig)
 
 def readmsigfromlog():
     txt = './dataset/seq.log'

@@ -160,6 +160,79 @@ test_importaccs() {
     cleos -u http://127.0.0.1:8888 push action ${contract_burn} importacnts '[['$accs']]' -p ${contract_burn}
     IFS=$OLD_IFS #还原IFS的原始值
 }
+test_csvimport() {
+    Start=$(date +%s)
+    
+    OLD_IFS=$IFS #保存原始值
+    IFS=","
+
+    while read name quantity; do
+        quantityx=$(echo $quantity | tr -d '\r')
+        accs=$accs$(echo '["'$name'","'$quantityx'"]')
+        count=$(($count + 1))
+        if (($(($count % $limits)) == 0)); then
+            test_importaccs
+            echo "=========count========"$count
+            End=$(date +%s)
+            echo $End
+            accs=''
+        else
+            accs=$accs','
+        fi
+    done <$file
+
+    IFS=$OLD_IFS #还原IFS的原始值
+
+    if (($(($count % $limits)) > 0)); then
+        accs=${accs%","}
+        test_importaccs
+        echo "=========count========"$count
+    fi
+    End=$(date +%s)
+    Time=$(($Start - $End))
+    echo "=====csv=Time========"$Time
+
+    echo "==============csv end============="
+}
+
+test_arrclear() {
+    OLD_IFS=$IFS #保存原始值
+    IFS="="
+    cleos -u http://127.0.0.1:8888 push action ${contract_burn} clear '[['$accs']]' -p ${contract_burn}
+    IFS=$OLD_IFS #还原IFS的原始值
+}
+test_clearfromcsv() {
+    Start=$(date +%s)
+    
+    OLD_IFS=$IFS #保存原始值
+    IFS=","
+    while read name quantity; do
+        accs=$accs'"'$name'"'
+        count=$(($count + 1))
+        if (($(($count % $limits)) == 0)); then
+            test_arrclear
+            echo "=========count========"$count
+            End=$(date +%s)
+            echo $End
+            accs=''
+        else
+            accs=$accs','
+        fi
+    done <$file
+
+    IFS=$OLD_IFS #还原IFS的原始值
+
+    if (($(($count % $limits)) > 0)); then
+        accs=${accs%","}
+        est_arrclear
+        echo "=========count========"$count
+    fi
+    End=$(date +%s)
+    Time=$(($Start - $End))
+    echo "=====csv=Time========"$Time
+
+    echo "==============csv end============="
+}
 
 test_transferairs() {
     OLD_IFS=$IFS #保存原始值
@@ -172,7 +245,6 @@ test_csvtransferairs() {
     Start=$(date +%s)
     OLD_IFS=$IFS #保存原始值
     IFS=";"
-    firstname=''
     count=0
     while read name quantity; do
         test_transferairs $name
@@ -189,45 +261,6 @@ test_csvtransferairs() {
     echo "==============imp end============="
 }
 
-test_csvimport() {
-    Start=$(date +%s)
-    
-    OLD_IFS=$IFS #保存原始值
-    IFS=","
-    firstname=''
-    while read name quantity; do
-        quantityx=$(echo $quantity | tr -d '\r')
-        accs=$accs$(echo '["'$name'","'$quantityx'"]')
-        count=$(($count + 1))
-        if (($(($count % $limits)) == 0)); then
-            # accs=$accs';'
-            test_importaccs
-            # echo $accs >>$ofile
-            echo "=========count========"$count
-            End=$(date +%s)
-            echo $End
-            accs=''
-        else
-            accs=$accs','
-        fi
-
-        #   firstname=$name
-        #   cat_acc $name $quantity
-    done <$file
-
-    IFS=$OLD_IFS #还原IFS的原始值
-
-    if (($(($count % $limits)) > 0)); then
-        accs=${accs%","}
-        echo $accs >>$ofile
-        echo "=========count========"$count
-    fi
-    End=$(date +%s)
-    Time=$(($Start - $End))
-    echo "=====csv=Time========"$Time
-
-    echo "==============csv end============="
-}
 
 case "$1" in
 "imp") test_importaccounts "$2" ;;

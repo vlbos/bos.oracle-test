@@ -78,7 +78,6 @@ def readmsigfromlog():
     return accseqmap
 
 def intersectmsigset():
-
     # 读取csv集合
     csvFile = './dataset/airdrop_msig.csv'
     msigmap, msiglist = loadcsv(csvFile)

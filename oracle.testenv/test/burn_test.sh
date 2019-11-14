@@ -5,13 +5,10 @@
 
 set_contracts() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
-    ${!cleos} set contract ${contract_oracle} ${CONTRACTS_DIR}/${contract_oracle_folder} -x 1000 -p ${contract_oracle}
+    ${!cleos} set contract ${contract_burn} ${CONTRACTS_DIR}/${contract_burn_folder} -x 1000 -p ${contract_burn}
     sleep .2
 
-    ${!cleos} set contract ${contract_consumer} ${CONTRACTS_DIR}/${contract_consumer_folder} -x 1000 -p ${contract_consumer}@active
-    sleep .2
-
-    ${!cleos} set account permission ${contract_oracle} active '{"threshold": 1,"keys": [{"key": "'${oracle_c_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_oracle}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_oracle}@owner
+    ${!cleos} set account permission ${contract_burn} active '{"threshold": 1,"keys": [{"key": "'${burn_c_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_burn}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_burn}@owner
 }
 
 test_set_contracts() {
@@ -29,16 +26,16 @@ get_account() {
 test_get_account() {
     get_account "$1"
     # get_account oraclize1111
-    # get_account bosbosoracle
-    # get_account ${contract_oracle}
+    # get_account bosbosburn
+    # get_account ${contract_burn}
 }
 
 transfer() {
     echo --- cleos1 transfer ---
-    $cleos1 transfer provider1111 ${contract_oracle} "0.0001 BOS" "0,0" -p provider1111
-    $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "1,0" -p consumer2222
-    $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "2,consumer2222,consumer1111,0" -p consumer2222
-    $cleos1 transfer consumer2222 ${contract_oracle} "0.0001 BOS" "3,0" -p consumer2222
+    $cleos1 transfer provider1111 ${contract_burn} "0.0001 BOS" "0,0" -p provider1111
+    $cleos1 transfer consumer2222 ${contract_burn} "0.0001 BOS" "1,0" -p consumer2222
+    $cleos1 transfer consumer2222 ${contract_burn} "0.0001 BOS" "2,consumer2222,consumer1111,0" -p consumer2222
+    $cleos1 transfer consumer2222 ${contract_burn} "0.0001 BOS" "3,0" -p consumer2222
 
     # $cleos2 transfer  testblklist1 testblklist2 "10.0000 BOS" "ibc receiver=chengsong111" -p testblklist1
     #
@@ -65,7 +62,7 @@ transfer0() {
     echo --- servicestake before transfer ---
     test_get_table servicestake
     echo --- cleos1 transfer service stake---
-    $cleos1 transfer provider1111 ${contract_oracle} "0.0001 BOS" "0,0" -p provider1111
+    $cleos1 transfer provider1111 ${contract_burn} "0.0001 BOS" "0,0" -p provider1111
     echo --- providers after transfer ---
     test_get_table providers
     echo --- svcprovision after transfer ---
@@ -81,25 +78,25 @@ test_list_pri_key() {
     ${!cleos} wallet private_keys --password PW5JhG3FdGXSc2RTXRNC2tDrd4KhudMA1BggF9QvxJ6YUL4ktUh4k
 }
 
-get_oracle_table() {
+get_burn_table() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
     echo $2
-    ${!cleos} get table ${contract_oracle} ${contract_oracle} $2 --limit 100
+    ${!cleos} get table ${contract_burn} ${contract_burn} $2 --limit 100
 
 }
-get_oracle_table1() {
+get_burn_table1() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
 
-    ${!cleos} get table ${contract_oracle} $2 $3 --limit 100
+    ${!cleos} get table ${contract_burn} $2 $3 --limit 100
 
 }
 
 test_get_table() {
-    get_oracle_table c1 $1
+    get_burn_table c1 $1
 }
 
 test_get_table1() {
-    get_oracle_table1 c1 $1 $2
+    get_burn_table1 c1 $1 $2
 }
 
 get_info() {
@@ -114,7 +111,7 @@ get_scope() {
 
     #cleos get table ${contract_token} ${contract_token} globals
     ${!cleos} get scope -t stat eosio.token
-    ${!cleos} get scope -t accounts ${contract_oracle}
+    ${!cleos} get scope -t accounts ${contract_burn}
 
 }
 
@@ -127,27 +124,28 @@ test_get_info() {
 }
 
 test_importaccounts() {
-    # $cleos1 push action ${contract_oracle} importacnts '[[{"account":"provider3333", "quantity":"0.0001 BOS"},{"account":"provider2222", "quantity":"0.0001 BOS"}]]' -p ${contract_oracle}
-    ${cleos1} push action ${contract_oracle} importacnts '[[["provider3333","0.0001 BOS"],["provider4444","0.0001 BOS"]]]' -p ${contract_oracle}
+    # $cleos1 push action ${contract_burn} importacnts '[[{"account":"provider3333", "quantity":"0.0001 BOS"},{"account":"provider2222", "quantity":"0.0001 BOS"}]]' -p ${contract_burn}
+    ${cleos1} push action ${contract_burn} importacnts '[[["provider3333","0.0001 BOS"],["provider4444","0.0001 BOS"]]]' -p ${contract_burn}
 
     test_get_table1 provider3333 accounts
 
 }
 
 test_clear() {
-    ${cleos1} push action ${contract_oracle} clear '[["provider3333","provider4444"]]' -p ${contract_oracle}
+    ${cleos1} push action ${contract_burn} clear '[["provider3333","provider4444"]]' -p ${contract_burn}
 }
 
 test_setparameter() {
-    ${cleos1} push action ${contract_oracle} setparameter '['${contract_oracle}']' -p ${contract_oracle}
+    ${cleos1} push action ${contract_burn} setparameter '[1,"'${contract_burn}'"]' -p ${contract_burn}
 }
 
 test_burn() {
-    ${cleos1} push action ${contract_oracle} burn '["0.0001 BOS"]' -p ${contract_oracle}
+    ${cleos1} push action ${contract_burn} burn '["0.0001 BOS"]' -p ${contract_burn}
 }
 
 test_trnasferair() {
-    ${cleos1} push action ${contract_oracle} transferair '["provider3333"]' -p provider4444
+    ${cleos1} push action ${contract_burn} transferair '["provider3333"]' -p provider4444
+    test_get_table1 provider3333 accounts
 }
 
 
@@ -155,22 +153,22 @@ flag=0
 count=0
 limits=1000
 accs=''
-file=./airdropburn/output/airdrop_unactive_account.csv
+file=./airdropburn/airdrop_unactive_account.csv
 test_importaccs() {
     OLD_IFS=$IFS #保存原始值
     IFS="="
-    cleos -u http://127.0.0.1:8888 push action ${contract_oracle} importacnts '[['$accs']]' -p ${contract_oracle}
+    cleos -u http://127.0.0.1:8888 push action ${contract_burn} importacnts '[['$accs']]' -p ${contract_burn}
     IFS=$OLD_IFS #还原IFS的原始值
 }
 
 test_transferairs() {
     OLD_IFS=$IFS #保存原始值
     IFS="="
-    cleos -u http://127.0.0.1:8888 push action ${contract_oracle} transferairs '[['$1']]' -p ${contract_oracle}
+    cleos -u http://127.0.0.1:8888 push action ${contract_burn} transferairs '[['$1']]' -p ${contract_burn}
     IFS=$OLD_IFS #还原IFS的原始值
 }
 
-test_csvburn() {
+test_csvtransferairs() {
     Start=$(date +%s)
     OLD_IFS=$IFS #保存原始值
     IFS=";"
@@ -232,16 +230,20 @@ test_csvimport() {
 }
 
 case "$1" in
-"cb") test_csvburn ;;
+"imp") test_importaccounts "$2" ;;
+"clear") test_clear ;;
+"setp") test_setparameter ;;
+"burn") test_burn ;;
+"air") test_trnasferair;;
+"ct") test_csvtransferairs ;;
 "ci") test_csvimport ;;
 "set") test_set_contracts ;;
 "acc") test_get_account "$2" ;;
-"imp") test_importaccounts "$2" ;;
 "transfer") test_transfer "$2" ;;
 "keys") test_list_pri_key ;;
 "table") test_get_table "$2" ;;
 "table1") test_get_table1 "$2" "$3" ;;
 "info") test_get_info ;;
 "scope") test_get_scope ;;
-*) echo "usage: burn_test.sh set|acc|imp|transfer|keys|table {name}|table1 {scope name}|info|scope|data" ;;
+*) echo "usage: burn_test.sh imp|clear|setp|burn|air|ci|set|acc|transfer|keys|table {name}|table1 {scope name}|info|scope|data" ;;
 esac

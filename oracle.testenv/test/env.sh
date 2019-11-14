@@ -13,9 +13,11 @@ cleos1='cleos -u http://127.0.0.1:8888'
 cleos2='cleos -u http://127.0.0.1:8889'
 
 contract_oracle=oraclebosbos
-# contract_oracle_folder=bos.oracle
+contract_oracle_folder=bos.oracle
 
-contract_oracle_folder=bos.burn
+
+contract_burn=burn.bos
+contract_burn_folder=bos.burn
 
 contract_consumer=consumer1234
 contract_consumer_folder=bos.oracle/consumer.contract
@@ -34,6 +36,9 @@ oracle_c_prikey=5JCtWxuqPzcPUfFukj58q8TqyRJ7asGnhSYvvxi16yq3c5p6JRG
 
 oracleoracle_c_pubkey=EOS6Sc4BuA7dEGRU6u4VSuEKusESFe61qD8LmguGEMULrghKDSPaU
 oracleoracle_c_prikey=5K79wAY8rgPwWQSRmyQa2BR8vPicieJdLCXL3cM5Db77QnsJess
+
+burn_c_pubkey=EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
+burn_c_prikey=5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3
 
 # [[
 

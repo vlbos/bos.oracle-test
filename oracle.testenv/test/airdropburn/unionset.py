@@ -29,11 +29,11 @@ def loadcsv(csvFile):
 
 def unionset():
     # 读取txt获取插件账户
-    txt = './files/src/nonactivated_bos_accounts.txt'
+    txt = './dataset/nonactivated_bos_accounts.txt'
     tacclist=loadtxt(txt)
 
     # 读取csv集合
-    csvFile = './files/src/airdrop_accounts.csv'
+    csvFile = './dataset/airdrop_accounts.csv'
     caccset, cacclist = loadcsv(csvFile)
 
     # 创建数值集合
@@ -51,7 +51,7 @@ def unionset():
     resCsv += msig
 
     # 写结果
-    with open('./files/dst/airdrop_unactive_account.csv','w') as cfile:
+    with open('./airdrop_unactive_account.csv','w') as cfile:
         writer = csv.writer(cfile)
         for item in resCsv:
             writer.writerow(item)
@@ -62,7 +62,7 @@ def unionset():
     print('sumBurn',sumBurn+sumBurnmsig)
 
 def readmsigfromlog():
-    txt = './files/src/seq.log'
+    txt = './dataset/seq.log'
     f=open(txt, 'r')
     sourceInline=f.read()
     #'get_unused_accounts  ] ----- rncsqdohedjq -- auth_sequence: 0 -----'
@@ -80,7 +80,7 @@ def readmsigfromlog():
 def intersectmsigset():
 
     # 读取csv集合
-    csvFile = './files/src/airdrop_msig.csv'
+    csvFile = './dataset/airdrop_msig.csv'
     msigmap, msiglist = loadcsv(csvFile)
 
     accseq = readmsigfromlog()
@@ -100,13 +100,13 @@ def intersectmsigset():
             acacc.append([item,msigmap[item],accseq[item]])
 
     # # 写结果
-    # with open('./files/dst/msig_unactive_acc.csv','w') as cfile:
+    # with open('./output/msig_unactive_acc.csv','w') as cfile:
     #     writer = csv.writer(cfile)
     #     for item in resCsv:
     #         writer.writerow(item)
     # cfile.close()
 
-    # with open('./files/dst/msig_active_acc.csv','w') as mcfile:
+    # with open('./output/msig_active_acc.csv','w') as mcfile:
     #     writer = csv.writer(mcfile)
     #     for item in acacc:
     #         writer.writerow(item)

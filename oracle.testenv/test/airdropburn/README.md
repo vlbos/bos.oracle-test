@@ -30,7 +30,7 @@ nodeos >> seq.log
 * nonactivated_bos_accounts.txt       主网未激活账户
 * seq.log                 主网账户  auth_sequence值
 
-[脚本文件](https://github.com/vlbos/bos.oracle-test/blob/master/oracle.testenv/test/airdropburn/unionset.py)
+[获取主网未激活空投账户python脚本文件](https://github.com/vlbos/bos.oracle-test/blob/master/oracle.testenv/test/airdropburn/unionset.py)
 执行脚本
 ```
 test/airdropburn/unionset.py
@@ -42,7 +42,7 @@ test/airdropburn/unionset.py
 ## 升级部署系统合约，eosio.token合约
 * 编译前指定指定燃烧token的执行账户和合约账户(合约账户当前是burn.bos,执行账户burnbos4unac可都是同一账户如合约账户)
 ## 部署燃烧token合约
-[脚本文件](https://github.com/vlbos/bos.oracle-test/blob/master/oracle.testenv/test/burn_test.sh)
+[执行燃烧token合约命令脚本文件](https://github.com/vlbos/bos.oracle-test/blob/master/oracle.testenv/test/burn_test.sh)
 
 执行命令
 ```

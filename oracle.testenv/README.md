@@ -2,6 +2,15 @@
 
 
 ``` 
+update part 
+update file: test/env.sh
+update  CONTRACTS_DIR
+CONTRACTS_DIR=/Users/lisheng/mygit/vlbos/oracle/${contract_repo_dir}/build/contracts/
+
+update file: chains-mgmt/init.sh
+update nodeos_repo_dir:
+nodeos_repo_dir=${base_dir}/boscore/bos
+
 # step 1
 cd ./clains-mgmt
 ./cluster.sh init
@@ -11,12 +20,13 @@ tail -f node1.log
 
 # step 2 ( in a new shell )
 cd ./test
-. chains_init.sh
+. init_chains.sh
 
 
 # step 3 ( in a new shell )
+#deploy_test
 cd ./test
-. task_ibc_test.sh
+. burn_test.sh set 
 
 
 # clear shell backgroud processes and log files

@@ -12,7 +12,7 @@
 * airdrop_msig.csv
 
 ## 导出bos主网未激活账户及账户auth_sequence
-
+主网支持命令URL:  https://api.boscore.io/v1/chain/get_unused_accounts 
 ```
 curl localhost:8888/v1/chain/get_unused_accounts 
 nodeos >> seq.log
@@ -30,7 +30,8 @@ nodeos >> seq.log
 * nonactivated_bos_accounts.txt       主网未激活账户
 * seq.log                 主网账户  auth_sequence值
 
-执行脚本文件
+[脚本文件](https://github.com/vlbos/bos.oracle-test/blob/master/oracle.testenv/test/airdropburn/unionset.py)
+执行脚本
 ```
 test/airdropburn/unionset.py
 ```
@@ -41,6 +42,14 @@ test/airdropburn/unionset.py
 ## 升级部署系统合约，eosio.token合约
 * 编译前指定指定燃烧token的执行账户和合约账户(合约账户当前是burn.bos,执行账户burnbos4unac可都是同一账户如合约账户)
 ## 部署燃烧token合约
+[脚本文件](https://github.com/vlbos/bos.oracle-test/blob/master/oracle.testenv/test/burn_test.sh)
+
+执行命令
+```
+./burn.test.sh set
+```
+
+命令内容
 
 ```
 ${!cleos} set contract ${contract_burn} ${CONTRACTS_DIR}/${contract_burn_folder} -x 1000 -p ${contract_burn}
@@ -48,6 +57,12 @@ ${!cleos} set contract ${contract_burn} ${CONTRACTS_DIR}/${contract_burn_folder}
 
 ### 导入未激活空投账户
 
+执行命令
+```
+./burn.test.sh ci
+```
+
+命令内容
 ```
 flag=0
 count=0
@@ -89,12 +104,23 @@ test_csvimport() {
 
 ### 设置指定执行账户如合约账户
 
+执行命令
+```
+./burn.test.sh setp
+```
+
+命令内容
 ```
 ${cleos1} push action ${contract_burn} setparameter '[1,"'${contract_burn}'"]' -p ${contract_burn}
 ```
 
 ### 设置执行账户（与合约账户为同一账户）是eosio.code 权限给合约
+执行命令
+```
+./burn.test.sh set
+```
 
+命令内容
 ```
 ${!cleos} set account permission ${contract_burn} active '{"threshold": 1,"keys": [{"key": "'${burn_c_pubkey}'","weight": 1}],"accounts": [{"permission":{"actor":"'${contract_burn}'","permission":"eosio.code"},"weight":1}]}' owner -p ${contract_burn}@owner
 ```
@@ -102,11 +128,19 @@ ${!cleos} set account permission ${contract_burn} active '{"threshold": 1,"keys"
 ### 多签合约账户
 
 ```
-${!cleos} set contract ${contract_burn} ${CONTRACTS_DIR}/${contract_burn_folder} -x 1000 -p ${contract_burn}
+cleos set contract oracle.bos bos.oracle/ -p oracle.bos  -s -j -d > setcontract.json
+cleos multisig propose_trx setcontract bppermission.json  setcontract.json  -p bostesterter
+cleos multisig approve bostesterter updatasystem '{"actor":"${BP_NAME}","permission":"active"}' -p ${BP_NAME}
+cleos multisig exec bostesterter setcontract -p bostesterter@active
+```
+[详见多签文档](https://github.com/boscore/Documentation/blob/master/Oracle/BOS_Oracle_Deployment.md#22-create-msig)
+### 执行从未激活空投账户到hole.bos账户转账空投部署tokens
+执行命令
+```
+./burn.test.sh air
 ```
 
-### 执行从未激活空投账户到hole.bos账户转账空投部署tokens
-
+命令内容
 ```
 test_transferairs() {
     OLD_IFS=$IFS #保存原始值
@@ -127,13 +161,24 @@ test_csvtransferairs() {
 ```
 
 ### 执行燃烧token操作销毁hole.bos指定金额tokens
+执行命令
+```
+./burn.test.sh burn
+```
 
+命令内容
 ```
 ${cleos1} push action ${contract_burn} burn '["46839967.5494 BOS"]' -p ${contract_burn}
 ```
 
 ### 结束后清除数据
 
+执行命令
+```
+./burn.test.sh clear
+```
+
+命令内容
 ```
 flag=0
 count=0

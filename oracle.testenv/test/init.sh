@@ -12,7 +12,7 @@ start_keosd
 
 
 create_wallet(){
-    rm -rf ~/eosio-wallet/
+    # rm -rf ~/eosio-wallet/
     cleos wallet create -f ${WALLET_DIR}/password.txt
     cleos wallet import --private-key 5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3
 }

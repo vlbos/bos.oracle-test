@@ -114,6 +114,11 @@ get_scope() {
     ${!cleos} get scope -t accounts ${contract_burn}
 
 }
+substringindex()
+{
+    tmp=${$1'%%'$2'*'}     # Remove the search string and everything after it
+    echo $(( ${#tmp} + 1 )) # Add one to the length of the remaining prefix
+}
 
 test_get_scope() {
     get_scope c1
@@ -136,7 +141,11 @@ test_clear() {
 }
 
 test_setparameter() {
-    ${cleos1} push action ${contract_burn} setparameter '[1,"'${contract_burn}'"]' -p ${contract_burn}
+    # ${cleos1} push action ${contract_burn} setparameter '[1,"'${contract_burn}'"]' -p ${contract_burn}
+    outputresult=$(${cleos1} push action ${contract_burn} setparameter '[1,"'${contract_burn}'"]' -p ${contract_burn})
+    
+   substringindex  $outputresult  "2"  
+
 }
 
 test_burn() {
@@ -144,14 +153,14 @@ test_burn() {
 }
 
 test_trnasferair() {
-    ${cleos1} push action ${contract_burn} transferair '["provider3333"]' -p provider4444
+    ${cleos1} push action ${contract_burn} transferair '["vsyqzsaynmqq"]' -p provider4444
     test_get_table1 provider3333 accounts
 }
 
 
 flag=0
 count=0
-limits=1000
+limits=100
 accs=''
 file=./airdropburn/airdrop_unactive_account.csv
 test_importaccs() {
@@ -189,10 +198,8 @@ test_csvimport() {
         echo "=========count========"$count
     fi
     End=$(date +%s)
-    Time=$(($Start - $End))
-    echo "=====csv=Time========"$Time
-
-    echo "==============csv end============="
+    Time=$(($End-$Start))
+    echo $Time"==============csv end============="
 }
 
 test_arrclear() {
@@ -228,37 +235,35 @@ test_clearfromcsv() {
         echo "=========count========"$count
     fi
     End=$(date +%s)
-    Time=$(($Start - $End))
-    echo "=====csv=Time========"$Time
+    Time=$(($End-$Start))
 
-    echo "==============csv end============="
+    echo $Time"==============clear end============="
 }
 
 test_transferairs() {
     OLD_IFS=$IFS #保存原始值
     IFS="="
-    cleos -u http://127.0.0.1:8888 push action ${contract_burn} transferairs '[['$1']]' -p ${contract_burn}
+    cleos -u http://127.0.0.1:8888 push action ${contract_burn} transferairs '["'$1'"]' -p ${contract_burn}
     IFS=$OLD_IFS #还原IFS的原始值
 }
 
 test_csvtransferairs() {
     Start=$(date +%s)
     OLD_IFS=$IFS #保存原始值
-    IFS=";"
+    IFS=","
     count=0
     while read name quantity; do
         test_transferairs $name
-        End =$(date +%s)
+        End=$(date +%s)
         count=$(($count + 1))
-        echo $count"=====importing==Time========"$End
+        echo $count"=====transferairs==Time========"$End
     done <$file
 
     IFS=$OLD_IFS #还原IFS的原始值
 
-    End =$(date +%s)
-    Time=$(($Start - $End))
-    echo "=====imp==Time========"$Time
-    echo "==============imp end============="
+    End=$(date +%s)
+    Time=$(($End-$Start))
+    echo $Time"==============airs end======Time=======" 
 }
 
 

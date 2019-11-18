@@ -26,14 +26,14 @@ cluster_start(){
     echo "starting node 1"
     node1data=var/lib/node_bios1/
     node1conf=staging/etc/eosio/node_bios1
-    # nohup ./programs/nodeos/nodeos -e -p eosio -d $node1data --config-dir $node1conf --genesis-json $node1conf/genesis.json \
-    #     --plugin eosio::chain_api_plugin --plugin eosio::producer_plugin  \
-    #     --plugin eosio::producer_api_plugin --plugin eosio::history_api_plugin --plugin eosio::http_plugin \
-    #     --contracts-console  --max-transaction-time 1000 --genesis-timestamp $now > node1.log &
+    nohup ./programs/nodeos/nodeos -e -p eosio -d $node1data --config-dir $node1conf --genesis-json $node1conf/genesis.json \
+        --plugin eosio::chain_api_plugin --plugin eosio::producer_plugin  \
+        --plugin eosio::producer_api_plugin --plugin eosio::history_api_plugin --plugin eosio::http_plugin \
+        --contracts-console  --max-transaction-time 1000 --genesis-timestamp $now > node1.log &
 # /Users/lisheng/Downloads/burn/snode/node_bios1/snapshots 
 # /Users/lisheng/Downloads/burn/snode/node_bios1/snapshots/snapshot-000182d3304309f511a59d828e1e2147fc39fe8ff15e7dff84d9cef062721468.bin
-nohup ./programs/nodeos/nodeos -d $node1data --config-dir $node1conf  --snapshot /Users/lisheng/Downloads/burn/snode/node_bios1/snapshots/snapshot-000182d3304309f511a59d828e1e2147fc39fe8ff15e7dff84d9cef062721468.bin  \
---max-irreversible-block-age=5000000 --max-transaction-time=100000  --wasm-runtime wabt  > node1.log &
+# nohup ./programs/nodeos/nodeos -d $node1data --config-dir $node1conf  --snapshot /Users/lisheng/Downloads/burn/snode/node_bios1/snapshots/snapshot-000182d3304309f511a59d828e1e2147fc39fe8ff15e7dff84d9cef062721468.bin  \
+# --max-irreversible-block-age=5000000 --max-transaction-time=100000  --wasm-runtime wabt  > node1.log &
 
 #    tail -f node1.log
 #    return

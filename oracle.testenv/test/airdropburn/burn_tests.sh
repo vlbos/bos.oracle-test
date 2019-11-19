@@ -198,7 +198,7 @@ clear_from_csv() {
 }
 
 checkresult() {
-    result=$($cleos1 get account provider1111)
+    result=$($cleos1 get account $1)
     echo $result
     if [[ "$string" =~ "abc" ]] ; then
         echo MATCH !
@@ -207,13 +207,31 @@ checkresult() {
     fi
 }
 
+checkresult_from_csv() {
+    Start=$(date +%s)
+    OLD_IFS=$IFS #保存原始值
+    IFS=","
+    count=0
+    while read name quantity; do
+        checkresult $name $quantity
+        End=$(date +%s)
+        count=$(($count + 1))
+        echo $count"=====transferairs==Time===="
+    done <$file
+    
+    IFS=$OLD_IFS #还原IFS的原始值
+    
+    End=$(date +%s)
+    Time=$(($End-$Start))
+    echo $Time"==============airs end======Time======="
+}
 
 case "$1" in
     "set") set_contracts ;;
     "imp") import_from_csv ;;
     "setp") setparameter ;;
     "ct") transferairs_from_csv ;;
-    "chk") checkresult ;;
+    "chk") checkresult_from_csv ;;
     "burn") burn_from_hole ;;
     "clr") clear_from_csv ;;
     "acc") get_account "$2" ;;
@@ -222,5 +240,5 @@ case "$1" in
     "info") get_info ;;
     "scope") get_scope ;;
     "test") test_ "$2";;
-    *) echo "usage: burn_test.sh set|imp|chk|clr|setp|burn|air|ct|ci|acc|transfer|keys|table {name}|tables {scope name}|info|scope" ;;
+    *) echo "usage: burn_test.sh set|imp|setp|ct|chk|burn|clr|acc|table {name}|tables {scope name}|info|scope|test" ;;
 esac

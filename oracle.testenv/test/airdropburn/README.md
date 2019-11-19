@@ -12,7 +12,7 @@
 * airdrop_msig.csv
 
 ## 导出bos主网未激活账户及账户auth_sequence
-主网支持命令URL:  https://api.boscore.io/v1/chain/get_unused_accounts 
+主网支持命令URL: https://api.boscore.io/v1/chain/get_unused_accounts 
 ```
 curl localhost:8888/v1/chain/get_unused_accounts 
 nodeos >> seq.log
@@ -134,7 +134,7 @@ cleos multisig approve bostesterter updatasystem '{"actor":"${BP_NAME}","permiss
 cleos multisig exec bostesterter setcontract -p bostesterter@active
 ```
 [详见多签文档](https://github.com/boscore/Documentation/blob/master/Oracle/BOS_Oracle_Deployment.md#22-create-msig)
-### 执行从未激活空投账户到hole.bos账户转账空投部署tokens
+### 执行从未激活空投账户到hole.bos 账户转账空投部署tokens
 执行命令
 ```
 ./burn.test.sh air

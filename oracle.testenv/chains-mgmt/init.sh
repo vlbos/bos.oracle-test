@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-base_dir=/Users/lisheng/mygit
+base_dir=~/mygit
 
 # nodeos_repo_dir=${base_dir}/eos/eos
 # nodeos_repo_dir=${base_dir}/amybos/bos

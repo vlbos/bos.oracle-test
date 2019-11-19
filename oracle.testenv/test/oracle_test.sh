@@ -139,7 +139,7 @@ transfer(){
 # test_transfer()
 # {}
 
-pwd = 'cat /Users/lisheng/eosio-wallet/password.txt'
+pwd = 'cat ~/eosio-wallet/password.txt'
 
 test_list_pri_key()
 {

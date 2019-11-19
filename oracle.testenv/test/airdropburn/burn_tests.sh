@@ -167,6 +167,16 @@ count=0
 limits=100
 accs=''
 file=./airdropburn/airdrop_unactive_account.csv
+
+test_() {
+    OLD_IFS=$IFS #保存原始值
+    IFS="="
+    # cleos=$(echo $cleos1 | tr -d '\r')
+    s="http://127.0.0.1:8888"
+    cleos -u $s push action ${contract_burn} importacnts '[[["provider3333","0.0001 BOS"]]]' -p ${contract_burn}
+    IFS=$OLD_IFS #还原IFS的原始值
+}
+
 test_importaccs() {
     OLD_IFS=$IFS #保存原始值
     IFS="="
@@ -272,6 +282,7 @@ test_csvtransferairs() {
 
 
 case "$1" in
+    "test") test_ "$2";;
     "chk") test_checkresult ;;
     "imp") test_importaccounts "$2" ;;
     "clear") test_clear ;;

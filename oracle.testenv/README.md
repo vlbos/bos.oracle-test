@@ -5,7 +5,7 @@
 update part 
 update file: test/env.sh
 update  CONTRACTS_DIR
-CONTRACTS_DIR=/Users/lisheng/mygit/vlbos/burn/${contract_repo_dir}/build/contracts/
+CONTRACTS_DIR=~/mygit/vlbos/burn/${contract_repo_dir}/build/contracts/
 
 update file: chains-mgmt/init.sh
 update nodeos_repo_dir:

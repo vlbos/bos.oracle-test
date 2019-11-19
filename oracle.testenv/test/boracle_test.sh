@@ -77,7 +77,7 @@ transfer0() {
     test_get_table servicestake
 }
 
-pwd = 'cat /Users/lisheng/eosio-wallet/password.txt'
+pwd = 'cat ~/eosio-wallet/password.txt'
 
 test_list_pri_key() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi

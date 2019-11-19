@@ -397,7 +397,8 @@ function getTiming(){
     echo "$time_ms ms"
 } 
  
-
+test_substring()
+{
 count=1
 if (($count == 1)) 
 then
@@ -415,5 +416,30 @@ then
 sleep 10 
 end_time=`date +%s.%N` 
   
-getTiming $begin_time$end_time
+getTiming $begin_time $end_time
 fi
+}
+
+
+
+test_match()
+{
+string="abc123"
+
+FLAG=`echo $string | grep -c "abc"`
+if [ $FLAG -gt 0 ] ; then
+        echo MATCH !
+else
+        echo NO MATCH !
+fi
+
+
+string="abc123"
+
+if [[ "$string" =~ "abc" ]] ; then
+        echo MATCH !
+else
+        echo NO MATCH !
+fi
+}
+test_match

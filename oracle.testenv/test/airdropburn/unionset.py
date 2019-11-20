@@ -2,9 +2,13 @@
 import csv
 import re
 import json
+airdrop_accounts_file = './dataset/accounts_info_bos_snapshot.airdrop.normal.csv'
+airdrop_msig_accounts_file = './dataset/accounts_info_bos_snapshot.airdrop.msig.json'
+nonactive_accounts_file = './dataset/nonactivated_bos_accounts.txt'
+nonactive_msig_accounts_file = './dataset/nonactivated_bos_accounts.msig'
+nonactive_airdrop_accounts_file = "./unactive_airdrop_accounts.csv"
+
 # txt
-
-
 def loadtxt(txt):
     f = open(txt, 'r')
     sourceInline = f.readlines()
@@ -27,20 +31,18 @@ def loadcsv(csvFile):
     csvset = {}
     csvlist = []
     for item in reader:
-        csvset[item[0]] = item[1]
-        csvlist.append(item[0])
+        csvset[item[4]] = item[5]
+        csvlist.append(item[4])
     f.close()
     return csvset, csvlist
 
 
 def unionset():
-    # 读取txt获取插件账户
-    txt = './dataset/nonactivated_bos_accounts.txt'
-    tacclist = loadtxt(txt)
+    # 读取txt获取主网未激活账户
+    tacclist = loadtxt(nonactive_accounts_file)
 
-    # 读取csv集合
-    csvFile = './dataset/airdrop_accounts.csv'
-    caccset, cacclist = loadcsv(csvFile)
+    # 读取空投账户 csv集合  
+    caccset, cacclist = loadcsv(airdrop_accounts_file)
 
     # 创建数值集合
     tc = set(tacclist) & set(cacclist)
@@ -55,92 +57,53 @@ def unionset():
     print('len of unactive', len(resCsv))
     msig, sumBurnmsig = intersectmsigset()
     resCsv += msig
+    sumBurn += sumBurnmsig
 
     # 写结果
-    with open('./airdrop_unactive_account.csv', 'w') as cfile:
+    with open(nonactive_airdrop_accounts_file, 'w') as cfile:
         writer = csv.writer(cfile)
         for item in resCsv:
             writer.writerow(item)
 
     cfile.close()
 
-    print('len of unactive include msig', len(resCsv))
-    print('sumBurn inclue msig', (sumBurn+sumBurnmsig))
+    print('unactive airdrop accounts count:', len(resCsv))
+    print('unactive airdrop accounts quantity:', sumBurn)
 
 
 def msigfromjson():
     # 由于文件中有多行，直接读取会出现错误，因此一行一行读取
-    file = open("/Users/lisheng/Downloads/burn/bos-airdrop-snapshots-master/accounts_info_bos_snapshot.airdrop.msig.json", 'r', encoding='utf-8')
-    papers = []
+    file = open(airdrop_msig_accounts_file, 'r', encoding='utf-8')
+    csvset = {}
+    lst = []
     for line in file.readlines():
-        dic = json.loads(line)
-        print(dic)
-        papers.append(dic)
+        item = json.loads(line)
+        csvset[item['bos_account']] = item['bos_balance']
+        lst.append(item['bos_account'])
 
-
-    print(len(papers))
-    print(papers)
-    # print(papers['bos_account'])
-    # print(papers['bos_balance'])
-    for key in papers:
-        print(key['bos_account'], key['bos_balance'])
-
-def readmsigfromlog():
-    txt = './dataset/seq.log'
-    f = open(txt, 'r')
-    sourceInline = f.read()
-    #'get_unused_accounts  ] ----- rncsqdohedjq -- auth_sequence: 0 -----'
-    'get_unused_accounts  ] ----- (.*?) -- auth_sequence: (\d+) -----'
-    pattern = re.compile(
-        'get_unused_accounts  ] ----- (.*?) -- auth_sequence: (\d+) -----', re.S)
-    # compile可以在多次使用中提高效率，这里影响不大
-    results = re.findall(pattern, sourceInline)
-    accseqmap = {}
-    for result in results:
-        acc, nums = result
-        accseqmap[acc] = nums
-        # print(acc,  nums)
-    return accseqmap
-
+    file.close()
+    return csvset,lst
 
 def intersectmsigset():
     # 读取csv集合
-    csvFile = './dataset/airdrop_msig.csv'
-    msigmap, msiglist = loadcsv(csvFile)
+    msiglist = loadtxt(nonactive_msig_accounts_file)
 
-    accseq = readmsigfromlog()
+    accquan,unactive_list = msigfromjson()
 
     # 创建数值集合
-    # tc = set(tacclist) & set(cacclist)
+    tc = set(msiglist) & set(unactive_list)
 
     resCsv = []
-    acacc = []
     sumBurn = 0
     # 构造交集结果
-    for item in msiglist:
-        if int(accseq[item]) == 2:
-            resCsv.append([item, msigmap[item]])
-            sumBurn += float(msigmap[item].replace('BOS', '').strip())
-        else:
-            acacc.append([item, msigmap[item], accseq[item]])
+    for item in tc:
+            resCsv.append([item, accquan[item]])
+            sumBurn += float(accquan[item].replace('BOS', '').strip())
 
-    # # 写结果
-    # with open('./output/msig_unactive_acc.csv','w') as cfile:
-    #     writer = csv.writer(cfile)
-    #     for item in resCsv:
-    #         writer.writerow(item)
-    # cfile.close()
+    print('unactive airdrop msig accounts count:', len(resCsv))
+    print('unactive airdrop msig accounts quantity:', sumBurn)
 
-    # with open('./output/msig_active_acc.csv','w') as mcfile:
-    #     writer = csv.writer(mcfile)
-    #     for item in acacc:
-    #         writer.writerow(item)
-    # mcfile.close()
-
-    print('len unactive', len(resCsv))
-    print('len active', len(acacc))
-    print('msumBurn', sumBurn)
     return resCsv, sumBurn
 
 
-msigfromjson()
+unionset()

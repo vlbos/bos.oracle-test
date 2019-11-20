@@ -442,4 +442,28 @@ else
         echo NO MATCH !
 fi
 }
-test_match
+# test_match
+
+
+
+str='{ \
+  "rows": [{ 
+      "account": "aabcftaqpqak", 
+      "quantity": "0.5000 BOS", 
+      "is_burned": 0 
+    } 
+  ], 
+  "more": false 
+}'
+
+echo 
+temp1=${str##*is_burned}  #结果为 @@@
+temp1=$(echo $temp1 | tr -d "\]")
+temp=$(echo $temp1 | tr -cd "[0-9]")
+echo $temp
+
+if [[ temp -eq 0 ]] ; then
+        echo MATCH !
+else
+        echo NO MATCH !
+fi

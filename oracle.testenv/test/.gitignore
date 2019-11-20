@@ -3,4 +3,5 @@ keys.txt
 *.log
 *.csv
 *.txt
+*.json
 .DS_Store

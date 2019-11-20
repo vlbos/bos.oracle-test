@@ -17,7 +17,7 @@
 curl 127.0.0.1:8888/v1/chain/get_unused_accounts 
 或
 curl -X POST --url http://127.0.0.1:8888/v1/chain/get_unused_accounts  -d '{
-  "file_path": "/Users/lisheng/Downloads/nonactivated_bos_accounts.txt"
+  "file_path": "/Users/xxxx/Downloads/nonactivated_bos_accounts.txt"
 }'
 ```
 

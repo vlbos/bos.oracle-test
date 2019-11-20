@@ -2,7 +2,10 @@
 ## 获取快照空投账户名单
   
 ```
+     cd dataset
      get clone  https://github.com/boscore/bos-airdrop-snapshots
+     mv ./bos-airdrop-snapshots/accounts_info_bos_snapshot.airdrop.msig.json .
+     mv ./bos-airdrop-snapshots/accounts_info_bos_snapshot.airdrop.normal.csv .
 ```    
 输出文件:
 * accounts_info_bos_snapshot.airdrop.msig.json
@@ -11,7 +14,7 @@
 ## 导出bos主网未激活账户及msig账户
 
 ```
-curl localhost:8888/v1/chain/get_unused_accounts 
+curl 127.0.0.1:8888/v1/chain/get_unused_accounts 
 或
 curl -X POST --url http://127.0.0.1:8888/v1/chain/get_unused_accounts  -d '{
   "file_path": "/Users/lisheng/Downloads/nonactivated_bos_accounts.txt"
@@ -31,7 +34,7 @@ curl -X POST --url http://127.0.0.1:8888/v1/chain/get_unused_accounts  -d '{
 * nonactivated_bos_accounts.txt       主网未激活账户
 * nonactivated_bos_accounts.msig                 主网未激活多签账户  
 
-[获取主网未激活空投账户python脚本文件](https://github.com/vlbos/bos.oracle-test/blob/master/oracle.testenv/test/airdropburn/unionset.py)
+[获取主网未激活空投账户python脚本文件](https://github.com/boscore/bos.contracts/tree/bos.burn/contracts/bos.burn/scripts/unionset.py)
 执行脚本
 
 ```
@@ -44,7 +47,7 @@ python ./scripts/unionset.py
 ## 升级部署系统合约，eosio.token合约
 * 编译前指定指定燃烧token的执行账户和合约账户(合约账户当前是burn.bos,执行账户burnbos4unac可都是同一账户如合约账户)
 ## 部署燃烧token合约
-[执行燃烧token合约命令脚本文件](https://github.com/vlbos/bos.oracle-test/blob/master/oracle.testenv/test/burn_test.sh)
+[执行燃烧token合约命令脚本文件](https://github.com/vlbos/bos.contracts/tree/bos.burn/contracts/bos.burn/scripts/burn_tests.sh)
 
 执行命令
 ```
@@ -90,7 +93,7 @@ ${!cleos} set account permission ${contract_burn} active '{"threshold": 1,"keys"
 ### 多签合约账户
 
 ```
-cleos set contract oracle.bos bos.oracle/ -p oracle.bos  -s -j -d > setcontract.json
+cleos set contract burn.bos bos.burn/ -p burn.bos  -s -j -d > setcontract.json
 cleos multisig propose_trx setcontract bppermission.json  setcontract.json  -p bostesterter
 cleos multisig approve bostesterter updatasystem '{"actor":"${BP_NAME}","permission":"active"}' -p ${BP_NAME}
 cleos multisig exec bostesterter setcontract -p bostesterter@active
@@ -98,6 +101,7 @@ cleos multisig exec bostesterter setcontract -p bostesterter@active
 [详见多签文档](https://github.com/boscore/Documentation/blob/master/Oracle/BOS_Oracle_Deployment.md#22-create-msig)
 ### 执行从未激活空投账户到hole.bos 账户转账空投部署tokens
 执行命令
+
 ```
 ./burn_tests.sh air
 ```

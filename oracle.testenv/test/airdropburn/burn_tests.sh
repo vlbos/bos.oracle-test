@@ -15,6 +15,7 @@ contract_burn_folder=bos.burn
 
 burn_c_pubkey=EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV
 burn_c_prikey=5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3
+burn_total_quantity="0.0001 BOS"
 
 flag=0
 count=0
@@ -74,11 +75,8 @@ setparameter() {
     ${cleos1} push action ${contract_burn} setparameter '[1,"'${contract_burn}'"]' -p ${contract_burn}
 }
 
-burn_from_hole() {
-    ${cleos1} push action ${contract_burn} burn '["0.0001 BOS"]' -p ${contract_burn}
-}
 
-OLD_IFS=''
+OLD_IFS='='
 save_ifs_() {
     OLD_IFS=$IFS #保存原始值
     IFS=$1
@@ -105,23 +103,18 @@ get_start() {
 get_end() {
     End=$(date +%s)
     Time=$(($End - $Start))
-    echo $Time"==============airs end======Time======="
+    echo $Time"==============end======Time======="
 }
 
+
 import_accs() {
-    # OLD_IFS=$IFS #保存原始值
-    # IFS="="
     save_ifs_eq
     cleos -u $http_endpoint push action ${contract_burn} importacnts '[['$accs']]' -p ${contract_burn}
     restore_ifs
-    # IFS=$OLD_IFS #还原IFS的原始值
 }
 
 import_from_csv() {
     get_start
-
-    # OLD_IFS=$IFS #保存原始值
-    # IFS=","
 
     while IFS="," read name quantity; do
         quantityx=$(echo $quantity | tr -d '\r')
@@ -138,8 +131,6 @@ import_from_csv() {
         fi
     done <$file
 
-    # IFS=$OLD_IFS #还原IFS的原始值
-
     if (($(($count % $limits)) > 0)); then
         accs=${accs%","}
         import_accs
@@ -150,10 +141,6 @@ import_from_csv() {
 }
 
 transferairs() {
-    # OLD_IFS=$IFS #保存原始值
-    # IFS="="
-    # cleos -u $http_endpoint push action ${contract_burn} transferairs '["'$1'"]' -p ${contract_burn}
-    # IFS=$OLD_IFS #还原IFS的原始值
     save_ifs_eq
     cleos -u $http_endpoint push action ${contract_burn} transferairs '["'$1'"]' -p ${contract_burn}
     restore_ifs
@@ -161,8 +148,6 @@ transferairs() {
 
 transferairs_from_csv() {
     get_start
-    # OLD_IFS=$IFS #保存原始值
-    # IFS=","
     count=0
     while IFS="," read name quantity; do
         transferairs $name
@@ -171,16 +156,43 @@ transferairs_from_csv() {
         echo $count"=====transferairs==Time===="
     done <$file
 
-    # IFS=$OLD_IFS #还原IFS的原始值
-
     get_end
 }
 
+checkresult() {
+    save_ifs_eq
+    result=$(cleos -u $http_endpoint  get table ${contract_burn} $1 accounts)
+    status=${result##*is_burned} #结果为 @@@
+    status=$(echo $status | tr -d "\]")
+    status=$(echo $status | tr -cd "[0-9]")
+    if [[ temp -eq 0 ]]; then
+        echo $1','$2' '$3 >> $result_file
+    else
+        echo $1 done !
+    fi
+    restore_ifs
+}
+
+checkresult_from_csv() {
+    get_start
+    count=0
+    while IFS="," read name quantity; do
+        quantityx=$(echo $quantity | tr -d '\r')
+        checkresult $name $quantityx
+        End=$(date +%s)
+        count=$(($count + 1))
+        echo $count"=====checkresult_from_csv==Time===="
+    done <$file
+    get_end
+}
+
+burn_from_hole() {
+    save_ifs_eq
+    cleos -u $http_endpoint push action ${contract_burn} burn '["'$burn_total_quantity'"]' -p ${contract_burn}
+    restore_ifs
+}
+
 arr_clear() {
-    # OLD_IFS=$IFS #保存原始值
-    # IFS="="
-    # cleos -u $http_endpoint push action ${contract_burn} clear '[['$accs']]' -p ${contract_burn}
-    # IFS=$OLD_IFS #还原IFS的原始值
     save_ifs_eq
     cleos -u $http_endpoint push action ${contract_burn} clear '[['$accs']]' -p ${contract_burn}
     restore_ifs
@@ -188,8 +200,6 @@ arr_clear() {
 clear_from_csv() {
     get_start
 
-    # OLD_IFS=$IFS #保存原始值
-    # IFS=","
     while IFS="," read name quantity; do
         accs=$accs'"'$name'"'
         count=$(($count + 1))
@@ -202,45 +212,11 @@ clear_from_csv() {
         fi
     done <$file
 
-    # IFS=$OLD_IFS #还原IFS的原始值
-
     if (($(($count % $limits)) > 0)); then
         accs=${accs%","}
         arr_clear
         echo "=========count========"$count
     fi
-
-    get_end
-}
-
-checkresult() {
-    save_ifs_eq
-    result=$(cleos -u $http_endpoint  get table ${contract_burn} $1 accounts)
-    status=${result##*is_burned} #结果为 @@@
-    status=$(echo $status | tr -d "\]")
-    status=$(echo $status | tr -cd "[0-9]")
-    if [[ temp -eq 0 ]]; then
-        echo $1','$2' '$3 >> result_file
-    else
-        echo $1 done !
-    fi
-    restore_ifs
-}
-
-checkresult_from_csv() {
-    get_start
-    # OLD_IFS=$IFS #保存原始值
-    # IFS=","
-    count=0
-    while IFS="," read name quantity; do
-        quantityx=$(echo $quantity | tr -d '\r')
-        checkresult $name $quantityx
-        End=$(date +%s)
-        count=$(($count + 1))
-        echo $count"=====checkresult_from_csv==Time===="
-    done <$file
-
-    # IFS=$OLD_IFS #还原IFS的原始值
 
     get_end
 }

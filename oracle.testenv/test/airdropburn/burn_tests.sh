@@ -215,12 +215,12 @@ clear_from_csv() {
 
 checkresult() {
     save_ifs_eq
-    result=$(get_burn_table_scope $1 accounts)
+    result=$(cleos -u $http_endpoint  get table ${contract_burn} $1 accounts)
     status=${result##*is_burned} #结果为 @@@
     status=$(echo $status | tr -d "\]")
     status=$(echo $status | tr -cd "[0-9]")
     if [[ temp -eq 0 ]]; then
-            echo $1','$2 >> result_file
+        echo $1','$2' '$3 >> result_file
     else
         echo $1 done !
     fi

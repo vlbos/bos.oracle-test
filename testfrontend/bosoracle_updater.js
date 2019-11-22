@@ -15,7 +15,8 @@ const btccnyUrl = "https://blockchain.info/ticker";
 
 const oilUrl = "https://www.quandl.com/api/v3/datasets/CHRIS/CME_RB1/data.json?rows=1&api_key=BZsFDXt-xXb3WFNgLQ97";
 const goldUrl = "https://www.quandl.com/api/v3/datasets/LBMA/GOLD/data.json?rows=1&api_key=BZsFDXt-xXb3WFNgLQ97";
-const rmbUrl = "https://www.mycurrency.net/CN.json";
+// const rmbUrl = "https://www.mycurrency.net/CN.json";
+const rmbUrl = "https://api.exchangeratesapi.io/latest?symbols=USD,CNY";
 
 dotenv.load();
 
@@ -355,13 +356,17 @@ class OracleTimer {
 
 						// //console.log("RMBUSD:", rmbRes);
 						// //console.log("RMBUSD:", JSON.parse(rmbRes).rates);
-						let arr = find_from_array(JSON.parse(rmbRes).rates);
+						let cny = JSON.parse(rmbRes).rates.CNY;
+						let usd = JSON.parse(rmbRes).rates.USD;
+
+						// let arr = find_from_array(JSON.parse(rmbRes).rates);
 						//console.log("RMBUSD:", arr);
 						//console.log("RMBUSD:", arr[0].rate);
 						let newdata = {
 							"oil": JSON.parse(oilRes).dataset_data.data[0][4],
 							"gold": JSON.parse(goldRes).dataset_data.data[0][2],
-							"rmb": arr[0].rate,
+							// "rmb": arr[0].rate,
+							"rmb": Number(usd)/Number(cny),
 						}
 						//console.log("EOSUSDeosprice:", newdata);
 
@@ -464,9 +469,9 @@ class OracleTimer {
 // start_timer();
 function start_coin_timer() {
 	const service_id = 1;
-	const update_cycle = 120;
-	const duration = 30;
-	const update_start_time = 1571038003;
+	const update_cycle = 60;
+	const duration = 49;
+	const update_start_time = 1573187998;
 	let timer = new OracleTimer("coin", service_id, update_cycle, duration, update_start_time);
 	timer.start_timer();
 	// timer.write(1);
@@ -475,9 +480,9 @@ function start_coin_timer() {
 start_coin_timer();
 function start_usd_timer() {
 	const service_id = 2;
-	const update_cycle = 120;
-	const duration = 30;
-	const update_start_time = 1571038008;
+	const update_cycle = 60;
+	const duration = 49;
+	const update_start_time = 1573188028;
 	let timer = new OracleTimer("usd", service_id, update_cycle, duration, update_start_time);
 	timer.start_timer();
 	// timer.writeusd(1);
@@ -486,182 +491,3 @@ function start_usd_timer() {
 start_usd_timer();
 
 
-// write();
-//setInterval(write, 60000);
-
-// let ws = require("nodejs-websocket")
-// const WebSocket = require('ws');
-// import {JsonRpc} from 'eosjs'
-
-// const rpc = new JsonRpc('http://127.0.0.1:8888');
-function test_time() {
-
-
-	// (async ()=>{
-	// 	let ret = await rpc.get_table_rows({
-	// 	  code:'eosio.token',
-	// 	  table:'stats',
-	// 	  scope:'SYS'
-	// 	})
-	// 	console.log(ret)
-	//   })()
-
-	// const update_start_time = "2019-09-12 09:09:09";
-	// update_start_timestamp = to_timestamp(update_start_time);
-	// //console.log(" update_start_timestamp", update_start_timestamp);
-	// now_sec = current_time();
-	// //console.log(" now_sec", now_sec);
-
-	// const pricesWs = new WebSocket('wss://ws.coincap.io/prices?assets=bitcoin,ethereum,monero,litecoin')
-
-	// pricesWs.onmessage = function (msg) {
-	// 	//console.log(msg.data)
-	// }
-
-	// const ws = new WebSocket('wss://ws.coincap.io/prices?assets=bitcoin,ethereum,monero,litecoin');
-
-	// ws.on('open', function open() {
-	// 	ws.send('something');
-	// });
-
-	// ws.on('message', function incoming(data) {
-	// 	//console.log(data);
-	// });
-
-
-	// request.get("wss://ws.coincap.io/prices?assets=bitcoin,ethereum,monero,litecoin", function (err, res, eosRes) {
-	// 	//console.log(err);
-	// 	//console.log(res);
-	// //console.log(eosRes);
-	// });
-
-	// myself = this;
-	// request.get(eosUrl, function (err, res, eosRes) {
-	// 	request.get(ethereumUrl, function (err, res, ethereumRes) {
-	// 		request.get(bitcoinUrl, function (err, res, bitcoinRes) {
-
-	// 			// {
-	// 			// 	"data": {
-	// 			// 		"id": "eos",
-	// 			// 		"rank": "7",
-	// 			// 		"symbol": "EOS",
-	// 			// 		"name": "EOS",
-	// 			// 		"supply": "931377543.1387000000000000",
-	// 			// 		"maxSupply": null,
-	// 			// 		"marketCapUsd": "3459800395.6626011241621507",
-	// 			// 		"volumeUsd24Hr": "694193196.4939930771219022",
-	// 			// 		"priceUsd": "3.7147131377070044",
-	// 			// 		"changePercent24Hr": "-1.1373653211375365",
-	// 			// 		"vwap24Hr": "3.7271304162291967"
-	// 			// 	},
-	// 			// 	"timestamp": 1568274617161
-	// 			// }
-
-	// 			//console.log("EOSUSD:", JSON.parse(eosRes).data.priceUsd);
-	// 			//console.log("ETHUSD:", JSON.parse(ethereumRes).data.priceUsd);
-	// 			//console.log("BTCUSD:", JSON.parse(bitcoinRes).data.priceUsd);
-	// 			let eosprice = JSON.parse(eosRes).data.priceUsd;
-	// 			let newdata = {
-	// 				"eos": JSON.parse(eosRes).data.priceUsd,
-	// 				"ethereum": JSON.parse(ethereumRes).data.priceUsd,
-	// 				"bitcoin": JSON.parse(bitcoinRes).data.priceUsd,
-	// 				"boscore": 0
-	// 			}
-	// 			//console.log("EOSUSDeosprice:", newdata);
-
-	// 			// myself.pushdatax(cycle_number, newdata, 1, 2);
-
-	// 		});
-	// 	});
-	// });
-}
-
-// test_time();
-
-
-// test_bos();
-
-
-// {
-// 	"baseCountry": "US",
-// 	"baseCurrency": "USD",
-// 	"rates": [{
-// 		"id": 301,
-// 		"name": "Hong Kong",
-// 		"name_zh": "中国香港",
-// 		"code": "HK",
-// 		"currency_name": "HKD",
-// 		"currency_name_zh": "港币",
-// 		"currency_code": "HKD",
-// 		"rate": 7.84331,
-// 		"hits": 30179,
-// 		"selected": 0,
-// 		"top": 0
-// 	}, {
-// 		"id": 449,
-// 		"name": "Singapore",
-// 		"name_zh": "新加坡",
-// 		"code": "SG",
-// 		"currency_name": "Dollar",
-// 		"currency_name_zh": "新币",
-// 		"currency_code": "SGD",
-// 		"rate": 1.3785,
-// 		"hits": 1148456,
-// 		"selected": 0,
-// 		"top": 0
-// 	}, {
-// 		"id": 356,
-// 		"name": "China",
-// 		"name_zh": "中国",
-// 		"code": "CN",
-// 		"currency_name": "Yuan Renminbi",
-// 		"currency_name_zh": "人民币",
-// 		"currency_code": "CNY",
-// 		"rate": 7.1098,
-// 		"hits": 238147,
-// 		"selected": 1,
-// 		"top": 5
-// 	}]
-// }
-
-// {
-// 	"baseCountry": "CN",
-// 	"baseCurrency": "CNY",
-// 	"rates": [{
-// 		"id": 356,
-// 		"name": "China",
-// 		"name_zh": "中国",
-// 		"code": "CN",
-// 		"currency_name": "Yuan Renminbi",
-// 		"currency_name_zh": "人民币",
-// 		"currency_code": "CNY",
-// 		"rate": 1,
-// 		"hits": 238170,
-// 		"selected": 1,
-// 		"top": 5
-// 	}, {
-// 		"id": 449,
-// 		"name": "Singapore",
-// 		"name_zh": "新加坡",
-// 		"code": "SG",
-// 		"currency_name": "Dollar",
-// 		"currency_name_zh": "新币",
-// 		"currency_code": "SGD",
-// 		"rate": 0.19345675027017922,
-// 		"hits": 1148567,
-// 		"selected": 0,
-// 		"top": 0
-// 	}, {
-// 		"id": 297,
-// 		"name": "United States",
-// 		"name_zh": "美国",
-// 		"code": "US",
-// 		"currency_name": "USD",
-// 		"currency_name_zh": "美元",
-// 		"currency_code": "USD",
-// 		"rate": 0.14035284705750256,
-// 		"hits": 258867,
-// 		"selected": 1,
-// 		"top": 10
-// 	}]
-// }

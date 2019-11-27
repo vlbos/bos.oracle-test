@@ -1,10 +1,5 @@
 # coding:utf-8
 #!/usr/bin/env python3
-import csv
-import re
-import json
-
-import argparse
 import json
 import numpy
 import os
@@ -14,28 +9,16 @@ import subprocess
 import sys
 import time
 import csv
-import logging
-import time
 import datetime
 import requests
 from concurrent.futures import ProcessPoolExecutor
-import time,os
 import copy
 
-airdrop_accounts_file = './dataset/accounts_info_bos_snapshot.airdrop.normal.csv'
-airdrop_msig_accounts_file = './dataset/accounts_info_bos_snapshot.airdrop.msig.json'
-nonactive_accounts_file = './dataset/nonactivated_bos_accounts.txt'
-nonactive_msig_accounts_file = './dataset/nonactivated_bos_accounts.msig'
-nonactive_airdrop_accounts_file = "./unactive_airdrop_accounts.csv"
 
 cleos="/Users/lisheng/mygit/boscore/bos/build/programs/cleos/cleos --url http://127.0.0.1:8888 "
-
-def jsonArg(a):
-    return " '" + json.dumps(a) + "' "
+nonactive_airdrop_accounts_file="no.csv"
 
 def getOutput(args):
-    # print('bios-boot-tutorial.py:', args)
-    # logFile.write(args + '\n')
     proc = subprocess.Popen(args, shell=True, stdout=subprocess.PIPE)
     return proc.communicate()[0].decode('utf-8')
 
@@ -45,9 +28,8 @@ def getJsonOutput(args):
 def writeResult(resCsv):
     if len(resCsv)==0:
         return
-    nonactive_airdrop_accounts_file=str(os.getpid())+"".join(resCsv[0])+"no.csv"
 
-    with open(nonactive_airdrop_accounts_file, 'w') as cfile:
+    with open(nonactive_airdrop_accounts_file, 'a+') as cfile:
         writer = csv.writer(cfile)
         for item in resCsv:
             writer.writerow(item)
@@ -73,7 +55,7 @@ def loadcsv(csvFile,t):
         accs=copy.deepcopy(accounts[i:])
         if end < flen:
             accs=copy.deepcopy(accounts[i:end])
-        dt_ms = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f') # 含微秒的日期时间，来源 比特量化
+        dt_ms = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f') 
         print("loadcsv",dt_ms)    
         t.submit(validAccounts,accs,i).add_done_callback(parse)
 
@@ -112,17 +94,16 @@ def validAccounts(accounts,start):
 
 # 进程池方式
 
-
 def parse(obj):
     res=obj.result()
     print('[%s] <%s> (%s) =%s=' % (os.getpid(), res['first'], res['last'],res['len']))
-    dt_ms = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f') # 含微秒的日期时间，来源 比特量化
+    dt_ms = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f') 
     print(dt_ms)    
 
 if __name__ == '__main__':
 
-    dt_ms = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f') # 含微秒的日期时间，来源 比特量化
-    print(dt_ms)    
+    dt_ms = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f') 
+    print("main begin",dt_ms)    
     #  t.__exit__方法会调用t.shutdown(wait=True)方法，
     with ProcessPoolExecutor(max_workers=10) as t:
         csvFile="./unactive_airdrop_accounts.csv"
@@ -130,5 +111,5 @@ if __name__ == '__main__':
   
             
     print('主',os.getpid())
-    dt_ms = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f') # 含微秒的日期时间，来源 比特量化
-    print(dt_ms)    
+    dt_ms = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S.%f') 
+    print("main end",dt_ms)    

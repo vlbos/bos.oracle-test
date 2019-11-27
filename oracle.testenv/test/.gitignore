@@ -5,3 +5,4 @@ keys.txt
 *.txt
 *.json
 .DS_Store
+*.msig

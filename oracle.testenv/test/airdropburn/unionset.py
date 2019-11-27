@@ -92,6 +92,7 @@ def intersectmsigset():
 
     # 创建数值集合
     tc = set(msiglist) & set(unactive_list)
+    print('unactive airdrop msig accounts count:', len(tc))
 
     resCsv = []
     sumBurn = 0

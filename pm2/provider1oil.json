@@ -1,0 +1,31 @@
+{
+    "apps": [
+        {
+            "name": "provider1oil",
+            "script": "provider1oil.js",
+            "cwd": "/Users/chenpuxin/Code/BOSCORE/neworacletest",
+            "exec_mode": "fork",
+            "max_memory_restart": "1G",
+            "autorestart": true,
+            "node_args": [],
+            "args": [],
+            "env": {
+               "EOS_PROTOCOL":"https",
+                "EOS_HOST":"api-bostest.blockzone.net",
+                "EOS_PORT":"443",
+                "EOS_KEY":"5JH2RzGXnxpmZVaThbbUBjRzXhr5NrpkTngopKUg491PiEeDua6",
+                "EOS_CHAIN":"33cc2426f1b258ef8c798c34c0360b31732ea27a2d7e35a65797850a86d1ba85",
+                "ORACLE":"eosio",
+                "CONTRACT":"oracle.bos",
+                "FREQ":"600000",
+                "ORACLE_PERMISSION":"active",
+                "SERVICE_ID" : "7",
+                "UPDATE_CYCLE" : "60",
+                "DURATION" : "51",
+                "UPDATE_START_TIME" : "1575517550",
+                "PROVIDER" : "oracleprovi1",
+                "TIMER_TICKER" : "0 */1 * * * *"
+            }
+        }
+    ]
+}

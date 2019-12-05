@@ -8,7 +8,7 @@ const axios = require('axios');
     const duration = Number(process.env.DURATION) ||0;
     const update_start_time = Number(process.env.UPDATE_START_TIME) || 0;
     const timer_sticker = process.env.TIMER_TICKER || '* * * * * *';
-    
+    let cache = {};
 
     function getFeixiaohaoPrice(res){
         const $ = cheerio.load(res);
@@ -34,13 +34,20 @@ const axios = require('axios');
         // 组装数据
             const data = {
                 "source":"FeiXiaoHao",
-                "eos": getFeixiaohaoPrice(result1.data) ,
-                "ethereum": getFeixiaohaoPrice(result2.data),
-                "bitcoin": getFeixiaohaoPrice(result3.data),
-                "boscore": getFeixiaohaoPrice(result4.data) ,
-                "timestamp": new Date() 
+                "eos": getFeixiaohaoPrice(result1.data) || cache.eos,
+                "ethereum": getFeixiaohaoPrice(result2.data) || cache.ethereum,
+                "bitcoin": getFeixiaohaoPrice(result3.data) || cache.bitcoin,
+                "boscore": getFeixiaohaoPrice(result4.data) || cache.boscore,
+                "timestamp": !result4.data || !result3.data || !result2.data || !result1.data ? cache.boscore : new Date() 
             }
             console.log(data);
+
+        // 缓存处理
+        if (!result4.data || !result3.data || !result2.data || !result1.data) {
+            console.log('CoinGecko Api 出问题了')
+        } else {
+            cache = data;
+        }
     
             let end_time = new Date();
         // 推送数据

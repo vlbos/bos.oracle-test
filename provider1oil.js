@@ -8,7 +8,8 @@ const schedule = require("node-schedule");
     const duration = Number(process.env.DURATION) ||0;
     const update_start_time = Number(process.env.UPDATE_START_TIME) || 0;
     const timer_sticker = process.env.TIMER_TICKER || '* * * * * *';
-    
+    let cache = {};
+
     schedule.scheduleJob(timer_sticker, async ()=>{
         let provider = new OracleProvider(service_id, update_cycle, duration, update_start_time);
         let start_time = new Date();
@@ -25,12 +26,18 @@ const schedule = require("node-schedule");
         // 组装数据
             const data = {
                 "source":"www.quandl.com",
-                "oil": result1.data.dataset_data.data[0][4],
-                "gold": result2.data.dataset_data.data[0][2],
-                "rmb": Number(usd) / Number(cny)
+                "oil": result1.data.dataset_data.data[0][4] || cahce.oil,
+                "gold": result2.data.dataset_data.data[0][2] || cache.gold,
+                "rmb": Number(usd) / Number(cny) || cache.rmb,
+                "timestamp": result1.data ? new Date() : cache.timestamp
             }
             console.log(data);
-    
+        // 缓存处理
+        if (!result1.data || !result3.data) {
+            console.log('QUANDL Api 出问题了')
+        } else {
+            cache = data;
+        }
             let end_time = new Date();
         // 推送数据
             await provider.start(data);

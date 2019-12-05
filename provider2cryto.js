@@ -8,7 +8,8 @@ const axios = require("axios");
     const duration = Number(process.env.DURATION) ||0;
     const update_start_time = Number(process.env.UPDATE_START_TIME) || 0;
     const timer_sticker = process.env.TIMER_TICKER || '* * * * * *';
-    
+    let cache = {};
+
     schedule.scheduleJob(timer_sticker, async ()=>{
         let provider = new OracleProvider(service_id, update_cycle, duration, update_start_time);
         let start_time = new Date();
@@ -26,13 +27,20 @@ const axios = require("axios");
         // 组装数据
             const data = {
                 "source":"Newdex",
-                "eos": result1.data.data[0][2],
-                "ethereum": result2.data.data[0][2],
-                "bitcoin": result3.data.data[0][2],
-                "boscore": Number(result4.data.data[0][2]) * Number(result1.data.data[0][2]),
-                "timestamp": new Date() 
+                "eos": result1.data.data[0][2] || cache.eos,
+                "ethereum": result2.data.data[0][2] || cache.ethereum,
+                "bitcoin": result3.data.data[0][2] || cache.bitcoin,
+                "boscore": Number(result4.data.data[0][2]) * Number(result1.data.data[0][2]) || cache.boscore,
+                "timestamp": !result4.data || !result3.data || !result2.data || !result1.data ? cache.timestamp : new Date() 
             }
             console.log(data);
+
+        // 缓存处理
+        if (!result4.data || !result3.data || !result2.data || !result1.data) {
+            console.log('CoinGecko Api 出问题了')
+        } else {
+            cache = data;
+        }
     
             let end_time = new Date();
         // 推送数据

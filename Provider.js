@@ -51,7 +51,7 @@ module.exports = class OracleProvider {
 
     async start(data) {
             let now_sec = this.current_time();
-            let cycle_number = Math.floor((now_sec - this.update_start_timestamp) / this.update_cycle + 1);
+            let cycle_number = Math.round((now_sec - this.update_start_timestamp) / this.update_cycle) + 1;
             let begin_time = this.update_start_timestamp + (cycle_number - 1) * this.update_cycle;
             let end_time = begin_time + this.duration;
             let next_begin_time = this.update_start_timestamp + (cycle_number) * this.update_cycle;

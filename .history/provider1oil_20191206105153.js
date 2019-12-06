@@ -13,9 +13,9 @@ const schedule = require("node-schedule");
     schedule.scheduleJob(timer_sticker, async ()=>{
         let provider = new OracleProvider(service_id, update_cycle, duration, update_start_time);
         let start_time = new Date();
-        let apikey = ['BZsFDXt-xXb3WFNgLQ97','TA7zFqyvXM2VYxAPGoHX'];
-        const api1 = `https://www.quandl.com/api/v3/datasets/CHRIS/CME_RB1/data.json?rows=1&api_key=${apikey[start_time%2]}`;
-        const api2 = `https://www.quandl.com/api/v3/datasets/LBMA/GOLD/data.json?rows=1&api_key=${apikey[start_time%2]}`;
+    
+        const api1 = "https://www.quandl.com/api/v3/datasets/CHRIS/CME_RB1/data.json?rows=1&api_key=BZsFDXt-xXb3WFNgLQ97";
+        const api2 = "https://www.quandl.com/api/v3/datasets/LBMA/GOLD/data.json?rows=1&api_key=BZsFDXt-xXb3WFNgLQ97";
         const api3 = "https://api.exchangeratesapi.io/latest?symbols=USD,CNY";
         // 获取数据
             const result1 = await axios.get(api1).catch(e => console.error(e));

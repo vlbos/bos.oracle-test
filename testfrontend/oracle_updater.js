@@ -195,7 +195,7 @@ class OracleTimer {
 				// sleep.sleep(2);
 				for (let i = begin; i <= end; i++) {
 					let provider = "provider" + repeat(i, 4);
-					console.log("$$$$push===",i,"Date.parse(new Date()) =", (new Date()) );
+					console.log("$$$$push===", i, "Date.parse(new Date()) =", (new Date()));
 					contract.pushdata({
 						service_id: this.service_id,
 						provider: provider,
@@ -209,7 +209,7 @@ class OracleTimer {
 						})
 						.then(results => {
 							// //console.log("results:", results);
-							console.log("$$$$push result===",i,"Date.parse(new Date()) =", (new Date()) );
+							console.log("$$$$push result===", i, "Date.parse(new Date()) =", (new Date()));
 						})
 						.catch(error => {
 							console.log("error:", error);
@@ -226,35 +226,18 @@ class OracleTimer {
 			});
 	}
 
-	write(cycle_number, retrytimes=1) {
-		// const pricesWs = new WebSocket('wss://ws.coincap.io/prices?assets=bitcoin,ethereum,monero,litecoin')
-		// pricesWs.onmessage = function (msg) {
-		// 	//console.log(msg.data)
-		// }
-
+	write(cycle_number, retrytimes = 1) {
 		let THIS = this;
-		console.log("####coin====",new Date());
+		console.log("####coin====", new Date());
+		
 		request.get(eosUrl, function (err, res, eosRes) {
-			console.log("####eos====",new Date());
+			console.log("####eos====", new Date());
 			request.get(ethereumUrl, function (err, res, ethereumRes) {
-				console.log("####ethereum====",new Date());
+				console.log("####ethereum====", new Date());
 				request.get(bitcoinUrl, function (err, res, bitcoinRes) {
-					console.log("####bitcoin====",new Date());
-					// {
-					// 	"data": {
-					// 		"id": "bitcoin",
-					// 		"symbol": "BTC",
-					// 		"currencySymbol": "₿",
-					// 		"type": "crypto",
-					// 		"rateUsd": "8381.5743950534844711"
-					// 	},
-					// 	"timestamp": 1570783620323
-					// }
+					console.log("####bitcoin====", new Date());
 
 					try {
-						//console.log("EOSUSD:", JSON.parse(eosRes).data.rateUsd);
-						//console.log("ETHUSD:", JSON.parse(ethereumRes).data.rateUsd);
-						//console.log("BTCUSD:", JSON.parse(bitcoinRes).data.rateUsd);
 						let eosprice = JSON.parse(eosRes).data.rateUsd;
 						let newdata = {
 							"eos": JSON.parse(eosRes).data.rateUsd,
@@ -269,13 +252,13 @@ class OracleTimer {
 					catch (err) {
 						console.log("Error name: " + err.name + "");
 						console.log("Error message: " + err.message);
-						if (retrytimes < 1) {
-							try{
-							write(cycle_number, retrytimes + 1);
-						}						catch (err1) {
+						if (retrytimes < 3) {
+							try {
+								write(cycle_number, retrytimes + 1);
+							} catch (err1) {
+							}
 						}
 					}
-				}
 
 				});
 			});
@@ -285,102 +268,26 @@ class OracleTimer {
 
 
 
-	writeusd(cycle_number, retrytimes=1) {
+	writeusd(cycle_number, retrytimes = 1) {
 		let THIS = this;
-		console.log("****usd====",new Date());
+		console.log("****usd====", new Date());
+	
 		request.get(oilUrl, function (err, res, oilRes) {
-			console.log("****oil====",new Date());
+			console.log("****oil====", new Date());
 			request.get(goldUrl, function (err, res, goldRes) {
-				console.log("****gold====",new Date());
+				console.log("****gold====", new Date());
 				request.get(rmbUrl, function (err, res, rmbRes) {
-					console.log("****rmb====",new Date());
-					// {
-					// 	"dataset_data": {
-					// 		"limit": 1,
-					// 		"transform": null,
-					// 		"column_index": null,
-					// 		"column_names": ["Date", "Open", "High", "Low", "Last", "Change", "Settle", "Volume", "Previous Day Open Interest"],
-					// 		"start_date": "2005-10-03",
-					// 		"end_date": "2019-10-09",
-					// 		"frequency": "daily",
-					// 		"data": [
-					// 			["2019-10-09", 1.5793, 1.6126, 1.575, 1.5833, 0.0062, 1.5871, 60980.0, 106203.0]
-					// 		],
-					// 		"collapse": null,
-					// 		"order": null
-					// 	}
-					// }
-
-					// {
-					// 	"dataset": {
-					// 	  "id": 11304240,
-					// 	  "dataset_code": "GOLD",
-					// 	  "database_code": "LBMA",
-					// 	  "name": "Gold Price: London Fixing",
-					// 	  "description": "Gold Price: .",
-					// 	  "refreshed_at": "2019-10-09 23:25:19 UTC",
-					// 	  "newest_available_date": "2019-10-09",
-					// 	  "oldest_available_date": "1968-01-02",
-					// 	  "column_names": [
-					// 		"Date",
-					// 		"USD (AM)",
-					// 		"USD (PM)",
-					// 		"GBP (AM)",
-					// 		"GBP (PM)",
-					// 		"EURO (AM)",
-					// 		"EURO (PM)"
-					// 	  ],
-					// 	  "frequency": "daily",
-					// 	  "type": "Time Series",
-					// 	  "premium": false,
-					// 	  "limit": 1,
-					// 	  "transform": null,
-					// 	  "column_index": null,
-					// 	  "start_date": "1968-01-02",
-					// 	  "end_date": "2019-10-09",
-					// 	  "data": [
-					// 		[
-					// 		  "2019-10-09",
-					// 		  1503.4,
-					// 		  1507.25,
-					// 		  1228.43,
-					// 		  1232.93,
-					// 		  1369.0,
-					// 		  1372.65
-					// 		]
-					// 	  ],
-					// 	  "collapse": null,
-					// 	  "order": null,
-					// 	  "database_id": 139
-					// 	}
-					//   }
-					//console.log(oilRes);
-					//console.log(JSON.parse(oilRes).dataset_data.data[0][4]);
-					//console.log("OILUSD:", JSON.parse(oilRes).dataset_data.data[0][4]);
-					// 					EvalError：eval()的使用与定义不一致
-					// RangeError：数值越界
-					// ReferenceError：非法或不能识别的引用数值
-					// SyntaxError：发生语法解析错误
-					// TypeError：操作数类型错误
-					// URIError：URI处理函数使用不当
+					console.log("****rmb====", new Date());
 					try {
 						console.log("GOLDUSD:", goldRes);
 						console.log("GOLDUSD:", JSON.parse(goldRes).dataset_data);
-						//console.log("GOLDUSD:", JSON.parse(goldRes).dataset_data.data[0][2]);
-
-						// //console.log("RMBUSD:", rmbRes);
-						// //console.log("RMBUSD:", JSON.parse(rmbRes).rates);
 						let cny = JSON.parse(rmbRes).rates.CNY;
 						let usd = JSON.parse(rmbRes).rates.USD;
-
-						// let arr = find_from_array(JSON.parse(rmbRes).rates);
-						//console.log("RMBUSD:", arr);
-						//console.log("RMBUSD:", arr[0].rate);
 						let newdata = {
 							"oil": JSON.parse(oilRes).dataset_data.data[0][4],
 							"gold": JSON.parse(goldRes).dataset_data.data[0][2],
 							// "rmb": arr[0].rate,
-							"rmb": Number(usd)/Number(cny),
+							"rmb": Number(usd) / Number(cny),
 						}
 						//console.log("EOSUSDeosprice:", newdata);
 
@@ -390,12 +297,11 @@ class OracleTimer {
 					catch (err) {
 						console.log("Error name: " + err.name + "");
 						console.log("Error message: " + err.message);
-						if (retrytimes < 1) {
-							try{
-							writeusd(cycle_number, retrytimes + 1);
+						if (retrytimes < 3) {
+							try {
+								writeusd(cycle_number, retrytimes + 1);
 							}
-							catch(err)
-							{
+							catch (err) {
 
 							}
 						}
@@ -407,7 +313,7 @@ class OracleTimer {
 
 	}
 
-	test_bos(cycle_number, retrytimes=1) {
+	test_bos(cycle_number, retrytimes = 1) {
 		let CoinGeckoClient = new CoinGecko();
 
 		CoinGeckoClient.simple.price({
@@ -415,24 +321,7 @@ class OracleTimer {
 			ids: ['bitcoin', 'ethereum', 'eos', 'boscore'],
 		}).then((data) => {
 			this.data = data;
-			//console.log(data);
-			// {
-			// 	success: true,
-			// 	message: 'OK',
-			// 	code: 200,
-			// 	data: {
-			// 	  eos: { usd: 3.18 },
-			// 	  ethereum: { usd: 192.94 },
-			// 	  bitcoin: { usd: 8555.88 },
-			// 	  boscore: { usd: 0.03517988 }
-			// 	}
 			try {
-				//console.log("eos", data.data.eos.usd);
-				//console.log("eos", data.data.eos.usd);
-				//console.log("ethereum", data.data.ethereum.usd);
-				//console.log("bitcoin", data.data.bitcoin.usd);
-				//console.log("boscore", data.data.boscore.usd);
-
 				let newdata = {
 					"eos": data.data.eos.usd,
 					"ethereum": data.data.ethereum.usd,
@@ -445,12 +334,11 @@ class OracleTimer {
 			catch (err) {
 				console.log("Error name: " + err.name + "");
 				console.log("Error message: " + err.message);
-				if (retrytimes < 1) {
-					try{
-					test_bos(cycle_number, retrytimes + 1);
+				if (retrytimes < 3) {
+					try {
+						test_bos(cycle_number, retrytimes + 1);
 					}
-					catch(err)
-					{
+					catch (err) {
 
 					}
 				}
@@ -502,7 +390,7 @@ function start_coin_timer() {
 	// timer.write(1);
 }
 
-start_coin_timer();
+// start_coin_timer();
 function start_usd_timer() {
 	const service_id = 2;
 	const update_cycle = 120;
@@ -513,46 +401,119 @@ function start_usd_timer() {
 	// timer.writeusd(1);
 
 }
-start_usd_timer();
-
-
-// // an example using an object instead of an array
-// async.parallel({
-//     one: function(callback) {
-//         setTimeout(function() {
-//             callback(null, 1);
-//         }, 200);
-//     },
-//     two: function(callback) {
-//         setTimeout(function() {
-//             callback(null, 2);
-//         }, 100);
-//     }
-// }, function(err, results) {
-//     // results is now equals to: {one: 1, two: 2}
-// });
+// start_usd_timer();
 
 
 
+let myLoaderQueue = []; // passed to async.parallel
+		// let myUrls = [oilUrl, goldUrl, rmbUrl]; // 1000+ urls here
+		var myUrls = [eosUrl, bitcoinUrl, ethereumUrl]; // 1000+ urls here
+		var myTags = ["eos", "ethereum", "bitcoin"]; // 1000+ urls here
 
-// let myLoaderQueue = []; // passed to async.parallel
-// // let myUrls = [oilUrl, goldUrl, rmbUrl]; // 1000+ urls here
-// var myUrls = [eosUrl, bitcoinUrl, ethereumUrl]; // 1000+ urls here
+		for (let i = 0; i < myUrls.length; i++) {
+			myLoaderQueue.push(function (callback) {
 
-// for(let i = 0; i < myUrls.length; i++){
-//     myLoaderQueue.push(function(callback){
+				// Async http request
+				// request(myUrls[i], function (error, response, html) {
 
-//         // Async http request
-//         request(myUrls[i], function(error, response, html) {
+				// 	// Some processing is happening here before the callback is invoked
+				// 	callback(error, html);
+				// });
+				request.get(myUrls[i], function (err, res, jsonRes) {
+					console.log(myUrls[i],"####====", new Date());
 
-//             // Some processing is happening here before the callback is invoked
-//             callback(error, html);
-//         });
-//     });
-// }
+					try {
+						let price = JSON.parse(jsonRes).data.rateUsd;
+						let tag = myTags[i];
+						let newData={};
+						newData[tag] = price;
+						// let newdata = {
+						// 	"eos": JSON.parse(eosRes).data.rateUsd,
+						// 	"ethereum": JSON.parse(ethereumRes).data.rateUsd,
+						// 	"bitcoin": JSON.parse(bitcoinRes).data.rateUsd,
+						// 	"boscore": 0
+						// }
+						// //console.log("EOSUSDeosprice:", newdata);
 
-// // The loader queue has been made, now start to process the queue
-// async.parallel(myLoaderQueue, function(err, results){
-// 	// Done
-// 	console.log(results);
-// });
+						// THIS.pushdatax(cycle_number, newdata, 1, 2);
+						callback(err,newData)
+					}
+					catch (err) {
+						console.log("Error name: " + err.name + "");
+						console.log("Error message: " + err.message);
+						let price = "0";
+						let tag = myTags[i];
+						let newData={};
+						newData[tag] = price;
+						callback(err,newData)
+					}
+
+				});
+			});
+		}
+
+		// The loader queue has been made, now start to process the queue
+		async.parallel(myLoaderQueue, function (err, results) {
+			// Done
+			console.log(results);
+		});
+
+
+			// an example using an object instead of an array
+			async.parallel({
+				oil: function (callback) {
+					// setTimeout(function () {
+					// 	callback(null, 1);
+					// }, 200);
+					let url = oilUrl;
+					request.get(url, function (err, res, jsonRes) {
+						console.log("****====", new Date());
+						try {
+							let price = JSON.parse(jsonRes).dataset_data.data[0][4];
+							callback(err,price);
+						}
+						catch (err) {
+							console.log("Error name: " + err.name + "");
+							console.log("Error message: " + err.message);
+							callback(err,"0");
+						}
+	
+					});
+				},
+				gold: function (callback) {
+					let url = goldUrl;
+					request.get(url, function (err, res, jsonRes) {
+						console.log("****====", new Date());
+						try {
+						let price = JSON.parse(jsonRes).dataset_data.data[0][2];
+							callback(err,price);
+						}
+						catch (err) {
+							console.log("Error name: " + err.name + "");
+							console.log("Error message: " + err.message);
+							callback(err,"0");
+						}
+	
+					});
+				},
+				rmb: function (callback) {
+					let url = rmbUrl;
+					request.get(url, function (err, res, jsonRes) {
+						console.log("****====", new Date());
+						try {
+							let cny = JSON.parse(jsonRes).rates.CNY;
+							let usd = JSON.parse(jsonRes).rates.USD;
+							let price = Number(usd) / Number(cny);
+							callback(err,price);
+						}
+						catch (err) {
+							console.log("Error name: " + err.name + "");
+							console.log("Error message: " + err.message);
+							callback(err,"0");
+						}
+						});
+				}
+			}, function (err, results) {
+				// results is now equals to: {one: 1, two: 2}
+				console.log(results);
+			});

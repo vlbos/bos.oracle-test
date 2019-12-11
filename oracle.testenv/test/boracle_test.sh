@@ -140,3 +140,4 @@ case "$1" in
 "scope") test_get_scope ;;
 *) echo "usage: boracle_test.sh set|acc|keys|table {name}|table1 {scope name}|info|scope|data" ;;
 esac
+

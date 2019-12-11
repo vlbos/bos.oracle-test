@@ -5,7 +5,8 @@
 contract_repo_dir=bos.contracts
 
 # CONTRACTS_DIR=~/${contract_repo_dir}/build/contracts/
-CONTRACTS_DIR=~/mygit/vlbos/burn/${contract_repo_dir}/build/contracts/
+# CONTRACTS_DIR=~/mygit/vlbos/burn/${contract_repo_dir}/build/contracts/
+CONTRACTS_DIR=~/mygit/vlbos/oracle/${contract_repo_dir}/build/contracts/
 # CONTRACTS_DIR=~/abos/${contract_repo_dir}
 WALLET_DIR=~/eosio-wallet
 

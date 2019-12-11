@@ -55,7 +55,7 @@ EOF
 read -d '' configbios1 << EOF
 p2p-server-address = localhost:9801
 http-server-address = 127.0.0.1:8888
-p2p-listen-endpoint = 0.0.0.0:9876
+p2p-listen-endpoint = 0.0.0.0:98
 
 # ibc-listen-endpoint = 0.0.0.0:6001
 #ibc-peer-address = 127.0.0.1:6002

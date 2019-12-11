@@ -1,4 +1,10 @@
-  
+
+./push_test.sh para
+./push_test.sh regs 1
+./push_test.sh regs 2
+./push_test.sh pusht 1 1575860670
+./push_test.sh pusht 2 1575860677
+
 oracle1.0 问题修复列表 
 
 ###### 推送数据

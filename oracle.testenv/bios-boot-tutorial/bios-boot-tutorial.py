@@ -16,7 +16,8 @@ logFile = None
 unlockTimeout = 999999999
 fastUnstakeSystem = './fast.refund/eosio.system/eosio.system.wasm'
 workDir="/Users/lisheng/mygit/boscore/bos"
-contractDir="/Users/lisheng/mygit/boscore/bos.contracts"
+# contractDir="/Users/lisheng/mygit/boscore/bos.contracts"
+contractDir="/Users/lisheng/mygit/vlbos/oracle/bos.contracts"
 
 
 systemAccounts = [
@@ -106,6 +107,7 @@ def startNode(nodeIndex, account):
         args.nodeos +
         '    --max-irreversible-block-age -1'
         '    --contracts-console'
+        '    --max-transaction-time=100000 '
         '    --genesis-json ' + os.path.abspath(args.genesis) +
         '    --blocks-dir ' + os.path.abspath(dir) + '/blocks'
         '    --config-dir ' + os.path.abspath(dir) +
@@ -179,7 +181,7 @@ def createStakedAccounts(b, e):
 def regProducers(b, e):
     for i in range(b, e):
         a = accounts[i]
-        retry(args.cleos + 'system regproducer ' + a['name'] + ' ' + a['pub'] + ' https://' + a['name'] + '.com' + '/' + a['pub'])
+        retry(args.cleos + 'system regproducer ' + a['name'] + ' ' + a['pub'] + ' https://' + a['name'] + '.com' + '/' + a['pub'] + ' ' +  str((i-12)%12))
 
 def listProducers():
     run(args.cleos + 'system listproducers')
@@ -299,7 +301,7 @@ def stepSetSystemContract():
     sleep(1)
     run(args.cleos + 'push action eosio setpriv' + jsonArg(['eosio.msig', 1]) + '-p eosio@active')
 def stepInitSystemContract():
-    run(args.cleos + 'push action eosio init' + jsonArg(['0', '4,SYS']) + '-p eosio@active')
+    run(args.cleos + 'push action eosio init' + jsonArg(['0', '4,BOS']) + '-p eosio@active')
     sleep(1)
 def stepCreateStakedAccounts():
     createStakedAccounts(0, len(accounts))
@@ -326,6 +328,12 @@ def stepTransfer():
         randomTransfer(0, args.num_senders)
 def stepLog():
     run('tail -n 60 ' + args.nodes_dir + '00-eosio/stderr')
+def stepInstallOracleContracts():
+    run(args.cleos + 'set contract useraaaaaaaa ' + args.contracts_dir + '/bos.oracle/')
+# def stepRegisiterService():
+
+# def stepPush():
+
 
 if __name__ == '__main__':
     # Command Line Arguments
@@ -363,8 +371,8 @@ if __name__ == '__main__':
     parser.add_argument('--genesis', metavar='', help="Path to genesis.json", default="./genesis.json")
     parser.add_argument('--wallet-dir', metavar='', help="Path to wallet directory", default='./wallet/')
     parser.add_argument('--log-path', metavar='', help="Path to log file", default='./output.log')
-    parser.add_argument('--symbol', metavar='', help="The eosio.system symbol", default='SYS')
-    parser.add_argument('--user-limit', metavar='', help="Max number of users. (0 = no limit)", type=int, default=3000)
+    parser.add_argument('--symbol', metavar='', help="The eosio.system symbol", default='BOS')
+    parser.add_argument('--user-limit', metavar='', help="Max number of users. (0 = no limit)", type=int, default=300)
     parser.add_argument('--max-user-keys', metavar='', help="Maximum user keys to import into wallet", type=int, default=10)
     parser.add_argument('--ram-funds', metavar='', help="How much funds for each user to spend on ram", type=float, default=0.1)
     parser.add_argument('--min-stake', metavar='', help="Minimum stake before allocating unstaked funds", type=float, default=0.9)

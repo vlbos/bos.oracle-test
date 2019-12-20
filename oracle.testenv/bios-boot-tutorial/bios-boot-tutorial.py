@@ -30,6 +30,7 @@ systemAccounts = [
     'eosio.stake',
     'eosio.token',
     'eosio.vpay',
+    'eosio.rex',
 ]
 
 def jsonArg(a):
@@ -301,7 +302,7 @@ def stepSetSystemContract():
     sleep(1)
     run(args.cleos + 'push action eosio setpriv' + jsonArg(['eosio.msig', 1]) + '-p eosio@active')
 def stepInitSystemContract():
-    run(args.cleos + 'push action eosio init' + jsonArg(['0', '4,BOS']) + '-p eosio@active')
+    run(args.cleos + 'push action eosio init' + jsonArg(['0', '4,' + args.symbol]) + '-p eosio@active')
     sleep(1)
 def stepCreateStakedAccounts():
     createStakedAccounts(0, len(accounts))
@@ -330,10 +331,59 @@ def stepLog():
     run('tail -n 60 ' + args.nodes_dir + '00-eosio/stderr')
 def stepInstallOracleContracts():
     run(args.cleos + 'set contract useraaaaaaaa ' + args.contracts_dir + '/bos.oracle/')
-# def stepRegisiterService():
+def getTableRow(table):
+     table = getJsonOutput(args.cleos + 'get table eosio eosio '+ table + ' -l 1')
+     if table['rows']:
+        row=table['rows'][0]
+        return row
+     return {}
+       
 
-# def stepPush():
+def stepPush():
+     total_intervals = 60 * 6
+     dist_interval   = 10 
+     payment="100000.0000"
+     src="useraaaaaaaa"
+     dest="useraaaaaaaa"
+     run(args.cleos + ' system rex buyrex ' + src + ' "' + payment + ' ' + args.symbol + '"')
+     row=getTableRow("rexpool")
+     if row['total_lendable'] and row['total_unlent']:
+            print((0==row['total_lendable']),(0==row['total_unlent']))
+     rrow=getTableRow("rexretpool")
+     print((rrow=={}))
 
+     fee="30.0000"
+     bucket_interval_sec = 60
+     current_time_sec=int(time.time())
+     expected_pending_bucket_time=current_time_sec - current_time_sec % bucket_interval_sec + bucket_interval_sec
+     run(args.cleos + ' system rex rentcpu ' + src + ' ' + dest + ' "' + fee + ' ' + args.symbol + '"')
+     rrow=getTableRow("rexretpool")
+     t0=0
+     if rrow:
+         print((0==rrow["current_rate_of_increase"]),expected_pending_bucket_time,"==",rrow["pending_bucket_time"])
+         t0=rrow["pending_bucket_time"]
+
+     print(getTableRow("retbuckets"))
+     sleep(60)
+     run(args.cleos + ' system rex rexexec ' + src + ' 1' )
+     rate=int(fee)/total_intervals
+     rrow=getTableRow("rexretpool")
+     print(rate,"==",rrow["current_rate_of_increase"])
+     print(getTableRow("retbuckets"))
+     t2=rrow["last_dist_time"]
+     change      = rate * ((t2-t0) / dist_interval) + fee % total_intervals
+     expected    = payment + change
+     row=getTableRow("rexpool")
+     print(expected,"==",row['total_lendable'])
+     sleep(60)
+     run(args.cleos + ' system rex rexexec ' + src + ' 1' )
+     rrow=getTableRow("rexretpool")
+     expected    = payment + fee
+     print(expected,"==",row['total_lendable'])
+     print((row['total_lendable']==row['total_unlent']))
+     
+
+     
 
 if __name__ == '__main__':
     # Command Line Arguments
@@ -348,7 +398,7 @@ if __name__ == '__main__':
         ('c', 'contracts',          stepInstallSystemContracts, True,    "Install system contracts (token, msig)"),
         ('t', 'tokens',             stepCreateTokens,           True,    "Create tokens"),
         ('S', 'sys-contract',       stepSetSystemContract,      True,    "Set system contract"),
-        ('I', 'init-sys-contract',  stepInitSystemContract,     True,    "Initialiaze system contract"),
+        ('I', 'init-sys-contract',  stepInitSystemContract,     True,    "Initialize system contract"),
         ('T', 'stake',              stepCreateStakedAccounts,   True,    "Create staked accounts"),
         ('p', 'reg-prod',           stepRegProducers,           True,    "Register producers"),
         ('P', 'start-prod',         stepStartProducers,         True,    "Start producers"),

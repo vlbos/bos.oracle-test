@@ -15,10 +15,11 @@ logFile = None
 
 unlockTimeout = 999999999
 fastUnstakeSystem = './fast.refund/eosio.system/eosio.system.wasm'
-workDir="/Users/lisheng/mygit/vlbos/bos"
-# workDir="/Users/lisheng/mygit/boscore/bos"
-contractDir="/Users/lisheng/mygit/boscore/bos.contracts"
+# workDir="/Users/lisheng/mygit/vlbos/bos"
+workDir="/Users/lisheng/mygit/boscore/bos"
+# contractDir="/Users/lisheng/mygit/boscore/bos.contracts"
 # contractDir="/Users/lisheng/mygit/vlbos/oracle/bos.contracts"
+contractDir="/Users/lisheng/mygit/vlbos/bridge/bos.contracts"
 
 
 systemAccounts = [
@@ -33,6 +34,7 @@ systemAccounts = [
     'eosio.vpay',
     'eosio.rex',
     'oracle.bos',
+    'bridge.bos',
 ]
 
 def jsonArg(a):
@@ -103,15 +105,10 @@ def startNode(nodeIndex, account):
     run('mkdir -p ' + dir)
     otherOpts = ''.join(list(map(lambda i: '    --p2p-peer-address localhost:' + str(9000 + i), range(nodeIndex))))
     if not nodeIndex: otherOpts += (
-        '    --chain-state-db-size-mb 10240'
         '    --plugin eosio::history_plugin'
         '    --plugin eosio::history_api_plugin'
-        '    --config-dir ' + os.path.abspath(args.config) 
     )
-    else: otherOpts += (
-        '    --chain-state-db-size-mb 1024'
-        '    --config-dir ' + os.path.abspath(dir) 
-    )
+ 
 
     cmd = (
         args.nodeos +
@@ -121,6 +118,7 @@ def startNode(nodeIndex, account):
         '    --genesis-json ' + os.path.abspath(args.genesis) +
         '    --blocks-dir ' + os.path.abspath(dir) + '/blocks'
         '    --data-dir ' + os.path.abspath(dir) +
+        '    --config-dir ' + os.path.abspath(args.config) +
         '    --http-server-address 127.0.0.1:' + str(8000 + nodeIndex) +
         '    --p2p-listen-endpoint 127.0.0.1:' + str(9000 + nodeIndex) +
         '    --max-clients ' + str(maxClients) +
@@ -301,7 +299,7 @@ def stepInstallSystemContracts():
     run(args.cleos + 'set contract eosio.msig ' + args.contracts_dir + '/eosio.msig/')
 def stepCreateTokens():
     run(args.cleos + 'push action eosio.token create \'["eosio", "100000000000.0000 %s"]\' -p eosio.token' % (args.symbol))
-    totalAllocation = allocateFunds(0, len(accounts))*10
+    totalAllocation = allocateFunds(0, len(accounts))
     run(args.cleos + 'push action eosio.token issue \'["eosio", "%s", "memo"]\' -p eosio' % intToCurrency(totalAllocation))
     sleep(1)
 def stepSetSystemContract():
@@ -334,10 +332,16 @@ def stepResign():
 def stepTransfer():
     while True:
         randomTransfer(0, args.num_senders)
+def stepIssueTokens():
+    totalAllocation = allocateFunds(0, len(accounts))
+    run(args.cleos + 'push action eosio.token issue \'["eosio", "%s", "memo"]\' -p eosio' % intToCurrency(totalAllocation))
+    sleep(1)
 def stepLog():
     run('tail -n 60 ' + args.nodes_dir + '00-eosio/stderr')
-def stepInstallOracleContracts():
-    run(args.cleos + 'set contract oracle.bos ' + args.contracts_dir + '/bos.oracle/')
+def stepInstallBridgeContracts():
+    # run(args.cleos + 'set contract oracle.bos ' + args.contracts_dir + '/bos.oracle/')
+    run(args.cleos + 'set contract bridge.bos ' + args.contracts_dir + '/bos.bridge/')
+
 def getTableRow(table):
      table = getJsonOutput(args.cleos + 'get table eosio eosio '+ table + ' -l 1')
      if table['rows']:
@@ -418,6 +422,8 @@ if __name__ == '__main__':
         ('m', 'msg-replace',        msigReplaceSystem,          False,   "Replace system contract using msig"),
         ('X', 'xfer',               stepTransfer,               False,   "Random transfer tokens (infinite loop)"),
         ('l', 'log',                stepLog,                    True,    "Show tail of node's log"),
+        ('i', 'issue',              stepIssueTokens,            False,   "Issue tokens "),
+        ('B', 'bridge',             stepInstallBridgeContracts, False,   "Install bridge contracts "),
     ]
 
     parser.add_argument('--public-key', metavar='', help="EOSIO Public Key", default='EOS8Znrtgwt8TfpmbVpTKvA2oB8Nqey625CLN8bCN3TEbgx86Dsvr', dest="public_key")

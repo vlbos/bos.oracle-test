@@ -105,7 +105,9 @@ get_info() {
     #cleos get table ${contract_token} ${contract_token} globals
     ${!cleos} get info
     
+    ${!cleos} push action burn.bos transfer2he '["EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","ss",1]' -p burn.bos@active
 }
+
 get_scope() {
     cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
     

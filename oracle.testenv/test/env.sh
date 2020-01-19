@@ -6,7 +6,7 @@ contract_repo_dir=bos.contracts
 
 # CONTRACTS_DIR=~/${contract_repo_dir}/build/contracts/
 # CONTRACTS_DIR=~/mygit/vlbos/burn/${contract_repo_dir}/build/contracts/
-CONTRACTS_DIR=~/mygit/vlbos/oracle/${contract_repo_dir}/build/contracts/
+CONTRACTS_DIR=~/mygit/vlbos/bridge/${contract_repo_dir}/build/contracts/
 # CONTRACTS_DIR=~/abos/${contract_repo_dir}
 WALLET_DIR=~/eosio-wallet
 
@@ -18,7 +18,7 @@ contract_oracle_folder=bos.oracle
 
 
 contract_burn=burn.bos
-contract_burn_folder=bos.burn
+contract_burn_folder=bos.bridge
 
 contract_consumer=consumer1234
 contract_consumer_folder=bos.oracle/consumer.contract

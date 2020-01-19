@@ -77,7 +77,6 @@ if [ "$#" -ne 1 ];then
 	exit 0
 fi
 
-
 case "$1"
 in
     "init"  )   cluster_init;;

@@ -4,7 +4,7 @@
 
 setup_system_contracts_and_issue_token(){
     cleos=cleos1 sym=BOS && if [ "$1" == "c2" ];then cleos=cleos2 sym=EOS ;fi
-    token=ETHT
+
     # step 1: set contract eosio.bios
     ${!cleos} set contract eosio ${CONTRACTS_DIR}/eosio.bios -p eosio
 
@@ -29,9 +29,6 @@ setup_system_contracts_and_issue_token(){
     echo step 4
     ${!cleos} push action eosio.token create '["eosio", "10000000000.0000 '$sym'"]' -p eosio.token
     ${!cleos} push action eosio.token issue '["eosio",  "1000000000.0000 '$sym'", "memo"]' -p eosio
-
-    ${!cleos} push action eosio.token create '["eosio", "10000000000.0000 '$token'"]' -p eosio.token
-    ${!cleos} push action eosio.token issue '["eosio",  "1000000000.0000 '$token'", "memo"]' -p eosio
 
     #setp 5: setting privileged account for eosio.msig
     ${!cleos} push action eosio setpriv '{"account": "eosio.msig", "is_priv": 1}' -p eosio

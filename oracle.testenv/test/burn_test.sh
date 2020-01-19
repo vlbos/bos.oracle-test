@@ -19,12 +19,14 @@ test_set_contracts() {
 get_account() {
     echo --- cleos1 --- $1
     $cleos1 get account $1
+    $cleos1 get currency balance eosio.token burn.bos ETHT
     # echo && echo --- cleos2 ---  $1
     # $cleos2 get account  $1
 }
 
 test_get_account() {
     get_account "$1"
+    
     # get_account oraclize1111
     # get_account bosbosburn
     # get_account ${contract_burn}
@@ -105,6 +107,8 @@ get_info() {
     #cleos get table ${contract_token} ${contract_token} globals
     ${!cleos} get info
     
+  
+
     ${!cleos} push action burn.bos transfer2he '["EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","ss",1]' -p burn.bos@active
 }
 
@@ -115,6 +119,12 @@ get_scope() {
     ${!cleos} get scope -t stat eosio.token
     ${!cleos} get scope -t accounts ${contract_burn}
     
+    token=ETHT
+
+    ${!cleos} push action eosio.token create '["eosio", "10000000000.0000 '$token'"]' -p eosio.token
+    ${!cleos} push action eosio.token issue '["eosio",  "1000000000.0000 '$token'", "memo"]' -p eosio
+    
+    $cleos1 transfer eosio consumer1111 "100000.0000 ETHT" "ETH ETHT bridge" -p eosio
 }
 
 test_get_scope() {

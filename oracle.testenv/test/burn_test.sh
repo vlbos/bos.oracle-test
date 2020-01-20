@@ -19,7 +19,9 @@ test_set_contracts() {
 get_account() {
     echo --- cleos1 --- $1
     $cleos1 get account $1
-    $cleos1 get currency balance eosio.token burn.bos ETHT
+
+    echo ==ETHT balance
+    $cleos1 get currency balance eosio.token $1 ETHT
     # echo && echo --- cleos2 ---  $1
     # $cleos2 get account  $1
 }

@@ -111,7 +111,22 @@ get_info() {
     
   
 
-    ${!cleos} push action burn.bos transfer2he '["EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","ss",1]' -p burn.bos@active
+    # ${!cleos} push action burn.bos transfer2he '["EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","ss",1]' -p burn.bos@active
+    # ${!cleos} get actions burn.bos 
+    # ${!cleos} get transaction 48e5bc5261f7969738bf4907634b1cc51f7b69ef9faec17ab8544570efa236db
+}
+
+
+get_action() {
+    cleos=cleos1 && if [ "$1" == "c2" ]; then cleos=cleos2; fi
+  
+      # ${!cleos} push action burn.bos transfer2he '["EOS6MRyAjQq8ud7hVNYcfnVPJqcVpscN5So8BhtHuGYqET5GDW5CV","ss",1]' -p burn.bos@active
+    ${!cleos} get actions burn.bos -1 -1
+    ${!cleos} get transaction 9cda16a80f8a0ce374d3f92ecc0e177ef76f1a20bcfee74a00fbae2571554d5e
+}
+
+test_get_action() {
+    get_action c1
 }
 
 get_scope() {
@@ -302,5 +317,6 @@ case "$1" in
     "table1") test_get_table1 "$2" "$3" ;;
     "info") test_get_info ;;
     "scope") test_get_scope ;;
-    *) echo "usage: burn_test.sh chk|imp|clear|setp|burn|air|ct|ci|set|acc|transfer|keys|table {name}|table1 {scope name}|info|scope" ;;
+    "act") test_get_action ;;
+    *) echo "usage: burn_test.sh chk|imp|clear|setp|burn|air|ct|ci|set|acc|transfer|keys|table {name}|table1 {scope name}|info|scope|act" ;;
 esac

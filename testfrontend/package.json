@@ -9,7 +9,7 @@
   "author": "Guillaume Babin-Tremblay",
   "license": "ISC",
   "dependencies": {
-    "async": "^3.1.0",
+    "async": "^3.2.2",
     "coingecko-api": "^1.0.6",
     "colors": "*",
     "dotenv": "^6.0.0",
